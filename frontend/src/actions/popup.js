@@ -2,10 +2,10 @@ export const OPEN_POPUP = 'OPEN_POPUP'
 export const CLOSE_POPUP = 'CLOSE_POPUP'
 export const SET_SCREEN = 'SET_SCREEN'
 
-export const openPopup = defaults => {
+export const openPopup = context => {
 	return {
 		type: OPEN_POPUP,
-		defaults: defaults,
+		context: context,
 	}
 }
 

@@ -4,8 +4,7 @@ import { withStyles } from 'material-ui/styles'
 import AddIcon from 'material-ui-icons/Add';
 import Button from 'material-ui/Button'
 import PopupContainer from '../components/PopupContainer'
-
-import { openPopup, closePopup } from '../actions/popup'
+import { openPopup, closePopup, setScreen } from '../actions/popup'
 
 /*
 	HomeScreenContainer is a container component. It is stateful,
@@ -31,6 +30,7 @@ class HomeScreenContainer extends Component{
 		super(props)
 		this.showPopup = this.showPopup.bind(this)
 		this.hidePopup = this.hidePopup.bind(this)
+		this.changePopupScreen = this.changePopupScreen.bind(this)
 	}
 
 	showPopup(defaults){
@@ -41,17 +41,24 @@ class HomeScreenContainer extends Component{
 		this.props.dispatch(closePopup())
 	}
 
+	changePopupScreen(screen){
+		this.props.dispatch(setScreen(screen))
+	}
+
 	render(){
 		console.log('HomeScreenContainer', this.props)
 		const {classes} = this.props
 
 		return (
 			<div>
-				<PopupContainer {...this.props.popup} onClose={this.hidePopup}/>
+				<PopupContainer {...this.props.popup} 
+						onClose={this.hidePopup} 
+						setScreen={this.changePopupScreen}/>
+
 				<Button variant="fab" 
 						className={classes.fab} 
 						color="primary"
-						onClick={this.showPopup.bind(this, {})}>
+						onClick={this.showPopup.bind(this)}>
 						<AddIcon/>
 				</Button>
 			</div>
@@ -60,6 +67,4 @@ class HomeScreenContainer extends Component{
 }
 
 const HomeScreenContainerWrapper = withStyles(styles, {withTheme: true})(HomeScreenContainer)
-
-
 export default connect(mapStateToProps)(HomeScreenContainerWrapper)

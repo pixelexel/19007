@@ -3,22 +3,32 @@ import { screens } from '../components/PopupContainer'
 
 const initialState = {
 	open: false,
-	x: null,
-	y: null,
-	filters: [],
-	screen: screens.CHOOSE
+	screen: screens.CHOOSE,
+	graph: {
+		id: null,
+		x: null,
+		y: null,
+		filters: [],
+		name: 'Untitled Graph'
+	},
+	list: {
+		id: null,
+		x: null,
+		filters: [],
+		name: 'Untitled List'
+	},
 }
 
-const popup = (state = initialState, action) => {
-	let defaults = action.defaults
+const popup = (state = initialState, action) => {	
+	let { screen, graph, list } = action.defaults || initialState
+
 	switch(action.type){
 		case OPEN_POPUP:
 			return Object.assign({}, state, {
 				open: true,
-				x: defaults.x ? defaults.x : initialState.x,
-				y: defaults.y ? defaults.y : initialState.y,
-				screen: defaults.screen ? defaults.screen: initialState.screen,
-				filters: defaults.filters ? defaults.filters : initialState.filters,
+				screen: screen,
+				graph: graph,
+				list: list,
 			})
 
 		case CLOSE_POPUP:
