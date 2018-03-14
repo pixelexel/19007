@@ -1,46 +1,65 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchSearchResults } from '../actions'
-import SearchCard from '../components/SearchCard'
+import { withStyles } from 'material-ui/styles'
+import AddIcon from 'material-ui-icons/Add';
+import Button from 'material-ui/Button'
+import PopupContainer from '../components/PopupContainer'
+
+import { openPopup, closePopup } from '../actions/popup'
 
 /*
 	HomeScreenContainer is a container component. It is stateful,
 	and can dispatch actions to the store
 */
 
-// NOTE: Will contain 4 cards eventually
-
 // Map the state (from store) to props -> Redux function
 function mapStateToProps(state){
-	return {
-		search: state.search
-	}
+	return state
 }
+
+const styles = theme => ({
+	fab: {
+		position: 'absolute',
+		bottom: theme.spacing.unit * 2,
+		right: theme.spacing.unit * 2,
+	}
+})
+
 
 class HomeScreenContainer extends Component{
 	constructor(props){
 		super(props)
-		this.handleSearchClick = this.handleSearchClick.bind(this)
+		this.showPopup = this.showPopup.bind(this)
+		this.hidePopup = this.hidePopup.bind(this)
 	}
 
-	handleSearchClick(query){
-		this.props.dispatch(fetchSearchResults(query))
+	showPopup(defaults){
+		this.props.dispatch(openPopup(defaults))
+	}
+
+	hidePopup(){
+		this.props.dispatch(closePopup())
 	}
 
 	render(){
-		console.log('HOMESCREEN', this.props.search)
-		const {data, isFetching} = this.props.search
+		console.log('HomeScreenContainer', this.props)
+		const {classes} = this.props
 
 		return (
 			<div>
-			<SearchCard 
-				onClick={this.handleSearchClick}
-				isFetching={isFetching}
-				data={data}
-			/>
+				<PopupContainer {...this.props.popup} onClose={this.hidePopup}/>
+				<Button variant="fab" 
+						className={classes.fab} 
+						color="primary"
+						onClick={this.showPopup.bind(this, {})}>
+						<AddIcon/>
+				</Button>
 			</div>
 		)
 	}
 }
 
-export default connect(mapStateToProps)(HomeScreenContainer)
+const HomeScreenContainerWrapper = withStyles(styles, {withTheme: true})(HomeScreenContainer)
+
+
+export default connect(mapStateToProps)(HomeScreenContainerWrapper)
