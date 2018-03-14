@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './styles/App.scss';
 import CssBaseline from 'material-ui/CssBaseline';
 import HomeScreenContainer from './containers/HomeScreenContainer'
+import { hot } from 'react-hot-loader'
 
 class App extends Component {
   render() {
@@ -14,4 +15,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default hot(module)(App)
