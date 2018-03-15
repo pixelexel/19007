@@ -50,6 +50,7 @@ class HomeScreenContainer extends Component{
 
 	addGraph(data){
 		this.props.dispatch(addGraph(data))
+		this.props.dispatch(closePopup())
 	}
 
 	updateGraph(data){

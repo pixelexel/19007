@@ -56,7 +56,7 @@ class PopupContainer extends Component{
 								<ChoiceCard id="choice-card-graph" 
 											key="GraphCard" 
 											imageUrl={IMAGE_URL + 'graph.png'}
-											text="Add a new graph"
+											text="Add a new bar chart"
 											onClick={
 												this.changeScreen
 												.bind(this, screens.GRAPH_SELECT)}

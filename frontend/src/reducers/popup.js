@@ -41,6 +41,7 @@ const popup = (state = initialState, action) => {
 		case CLOSE_POPUP:
 			return Object.assign({}, state, {
 				open: false,
+				formValsFetched: false
 			})
 
 		case SET_SCREEN:
@@ -64,7 +65,7 @@ const popup = (state = initialState, action) => {
 
 		case UPDATE_LIST_FORM:
 			return state
-
+			
 		case REQUEST_FORM_VALS:
 			return Object.assign({}, state, {
 				isFetching: true

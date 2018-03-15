@@ -7,10 +7,12 @@ import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 import TextField from 'material-ui/TextField'
 import Select from 'material-ui/Select'
-import Input, { InputLabel } from 'material-ui/Input'
+import { InputLabel } from 'material-ui/Input'
 import { MenuItem } from 'material-ui/Menu'
-import { FormControl, FormHelperText } from 'material-ui/Form'
+import { FormControl } from 'material-ui/Form'
 import Chip from 'material-ui/Chip'
+import Grid from 'material-ui/Grid'
+import Paper from 'material-ui/Paper'
 
 const styles = theme => ({
 	root: {
@@ -22,6 +24,9 @@ const styles = theme => ({
 	instructions: {
 		marginTop: theme.spacing.unit,
 		marginBottom: theme.spacing.unit,
+	},
+	chip: {
+	  margin: theme.spacing.unit / 2,
 	},
 });
 
@@ -47,7 +52,12 @@ class GraphCreator extends React.Component {
 		super(props)
 		this.state = {
 			activeStep: 0,
-			selectedFilter: '',
+			selectedFilter: {
+				name: '',
+				op: null,
+				val: null,
+				type: '',
+			},
 		}
 	}
 
@@ -58,8 +68,6 @@ class GraphCreator extends React.Component {
 		this.setState({
 			activeStep: activeStep + 1,
 		})
-
-		// this.props.setActiveStep(this.props.activeStep + 1)
 	}
 
 	handleBack = () => {
@@ -69,8 +77,6 @@ class GraphCreator extends React.Component {
 		this.setState({
 			activeStep: activeStep - 1,
 		})
-
-		// this.props.setActiveStep(this.props.activeStep - 1)
 	}
 
 	handleSave = () => {
@@ -85,8 +91,100 @@ class GraphCreator extends React.Component {
 		)
 	}
 
-	handleFiltersChange = () => {
+	handleFiltersChange = (type, id, e) => {
+		let {filters} = this.props
+		let { selectedFilter } = this.state
+		let sFilter = Object.assign({}, selectedFilter)
 
+		switch(type){
+			case 'add':				
+				let newFilters = filters.slice()
+				if(selectedFilter.op === null){
+					sFilter['op'] = '='
+				}
+				if(selectedFilter.val === null){
+					switch(selectedFilter.type){
+						case 'int': sFilter.val = 0
+						break
+						case 'bool': sFilter.val = 'False'
+						break
+						case 'string': sFilter.val = ''
+						break
+						default:
+						break
+					}
+				}
+
+
+				newFilters.push(sFilter)
+
+				this.props.update(
+					Object.assign({}, this.props, {
+						filters: newFilters,
+					})
+				)
+
+				this.setState({
+					selectedFilter: {
+						name: '',
+						op: null,
+						val: null,
+						type: '',
+					}
+				})
+
+			break
+
+			case 'delete':
+				
+				console.log('del', id)
+				const val = filters[id]
+
+				this.props.update(Object.assign({}, this.props, {
+					filters: filters.filter(v => v != val) 
+				}))
+			break
+
+			default:
+				break
+		}
+	}
+
+	handleFilterInputChange = (type, e) => {
+		let v = e.target.value
+		let { formVals } = this.props
+
+		switch(type){
+			case 'name':
+				this.setState({
+					selectedFilter: {
+						name: v,
+						val : null,
+						op: null,
+						type: formVals.filters[v].type,
+					}
+				})
+			break
+
+			case 'op':
+				this.setState({
+					selectedFilter: Object.assign({}, this.state.selectedFilter, {
+						op: v,
+					})
+				})
+
+				break
+
+			case 'val':
+				this.setState({
+					selectedFilter: Object.assign({}, this.state.selectedFilter, {
+						val: v,
+					})
+				})
+				break
+			default:
+				break
+		}	
 	}
 
 	handleAxesChange = (val, e) => {
@@ -98,27 +196,74 @@ class GraphCreator extends React.Component {
 	}
 
 	getValidOperators = (selectedFilter) => {
+		let { type } = selectedFilter
+		let { classes } = this.props
 
+		let a = []
+		switch(type){
+			case 'int':
+				a = ['>', '<', '=', '>=', '<=']
+				break
+			case 'string':
+			case 'bool':
+				a = ['=']
+				break
+
+			default:
+				a = []
+
+		}
+
+		if(selectedFilter.name == '') return null
+
+		return (
+				<FormControl styles={{marginLeft: 50}} className={classes.formControl}>
+					<InputLabel htmlFor='add-op'>Operand</InputLabel>
+					<Select value={selectedFilter.op == null ? a[0] : selectedFilter.op} 
+						onChange={this.handleFilterInputChange.bind(this, 'op')} 
+						inputProps={{
+							id: 'add-op',
+							name: 'add-op'
+						}}>
+						{a.map(op => {
+							return (
+									<MenuItem key={op} value={op}>{op}</MenuItem>
+								)
+						})}
+					</Select> 
+				</FormControl>
+		)
 	}
 
 	getInputField = (selectedFilter) => {
+		let { type } = selectedFilter
+		let { classes } = this.props
 
+		let defaultValue = ''
+		if(type === 'int') defaultValue = 0
+		if(type === 'bool') defaultValue = 'False'
+
+		return (
+			<FormControl className={classes.formControl}>
+				<TextField required type={type === 'int' ? 'number' : 'text'} 
+					onChange={this.handleFilterInputChange.bind(this, 'val')}
+					value={selectedFilter.val !== null ? selectedFilter.val : defaultValue}
+					label="Value"/>
+			</FormControl>
+		)		
 	}
 
+	formChip = v => `${v.name} ${v.op} ${v.val}`
+
 	getForm = (step) => {
-		console.log(this.props)
-
-		function formChip(v){
-			return `${v.name} - ${v.op} - ${v.val}`
-		}
-
 		const {x, y, name, filters, classes, formVals} = this.props
 
 		switch(step){
 			case 0:
 				return (
-					<TextField label="name" value={name} onChange={this.handleNameChange} />		
+					<TextField label="Name" value={name} onChange={this.handleNameChange} />		
 				)
+
 			case 1:
 				return (
 					<div>
@@ -159,37 +304,72 @@ class GraphCreator extends React.Component {
 				)
 
 			case 2:
-				return (<div>
+				console.log('Form 2', this.state, this.state.selectedFilter.name)
+				const filterVals = formVals.filters
+				const filterValsKeys = Object.keys(filterVals)
+				console.log('filters', filters)
+
+				const paperStyle = {
+					display: 'flex',
+					justifyContent: 'left',
+					flexWrap: 'wrap',
+					padding: 4,
+				}
+
+				return (
+				<div>
+					
 					<div className="chips-container"> 
+						<Paper style={paperStyle} className={classes.root}>
 						{
-							this.props.filters.map(v => {
+							filters.map( (v, index) => {
 							return (
-								<Chip onDelete={this.handleFiltersChange.bind(this, 'delete')} className={classes.chip} label={formChip(v)}/>
+								<Chip id={index}
+									key={this.formChip(v)} 
+									onDelete={this.handleFiltersChange.bind(this, 'delete', index)} 
+									className={classes.chip} 
+									label={this.formChip(v)}/>
 							)
 						} )}
+						</Paper>
 					</div>
-					<FormControl>
-						<InputLabel htmlFor='add-filter'>X Axis</InputLabel>
-						<Select value={''} onChange={this.handleFilterInputChange} inputProps={{
-							name: 'add-filter',
-							id: 'add-filter', 
-						}}>
-							{
-								formVals.filters.map(v=> {
-								return (
-									<MenuItem key={v.name} value={v.name}>{v.name}</MenuItem>
-								)
-							})}
-						</Select>
+					<br/>
 
-						{ this.getValidOperators(this.state.selectedFilter) }
-						{ this.state.selectedFilter !== '' ? this.getInputField(this.state.selectedFilter) : null }
-						{ this.state.selectedFilter !== '' && this.state.selectedFilter.val !== '' ? (
+					<FormControl>
+						<Grid container>
+							<Grid item xs={4}>
+								<InputLabel htmlFor='add-filter'>Filter name</InputLabel>
+								<Select value={this.state.selectedFilter.name} 
+										onChange={this.handleFilterInputChange.bind(this, 'name')} 
+										inputProps={{
+											name: 'add-filter',
+											id: 'add-filter', 
+										}}>
+									{
+										filterValsKeys.map(k=> {
+								
+										return (
+											<MenuItem key={k} value={k}>{k}</MenuItem>
+										)
+									})}
+								</Select>
+							</Grid>
+							<Grid style={{textAlign: 'center'}} item xs={4}>
+								{ this.getValidOperators(this.state.selectedFilter) }
+							</Grid>
+							<Grid item xs={4}>
+								{ this.state.selectedFilter.name !== '' ? this.getInputField(this.state.selectedFilter) : null }
+							</Grid>
+						</Grid>
+						<br/>
+							{ this.state.selectedFilter.name !== '' && this.state.selectedFilter.val !== '' ? (
+							<Grid item xs={3}>
 							<Button variant="raised" color="primary" 
 									className={classes.button} 
-									onClick={this.handleFiltersChange.bind(this, 'add')}>
+									onClick={this.handleFiltersChange.bind(this, 'add', -1)}>
 							    Add
-							</Button>) : null 
+							</Button></Grid>) : null 
+							
 						}
 					</FormControl>
 				</div>)
@@ -200,7 +380,7 @@ class GraphCreator extends React.Component {
 	}
 
 	render() {
-		console.log('GRAPHCREATOR', this.props)
+		console.log('GRAPHCREATOR', this.props, this.state)
 		const { classes } = this.props;
 		const steps = getSteps();
 		const { activeStep } = this.state;
