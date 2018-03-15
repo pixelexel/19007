@@ -7,6 +7,7 @@ const initialState = {
 
 const graph = (state = initialState, action) => {
 	let { x, y, filters, name } = action.data || {}
+	
 	switch(action.type){
 		case ADD_GRAPH:
 			let graphs = state.graphs.slice()

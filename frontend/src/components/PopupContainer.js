@@ -4,6 +4,7 @@ import Grid from 'material-ui/Grid'
 import { withStyles } from 'material-ui/styles'
 import ChoiceCard from './ChoiceCard'
 import { IMAGE_URL } from '../config'
+import GraphCreator from './GraphCreator'
 
 export const screens = {
 	CHOOSE: 'CHOOSE',
@@ -32,6 +33,13 @@ class PopupContainer extends Component{
 	constructor(props){
 		super(props)
 		this.getScreen = this.getScreen.bind(this)
+	}
+
+	componentWillReceiveProps(props){
+		if(!props.isFetching && props.open && !props.formValsFetched){
+			console.log('lets fetch some')
+			this.props.getFormVals()
+		}
 	}
 
 	changeScreen(screen){
@@ -69,9 +77,13 @@ class PopupContainer extends Component{
 				)
 
 			case screens.GRAPH_SELECT:
+				console.log('PopupContainer', this.props)
+
 				return (
-					<div>	Make a graph
-					</div>
+					<GraphCreator 
+						save={this.props.addGraph} 
+						update={this.props.updateGraphForm} 
+						{...this.props.graph} />
 				)
 
 			case screens.LIST_SELECT:

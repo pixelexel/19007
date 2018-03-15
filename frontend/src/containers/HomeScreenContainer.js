@@ -4,7 +4,8 @@ import { withStyles } from 'material-ui/styles'
 import AddIcon from 'material-ui-icons/Add';
 import Button from 'material-ui/Button'
 import PopupContainer from '../components/PopupContainer'
-import { openPopup, closePopup, setScreen } from '../actions/popup'
+import { openPopup, closePopup, setScreen, updateGraphForm, getFormVals } from '../actions/popup'
+import { addGraph } from '../actions/graph'
 
 /*
 	HomeScreenContainer is a container component. It is stateful,
@@ -30,7 +31,9 @@ class HomeScreenContainer extends Component{
 		super(props)
 		this.showPopup = this.showPopup.bind(this)
 		this.hidePopup = this.hidePopup.bind(this)
+		this.addGraph = this.addGraph.bind(this)
 		this.changePopupScreen = this.changePopupScreen.bind(this)
+		this.updateGraph = this.updateGraph.bind(this)
 	}
 
 	showPopup(defaults){
@@ -45,6 +48,19 @@ class HomeScreenContainer extends Component{
 		this.props.dispatch(setScreen(screen))
 	}
 
+	addGraph(data){
+		this.props.dispatch(addGraph(data))
+	}
+
+	updateGraph(data){
+		this.props.dispatch(updateGraphForm(data))
+	}
+
+	getFormVals(){
+		this.props.dispatch(getFormVals())
+	}
+
+
 	render(){
 		console.log('HomeScreenContainer', this.props)
 		const {classes} = this.props
@@ -53,7 +69,10 @@ class HomeScreenContainer extends Component{
 			<div>
 				<PopupContainer {...this.props.popup} 
 						onClose={this.hidePopup} 
-						setScreen={this.changePopupScreen}/>
+						setScreen={this.changePopupScreen}
+						addGraph={this.addGraph}
+						updateGraphForm={this.updateGraph}
+						getFormVals={this.getFormVals.bind(this)}/>
 
 				<Button variant="fab" 
 						className={classes.fab} 
