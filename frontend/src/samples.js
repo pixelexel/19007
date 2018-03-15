@@ -38,6 +38,100 @@ export const formVals = {
 	}
 }
 
+// api/get_all_graphs/
+export const sampleGraphs = () => {
+	let graphs = []
+	let axes = ['average_marks', 'sports_activity', 'cultural_activity']
+	let filters = [{
+					name: 'no_of_siblings',
+					type: 'int',
+					val: 3,
+					op: '='
+				},
+				{ 
+					name: 'parent_salary',
+					type: 'int',
+					val: 300000,
+					op: '>='
+				},
+				{
+					name:'is_handicapped',
+					type: 'bool',
+					val: 'False',
+					op: '=',
+				}]
+
+	for(let i = 0 ; i < 5; i++){
+		let x = axes[Math.floor(Math.random()*axes.length)],
+			y = axes[Math.floor(Math.random()*axes.length)],
+			filter = filters[Math.floor(Math.random()*filters.length)],
+			data = [];
+
+		let d = {}
+		for(let j = 0 ; j < 10; j ++){
+			d = {}
+			d[x] = j+1
+			d[y] = Math.ceil(Math.random() * (3000 - 1000) + 1000)
+			d[filter.name] = Math.ceil(Math.random() * (3000 - 1000) + 1000)
+			data.push(d)
+		}
+
+		graphs.push({
+			id: i+1,
+			x: x,
+			y: y,
+			filters: [filter],
+			data: data,
+		})
+	}
+
+	return {
+		error: false,
+		graphs: graphs,
+	}
+}
+
+export const sampleLists = () => {
+	let graphs = []
+	let axes = ['time', 'average_marks', 'sports_activity', 'cultural_activity']
+	let filters = [{
+					name: 'no_of_siblings',
+					type: 'int',
+					val: 3,
+					op: '='
+				},
+				{ 
+					name: 'parent_salary',
+					type: 'int',
+					val: 300000,
+					op: '>='
+				},
+				{
+					name:'is_handicapped',
+					type: 'bool',
+					val: 'False',
+					op: '=',
+				}]
+
+	for(let i = 0 ; i < 5; i++){
+		let x = axes[Math.floor(Math.random()*axes.length)],
+			filter = filters[Math.floor(Math.random()*filters.length)],
+			data = ['Saumitra', 'Adit', 'Ayush', 'Gaurav', 'Anas', 'Akshay'];
+
+		graphs.push({
+			id: i+1,
+			x: x,
+			filters: [filter],
+			data: data,
+		})
+	}
+
+	return {
+		error: false,
+		lists: graphs,
+	}
+}
+
 export const exampleGraph = (graphdata) => {
 	const { x, y, filters } = graphdata
 	let data = []

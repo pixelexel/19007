@@ -1,6 +1,7 @@
-import { ADD_GRAPH } from '../actions/graph'
+import { ADD_GRAPH, REQUEST_ALL_GRAPHS, RECEIVE_ALL_GRAPHS } from '../actions/graph'
 
 const initialState = {
+	fetchingAllGraphs: false,
 	graphs: [],
 	graphId: 0
 }
@@ -9,6 +10,17 @@ const graph = (state = initialState, action) => {
 	let { x, y, filters, name, id, data } = action.data || {}
 	
 	switch(action.type){
+		case REQUEST_ALL_GRAPHS:
+			return Object.assign({}, state, {
+				fetchingAllGraphs: true
+			})
+
+		case RECEIVE_ALL_GRAPHS:
+			return Object.assign({}, state, {
+				fetchingAllGraphs: false,
+				graphs: action.data,
+			})
+			
 		case ADD_GRAPH:
 			let newGraph = {
 					x: x,
