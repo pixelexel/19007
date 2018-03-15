@@ -6,16 +6,31 @@ const initialState = {
 }
 
 const list = (state = initialState, action) => {
-	let { x, filters, name } = action.data || {}
+	let { x, filters, name, id, data } = action.data || {}
+
 	switch(action.type){
 		case ADD_LIST:
 			let lists = state.lists.slice()
-			lists.push({
+			let found = false
+			let newList = {
 				x: x,
 				name: name,
 				filters: filters,
-				id: state.listId + 1
-			})
+				id: id,
+				data: data,
+			}
+
+			for(let i = 0 ; i < lists.length; i ++){
+				if(lists[i].id == id){
+					lists[i] = newList
+					found = true
+					break
+				}
+			}
+
+			if(!found){
+				lists.push(newList)
+			}
 
 			return Object.assign({}, state, {
 				lists: lists,

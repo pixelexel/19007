@@ -49,8 +49,8 @@ const popup = (state = initialState, action) => {
 				screen: action.screen
 			})
 
-		case UPDATE_GRAPH_FORM:
-			let { id, x, y, name, filters } = action.data
+		case UPDATE_GRAPH_FORM: {
+			const { id, x, y, name, filters } = action.data
 			graph = Object.assign({}, state.graph, {
 					id: id,
 					x: x,
@@ -62,9 +62,21 @@ const popup = (state = initialState, action) => {
 			return Object.assign({}, state, {
 				graph: graph
 			})
+		}
 
-		case UPDATE_LIST_FORM:
-			return state
+		case UPDATE_LIST_FORM:{
+			let { id, x, name, filters } = action.data
+			list = Object.assign({}, state.list, {
+				id: id,
+				x: x,
+				name: name,
+				filters: filters,
+			})
+
+			return Object.assign({}, state, {
+				list: list
+			})
+		}
 			
 		case REQUEST_FORM_VALS:
 			return Object.assign({}, state, {

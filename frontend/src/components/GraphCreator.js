@@ -30,22 +30,7 @@ const styles = theme => ({
 	},
 });
 
-function getSteps() {
-	return ['Graph Name', 'Axes', 'Filters']
-}
 
-function getStepContent(step) {
-	switch (step) {
-		case 0:
-			return 'Enter the title of the graph'
-		case 1:
-			return 'Enter the axes to be plotted'
-		case 2:
-			return 'Enter filters'
-		default:
-			return 'Unknown step';
-	}
-}
 
 class GraphCreator extends React.Component {
 	constructor(props){
@@ -58,6 +43,21 @@ class GraphCreator extends React.Component {
 				val: null,
 				type: '',
 			},
+		}
+	}
+
+	getSteps = () => [this.props.varname + ' Name', 'Axes', 'Filters']
+
+	getStepContent = step => {
+		switch (step) {
+			case 0:
+				return 'Enter the title of the ' + this.props.varname.toLowerCase()
+			case 1:
+				return 'Enter the axes to be plotted'
+			case 2:
+				return 'Enter filters'
+			default:
+				return 'Unknown step';
 		}
 	}
 
@@ -382,7 +382,7 @@ class GraphCreator extends React.Component {
 	render() {
 		console.log('GRAPHCREATOR', this.props, this.state)
 		const { classes } = this.props;
-		const steps = getSteps();
+		const steps = this.getSteps();
 		const { activeStep } = this.state;
 
 	    return (
@@ -412,7 +412,7 @@ class GraphCreator extends React.Component {
 	            </div>
 	          ) : (
 	            <div>
-	              <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+	              <Typography className={classes.instructions}>{this.getStepContent(activeStep)}</Typography>
 	              {this.getForm(this.state.activeStep)}
 	              <br/>
 	              <br/>

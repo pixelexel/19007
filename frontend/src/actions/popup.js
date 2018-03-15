@@ -59,20 +59,9 @@ const receiveFormVals = data => {
 export const getFormVals = () => {
 	return dispatch => {
 		dispatch(requestFormVals())
-		return fetch(BASE_API_URL + '/getFormVals/')
+		return fetch(BASE_API_URL + '/get_form_vals/')
 				.then(data => data.json())
 				.then(json => dispatch(receiveFormVals(json)))
 				.catch(error=> dispatch(receiveFormVals(formVals)))
 	}
 }
-
-
-// export function fetchSearchResults(query){
-// 	return (dispatch) => {
-// 		dispatch(requestSearch(query))
-// 		return fetch(BASE_URL)
-// 				.then(data => data.json())
-// 				.catch(error => dispatch(receiveSearch(false, formVals)))
-// 				.then(json => dispatch(receiveSearch(json.error, json.data)))
-// 	}
-// }

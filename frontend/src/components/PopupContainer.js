@@ -77,10 +77,9 @@ class PopupContainer extends Component{
 				)
 
 			case screens.GRAPH_SELECT:
-				console.log('PopupContainer', this.props)
-
 				return (
 					<GraphCreator 
+						varname='Graph'
 						save={this.props.addGraph} 
 						update={this.props.updateGraphForm} 
 						{...this.props.graph} />
@@ -88,7 +87,11 @@ class PopupContainer extends Component{
 
 			case screens.LIST_SELECT:
 				return (
-					<div> Make a list </div>
+					<GraphCreator
+						varname='List'
+						save={this.props.addList}
+						update={this.props.updateListForm}
+						{...this.props.list} />
 				)
 			default:
 				return null
