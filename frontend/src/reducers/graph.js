@@ -44,13 +44,13 @@ const graph = (state = initialState, action) => {
 				}
 
 				if(!found){
-					graphs.push(newGraph)
+					graphs.unshift(newGraph)
 				}
 			}
 
 			else{
 				newGraph.id = state.graphId + 1
-				graphs.push(newGraph)
+				graphs.unshift(newGraph)
 			}
 
 			return Object.assign({}, state, {

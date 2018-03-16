@@ -202,7 +202,7 @@ class GraphCreator extends React.Component {
 		let a = []
 		switch(type){
 			case 'int':
-				a = ['>', '<', '=', '>=', '<=']
+				a = ['=', '>', '<', '>=', '<=']
 				break
 			case 'string':
 			case 'bool':

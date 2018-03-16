@@ -4,6 +4,8 @@ import { withStyles } from 'material-ui/styles'
 import AddIcon from 'material-ui-icons/Add';
 import Button from 'material-ui/Button'
 import PopupContainer from '../components/PopupContainer'
+import CardContainer from '../components/CardContainer'
+
 import { openPopup, closePopup, setScreen, 
 		updateGraphForm, updateListForm, getFormVals } from '../actions/popup'
 import { addGraph, getAllGraphs } from '../actions/graph'
@@ -21,7 +23,7 @@ function mapStateToProps(state){
 
 const styles = theme => ({
 	fab: {
-		position: 'absolute',
+		position: 'fixed',
 		bottom: theme.spacing.unit * 2,
 		right: theme.spacing.unit * 2,
 	}
@@ -85,6 +87,8 @@ class HomeScreenContainer extends Component{
 
 		return (
 			<div>
+				<CardContainer {...this.props}/>
+
 				<PopupContainer {...this.props.popup} 
 						onClose={this.hidePopup} 
 						setScreen={this.changePopupScreen}

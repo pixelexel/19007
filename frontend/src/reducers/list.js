@@ -40,7 +40,7 @@ const list = (state = initialState, action) => {
 			}
 
 			if(!found){
-				lists.push(newList)
+				lists.unshift(newList)
 			}
 
 			return Object.assign({}, state, {

@@ -77,6 +77,7 @@ export const sampleGraphs = () => {
 		}
 
 		graphs.push({
+			name: 'Hello Graphs!',
 			id: i+1,
 			x: x,
 			y: y,
@@ -119,6 +120,7 @@ export const sampleLists = () => {
 			data = ['Saumitra', 'Adit', 'Ayush', 'Gaurav', 'Anas', 'Akshay'];
 
 		graphs.push({
+			name: 'Hello Lists',
 			id: i+1,
 			x: x,
 			filters: [filter],
