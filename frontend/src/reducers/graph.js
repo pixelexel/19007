@@ -1,4 +1,4 @@
-import { ADD_GRAPH, REQUEST_ALL_GRAPHS, RECEIVE_ALL_GRAPHS } from '../actions/graph'
+import { ADD_GRAPH, REQUEST_ALL_GRAPHS, RECEIVE_ALL_GRAPHS, REMOVE_GRAPH } from '../actions/graph'
 
 const initialState = {
 	fetchingAllGraphs: false,
@@ -20,6 +20,16 @@ const graph = (state = initialState, action) => {
 				fetchingAllGraphs: false,
 				graphs: action.data,
 			})
+
+		case REMOVE_GRAPH:{
+			let { graphs } = state
+			for(let i = 0 ; i < graphs.length; i++){
+
+			}
+
+			return state
+		
+		}
 			
 		case ADD_GRAPH:
 			let newGraph = {

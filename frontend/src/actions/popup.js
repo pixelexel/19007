@@ -59,9 +59,11 @@ const receiveFormVals = data => {
 export const getFormVals = () => {
 	return dispatch => {
 		dispatch(requestFormVals())
-		return fetch(BASE_API_URL + '/get_form_vals/')
+		return fetch(BASE_API_URL + 'get_form_vals', {mode: 'no-cors'})
 				.then(data => data.json())
 				.then(json => dispatch(receiveFormVals(json)))
-				.catch(error=> dispatch(receiveFormVals(formVals)))
+				.catch(error=> {
+					console.error('api call', error)
+					dispatch(receiveFormVals(formVals))})
 	}
 }

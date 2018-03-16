@@ -4,9 +4,15 @@ import { exampleGraph, sampleGraphs } from '../samples'
 export const ADD_GRAPH = 'ADD_GRAPH'
 export const REQUEST_ALL_GRAPHS = 'REQUEST_ALL_GRAPHS'
 export const RECEIVE_ALL_GRAPHS = 'RECEIVE_ALL_GRAPHS'
+export const REMOVE_GRAPH = 'REMOVE_GRAPH'
 
 const addGraphToState =  data => ({
 	type: ADD_GRAPH,
+	data: data,
+})
+
+const removeGraphFromState = data => ({
+	type: REMOVE_GRAPH,
 	data: data,
 })
 
@@ -32,6 +38,18 @@ export const addGraph = graphData => {
 					id: Math.ceil(Math.random()*1000),
 					data: exampleGraph(graphData),
 				}))))
+	}
+}
+
+export const removeGraph = graphData => {
+	return (dispatch) => {
+		return fetch(BASE_API_URL + 'delete_graph/', {
+			method: 'post',
+			body: JSON.stringify(graphData)
+		})
+		.then(data => data.json())
+		.then(json => dispatch(removeGraphFromState(graphData)))
+		.catch(err => dispatch(removeGraphFromState(graphData)))
 	}
 }
 

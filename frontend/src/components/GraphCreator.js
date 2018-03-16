@@ -282,7 +282,7 @@ class GraphCreator extends React.Component {
 							</Select>
 						</FormControl>
 						<br/>
-						{ formVals.y ? 
+						{ this.props.varname == 'Graph' ? 
 							<FormControl className={classes.formControl}>
 								<InputLabel htmlFor="y">Y Axis</InputLabel>
 								<Select value={y} onChange={this.handleAxesChange.bind(this, 'y')} inputProps={{
