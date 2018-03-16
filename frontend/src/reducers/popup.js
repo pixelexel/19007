@@ -41,7 +41,9 @@ const popup = (state = initialState, action) => {
 		case CLOSE_POPUP:
 			return Object.assign({}, state, {
 				open: false,
-				formValsFetched: false
+				formValsFetched: false,
+				graph: {},
+				list: {},
 			})
 
 		case SET_SCREEN:

@@ -28,9 +28,7 @@ const styles = theme => ({
 	chip: {
 	  margin: theme.spacing.unit / 2,
 	},
-});
-
-
+})
 
 class GraphCreator extends React.Component {
 	constructor(props){
@@ -257,7 +255,7 @@ class GraphCreator extends React.Component {
 
 	getForm = (step) => {
 		const {x, y, name, filters, classes, formVals} = this.props
-
+		console.log('getForm', this.props)
 		switch(step){
 			case 0:
 				return (

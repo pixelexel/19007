@@ -2,8 +2,8 @@
 export const formVals = {
 	error: false,
 	graph: {
-		x: ['time', 'average_marks', 'sports_activity', 'cultural_activity'],
-		y: ['time', 'sports_activity', 'average_marks', 'cultural_activity'],
+		x: ["name","no_of_parents","parent_salary","age","handicapped","no_of_siblingss","caste","religion"],
+		y: ["name","no_of_parents","parent_salary","age","handicapped","no_of_siblingss","caste","religion"],
 		filters: {
 				no_of_siblings: {
 					name: 'no_of_siblings',
@@ -40,28 +40,21 @@ export const formVals = {
 
 // api/get_all_graphs/
 export const sampleGraphs = () => {
+	let noSamples = 3
 	let graphs = []
-	let axes = ['average_marks', 'sports_activity', 'cultural_activity']
-	let filters = [{
-					name: 'no_of_siblings',
-					type: 'int',
-					val: 3,
-					op: '='
-				},
-				{ 
-					name: 'parent_salary',
-					type: 'int',
-					val: 300000,
-					op: '>='
-				},
-				{
-					name:'is_handicapped',
-					type: 'bool',
-					val: 'False',
-					op: '=',
-				}]
+	let axes = ["name","no_of_parents","parent_salary","age","handicapped","no_of_siblingss","caste","religion"]
+	let filters = [
+					{name: "age", type: "int", op:'<', val: 12},
+					{name: "caste", type: "string", op: '=', val: 'Open'},
+					{name: "handicapped", type: "bool", 'op': '=', val: 'True'},
+					{name: "name", type: "string", 'op': '=', 'val': 'Saumitra'},
+					{name: "no_of_parents", type: "int", 'op': '=', 'val': 2},
+					{name: "no_of_siblingss", type: "int", 'op': '<', 'val': 3},
+					{name: "parent_salary", type: "int", 'op': '>=', val: 30000},
+					{name: "religion", type: "string", 'op': '=', val: 'Hindu'},
+				]
 
-	for(let i = 0 ; i < 5; i++){
+	for(let i = 0 ; i < noSamples; i++){
 		let x = axes[Math.floor(Math.random()*axes.length)],
 			y = axes[Math.floor(Math.random()*axes.length)],
 			filter = filters[Math.floor(Math.random()*filters.length)],
@@ -72,7 +65,7 @@ export const sampleGraphs = () => {
 			d = {}
 			d[x] = j+1
 			d[y] = Math.ceil(Math.random() * (3000 - 1000) + 1000)
-			d[filter.name] = Math.ceil(Math.random() * (3000 - 1000) + 1000)
+			d[`${filter.name} ${filter.op} ${filter.val}`] = Math.ceil(Math.random() * (3000 - 1000) + 1000)
 			data.push(d)
 		}
 
@@ -93,31 +86,24 @@ export const sampleGraphs = () => {
 }
 
 export const sampleLists = () => {
+	const noSamples = 2
 	let graphs = []
-	let axes = ['time', 'average_marks', 'sports_activity', 'cultural_activity']
-	let filters = [{
-					name: 'no_of_siblings',
-					type: 'int',
-					val: 3,
-					op: '='
-				},
-				{ 
-					name: 'parent_salary',
-					type: 'int',
-					val: 300000,
-					op: '>='
-				},
-				{
-					name:'is_handicapped',
-					type: 'bool',
-					val: 'False',
-					op: '=',
-				}]
+	let axes = ["name","no_of_parents","parent_salary","age","handicapped","no_of_siblingss","caste","religion"]
+	let filters = [
+					{name: "age", type: "int", op:'<', val: 12},
+					{name: "caste", type: "string", op: '=', val: 'Open'},
+					{name: "handicapped", type: "bool", 'op': '=', val: 'True'},
+					{name: "name", type: "string", 'op': '=', 'val': 'Saumitra'},
+					{name: "no_of_parents", type: "int", 'op': '=', 'val': 2},
+					{name: "no_of_siblingss", type: "int", 'op': '<', 'val': 3},
+					{name: "parent_salary", type: "int", 'op': '>=', val: 30000},
+					{name: "religion", type: "string", 'op': '=', val: 'Hindu'},
+				]
 
-	for(let i = 0 ; i < 5; i++){
+	for(let i = 0 ; i < noSamples; i++){
 		let x = axes[Math.floor(Math.random()*axes.length)],
 			filter = filters[Math.floor(Math.random()*filters.length)],
-			data = ['Saumitra', 'Adit', 'Ayush', 'Gaurav', 'Anas', 'Akshay'];
+			data = ['Saumitra', 'Adit', 'Ayush', 'Gaurav', 'Anas', 'Akshay', 'Batman', 'Superman', 'Shaktiman'];
 
 		graphs.push({
 			name: 'Hello Lists',

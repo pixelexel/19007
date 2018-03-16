@@ -35,7 +35,7 @@ export const addGraph = graphData => {
 				.then(data => data.json())
 				.then(json => dispatch(addGraphToState(json)))
 				.catch(err => dispatch(addGraphToState(Object.assign({}, graphData, {
-					id: Math.ceil(Math.random()*1000),
+					id: graphData.id,
 					data: exampleGraph(graphData),
 				}))))
 	}

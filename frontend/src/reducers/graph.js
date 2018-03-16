@@ -21,13 +21,20 @@ const graph = (state = initialState, action) => {
 				graphs: action.data,
 			})
 
-		case REMOVE_GRAPH:{
+		case REMOVE_GRAPH: {
+			let id = action.data
 			let { graphs } = state
-			for(let i = 0 ; i < graphs.length; i++){
+			let newGraphs = []
 
+			for(let i = 0 ; i < graphs.length; i++){
+				if(graphs[i].id != id){
+					newGraphs.push(graphs[i])
+				}
 			}
 
-			return state
+			return Object.assign({}, state, {
+				graphs: newGraphs
+			})
 		
 		}
 			

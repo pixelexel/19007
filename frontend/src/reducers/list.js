@@ -1,4 +1,4 @@
-import { ADD_LIST, REQUEST_ALL_LISTS, RECEIVE_ALL_LISTS } from '../actions/list'
+import { ADD_LIST, REQUEST_ALL_LISTS, RECEIVE_ALL_LISTS, REMOVE_LIST } from '../actions/list'
 
 const initialState = {
 	lists: [],
@@ -19,8 +19,24 @@ const list = (state = initialState, action) => {
 				fetchingAllLists: false,
 				lists: action.data,
 			})
-			
-		case ADD_LIST:
+		
+		case REMOVE_LIST: {
+			let id = action.data
+			let { lists } = state
+			let newLists = []
+
+			for(let i = 0 ; i < lists.length; i++){
+				if(lists[i].id != id){
+					newLists.push(lists[i])
+				}
+			}
+
+			return Object.assign({}, state, {
+				lists: newLists,
+			})
+		}
+
+		case ADD_LIST: 
 			let lists = state.lists.slice()
 			let found = false
 			let newList = {
