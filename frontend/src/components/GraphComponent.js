@@ -5,6 +5,8 @@ const style = {
 	width: '100%',
 	height: '100%',
 	fontWeight: 'normal',
+	margin:'0 auto',
+	position: 'relative',
 }
 export default class GraphComponent extends Component{
 	render(){
@@ -13,7 +15,7 @@ export default class GraphComponent extends Component{
 		return(
 			<div style={style}>
 			<ResponsiveContainer width='90%' height="80%">
-				<LineChart data={data} margin={{ top: 5, right: 20, left: 20, bottom: 25 }}>
+				<LineChart data={data} margin={{ top: 5, right: 5, left: 30, bottom: 25 }}>
 				  <CartesianGrid strokeDasharray="3 3" />
 				  <XAxis dataKey={x}>
 				  	<Label value={x} offset={-10} position="insideBottom" />
