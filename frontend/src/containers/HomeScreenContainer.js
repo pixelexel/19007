@@ -45,8 +45,8 @@ class HomeScreenContainer extends Component{
 	}
 
 	componentWillMount(){
-		this.props.dispatch(getAllGraphs())
-		this.props.dispatch(getAllLists())
+		this.props.dispatch(getAllGraphs(this.props.screen))
+		this.props.dispatch(getAllLists(this.props.screen))
 	}
 
 	showPopup(defaults){

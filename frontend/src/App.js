@@ -4,7 +4,7 @@ import '../node_modules/react-grid-layout/css/styles.css'
 import '../node_modules/react-resizable/css/styles.css'
 
 import CssBaseline from 'material-ui/CssBaseline';
-import HomeScreenContainer from './containers/HomeScreenContainer'
+import Root from './containers/Root'
 import { hot } from 'react-hot-loader'
 
 class App extends Component {
@@ -12,7 +12,7 @@ class App extends Component {
     return (
       <div className="App">
         <CssBaseline/>
-        <HomeScreenContainer/>
+        <Root/>
       </div>
     );
   }
