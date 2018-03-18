@@ -7,14 +7,12 @@ import ImageIcon from 'material-ui-icons/Image'
 const styles = (theme) => ({
 	root: {
 		width: '90%',
-		height: '80%',
-		borderTopColor: theme.palette.grey[100],
-		borderStyle: 'solid',
-		borderWidth: 0,
-		borderTopWidth: 1.8,
+		height: 'calc(100% - 100px)',
+		backgroundColor: theme.palette.secondary.light,
 		margin: '0 auto',
 		overflow: 'auto',
-		marginBottom: 15
+		
+		paddingBottom: 15,
 	}
 })
 

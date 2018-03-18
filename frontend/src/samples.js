@@ -38,6 +38,8 @@ export const formVals = {
 	}
 }
 
+const getRandom = (min, max) => Math.ceil(Math.random() * (3000 - 1000) + 1000)
+
 // api/get_all_graphs/
 export const sampleGraphs = () => {
 	let noSamples = 3
@@ -124,21 +126,15 @@ export const exampleGraph = (graphdata) => {
 	const { x, y, filters } = graphdata
 	let data = []
 	let d = {}
-	const sample = [
-		[1, 4000, 2400],
-		[2, 3000, 1398],
-		[3, 2000, 9800],
-		[4, 2780, 3908],
-		[5, 1890, 4800],
-		[6, 2390, 3800],
-		[7, 3490, 4300]]
 
 	for(let i = 0 ; i < 7; i++){
 		d = {}
-		d[x] = sample[i][0]
-		d[y] = sample[i][1]
-		if(filters.length > 0){
-			d[filters[0].name] = sample[i][2]
+		d[x] = i + 1
+		d[y] = getRandom(1000, 10000)
+
+		for(let j in filters){
+			const filter = filters[j]
+			d[`${filter.name} ${filter.op} ${filter.val}`] = getRandom(1000, 10000)
 		}
 
 		data.push(d)

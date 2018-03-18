@@ -26,6 +26,7 @@ const styles = theme => ({
 		position: 'fixed',
 		bottom: theme.spacing.unit * 2,
 		right: theme.spacing.unit * 2,
+		backgroundColor: theme.palette.primary.main,
 	}
 })
 

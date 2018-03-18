@@ -16,7 +16,7 @@ const styles = theme => ({
   	alignSelf: 'bottom'
   },
   avatar:{
-  	backgroundColor: theme.palette.secondary.dark,
+  	backgroundColor: theme.palette.primary.main,
   }
 })
 
@@ -53,6 +53,7 @@ class AnalyticsCard extends Component{
 		            	</div>
 		            }
 		         />
+		        
 				{ this.props.children }
 			</Card>
 		)

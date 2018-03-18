@@ -47,7 +47,7 @@ class Root extends Component{
 
 		return (
 			<div>
-				<AppBar position="static" color="default">
+				<AppBar position="sticky" color="default">
 			       <Toolbar>
 			       	  <Avatar className={classes.primaryAvatar}>
 			       	  	<TrendingUpIcon/>

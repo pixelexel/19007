@@ -38,7 +38,7 @@ class CardContainer extends Component{
 			if(gp >= graphs.length){
 				layout.push({
 					i: i.toString(), x: dx, y: dy, h: defaultHeight + 2, w: defaultWidth,
-					minH: defaultHeight + 2, minW: defaultWidth - 1,
+					minH: defaultHeight - 2, minW: defaultWidth - 1,
 					data: lists[lp++], type: 'list',
 				})
 				type = 'list'
@@ -55,7 +55,7 @@ class CardContainer extends Component{
 				if(choice == 1){
 					layout.push({
 						i: i.toString(), x: dx, y: dy, h: defaultHeight + 2, w: defaultWidth,
-						minH: defaultHeight + 2, minW: defaultWidth - 1,
+						minH: defaultHeight - 2, minW: defaultWidth - 1,
 						data: lists[lp++], type: 'list',
 					})
 					type = 'list'
