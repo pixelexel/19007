@@ -2,31 +2,22 @@ import React, { Component } from 'react'
 import { screens } from '../actions/root'
 import { connect } from 'react-redux'
 import HomeScreenContainer from './HomeScreenContainer'
-
-import { withStyles } from 'material-ui/styles'
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import TrendingUpIcon from 'material-ui-icons/TrendingUp'
-import Avatar from 'material-ui/Avatar'
+import StudentContainer from './StudentContainer'
+import Header from '../components/Header'
+import DrawerComponent from '../components/DrawerComponent'
+import { toggleDrawer } from '../actions/root'
 
 const mapStateToProps = (state) => ({
-	screen: state.root.screen
-})
-
-const styles = theme => ({
-	primaryAvatar: {
-		color: theme.palette.secondary.dark,
-		backgroundColor: theme.palette.primary.main,
-		marginRight: 30,
-		height: 40,
-		width: 40
-	}
+	screen: state.root.screen,
 })
 
 class Root extends Component{
+	toggleDrawer = () => {
+		this.props.dispatch(toggleDrawer())
+	}
+
 	render(){
-		const { screen, classes } = this.props 
+		const { screen } = this.props 
 		let screenComponent = null
 
 		switch(screen){
@@ -39,7 +30,7 @@ class Root extends Component{
 				break
 
 			case screens.STUDENT:
-				screenComponent = null
+				screenComponent = <StudentContainer id={screen}/>
 				break
 			default:
 				screenComponent = null
@@ -47,22 +38,12 @@ class Root extends Component{
 
 		return (
 			<div>
-				<AppBar position="sticky" color="default">
-			       <Toolbar>
-			       	  <Avatar className={classes.primaryAvatar}>
-			       	  	<TrendingUpIcon/>
-			       	  </Avatar>
-			          <Typography variant="title" color="inherit">
-			            Student Analytics
-			          </Typography>
-			        </Toolbar>
-			      </AppBar>
-
-			      
+				<Header handleMenuClick={this.toggleDrawer}/>
 				{screenComponent}
+				<DrawerComponent/>
 			</div>
 		)
 	}
 }
 
-export default withStyles(styles)(connect(mapStateToProps)(Root))
+export default connect(mapStateToProps)(Root)

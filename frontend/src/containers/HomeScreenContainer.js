@@ -18,7 +18,9 @@ import { addList, getAllLists, removeList } from '../actions/list'
 
 // Map the state (from store) to props -> Redux function
 function mapStateToProps(state){
-	return state
+	return {
+		popup: state.popup,
+	}
 }
 
 const styles = theme => ({
