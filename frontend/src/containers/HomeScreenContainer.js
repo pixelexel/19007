@@ -4,7 +4,7 @@ import { withStyles } from 'material-ui/styles'
 import AddIcon from 'material-ui-icons/Add';
 import Button from 'material-ui/Button'
 import PopupContainer, {screens} from '../components/PopupContainer'
-import CardContainer from '../components/CardContainer'
+import CardContainer from './CardContainer'
 
 import { openPopup, closePopup, setScreen, 
 		updateGraphForm, updateListForm, getFormVals } from '../actions/popup'
@@ -41,8 +41,6 @@ class HomeScreenContainer extends Component{
 		this.updateGraph = this.updateGraph.bind(this)
 		this.addList = this.addList.bind(this)
 		this.updateList = this.updateList.bind(this)
-		this.editCard = this.editCard.bind(this)
-		this.deleteCard = this.deleteCard.bind(this)
 	}
 
 	componentWillMount(){
@@ -84,45 +82,14 @@ class HomeScreenContainer extends Component{
 		this.props.dispatch(getFormVals())
 	}
 
-	editCard(id, type){
-		switch(type){
-			case 'graph': {
-				this.props.dispatch(openPopup({
-					screen: screens.GRAPH_SELECT,
-					graph: this.props.graph.graphs.filter(v => v.id.toString() == id)[0]
-				}))
-			}
-
-			break
-
-			case 'list':
-				this.props.dispatch(openPopup({
-					screen: screens.LIST_SELECT,
-					list: this.props.list.lists.filter(v => v.id.toString() == id)[0]
-				}))
-				break
-			default:
-		}
-	}
-
-	deleteCard(id, type){
-		switch(type){
-			case 'graph':
-				this.props.dispatch(removeGraph(id))
-				break
-			case 'list':
-				this.props.dispatch(removeList(id))
-				break
-		}
-	}
-
+	
 	render(){
 		console.log('HomeScreenContainer', this.props)
 		const {classes} = this.props
 
 		return (
 			<div>
-				<CardContainer onEdit={this.editCard} onDelete={this.deleteCard} {...this.props}/>
+				<CardContainer/>
 
 				<PopupContainer {...this.props.popup} 
 						onClose={this.hidePopup} 

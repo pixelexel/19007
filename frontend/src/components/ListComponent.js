@@ -3,6 +3,7 @@ import List, { ListItem, ListItemText } from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'
 import { withStyles } from 'material-ui/styles'
 import ImageIcon from 'material-ui-icons/Image'
+import '../styles/list.scss'
 
 const styles = (theme) => ({
 	root: {
@@ -11,7 +12,6 @@ const styles = (theme) => ({
 		backgroundColor: theme.palette.secondary.light,
 		margin: '0 auto',
 		overflow: 'auto',
-		
 		paddingBottom: 15,
 	}
 })

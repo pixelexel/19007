@@ -7,7 +7,7 @@ const initialState = {
 }
 
 const graph = (state = initialState, action) => {
-	let { x, y, filters, name, id, data } = action.data || {}
+	let { x, y, filters, name, id, data, type } = action.data || {}
 	
 	switch(action.type){
 		case REQUEST_ALL_GRAPHS:
@@ -46,6 +46,7 @@ const graph = (state = initialState, action) => {
 					id: id,
 					filters: filters,
 					data: data,
+					type: type ? type: 'LINE',
 				}
 
 			let graphs = state.graphs.slice()

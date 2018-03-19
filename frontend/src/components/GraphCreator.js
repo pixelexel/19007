@@ -13,6 +13,7 @@ import { FormControl } from 'material-ui/Form'
 import Chip from 'material-ui/Chip'
 import Grid from 'material-ui/Grid'
 import Paper from 'material-ui/Paper'
+import {graphTypes} from './GraphComponent'
 
 const styles = theme => ({
 	root: {
@@ -85,6 +86,14 @@ class GraphCreator extends React.Component {
 		this.props.update(
 			Object.assign({}, this.props, {
 				name: e.target.value,
+			})
+		)
+	}
+
+	handleGraphTypeChange = (e) => {
+		this.props.update(
+			Object.assign({}, this.props, {
+				type: e.target.value,
 			})
 		)
 	}
@@ -254,59 +263,83 @@ class GraphCreator extends React.Component {
 	formChip = v => `${v.name} ${v.op} ${v.val}`
 
 	getForm = (step) => {
-		const {x, y, name, filters, classes, formVals} = this.props
-		console.log('getForm', this.props)
+		const {x, y, name, filters, classes, formVals, type} = this.props
+
 		switch(step){
 			case 0:
 				return (
-					<TextField label="Name" value={name} onChange={this.handleNameChange} />		
+					
+					<Grid container>
+						
+						<Grid item xs={3}>
+							<FormControl className={classes.formControl}>
+								<TextField label="Name" value={name} onChange={this.handleNameChange} />
+							</FormControl>
+						</Grid>
+						{ this.props.varname == 'Graph' ? (
+						 <Grid item xs={3}>
+						 	<FormControl className={classes.formControl}>
+							 	<InputLabel htmlFor="type">Y Axis</InputLabel>
+								<Select label="Type" value={type} onChange={this.handleGraphTypeChange} 
+									inputProps={{
+										name: 'type',
+										id: 'type', 
+									}}>
+									{
+										Object.keys(graphTypes).map(k=> (
+										<MenuItem key={k} value={graphTypes[k]}>{graphTypes[k]}</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+						</Grid>) : null }	
+					</Grid>
 				)
 
 			case 1:
 				return (
-					<div>
-						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="x">X Axis</InputLabel>
-							<Select value={x} onChange={this.handleAxesChange.bind(this, 'x')} inputProps={{
-								name: 'x',
-								id: 'x', 
-							}}>
-								{
-									formVals.x.map(v=> {
-									return (
-										<MenuItem key={v} value={v}>{v}</MenuItem>
-									)
-								})}
-							</Select>
-						</FormControl>
-						<br/>
-						{ this.props.varname == 'Graph' ? 
+					<Grid container>
+						<Grid item xs={4}>
 							<FormControl className={classes.formControl}>
-								<InputLabel htmlFor="y">Y Axis</InputLabel>
-								<Select value={y} onChange={this.handleAxesChange.bind(this, 'y')} inputProps={{
-									name: 'y',
-									id: 'y', 
+								<InputLabel htmlFor="x">X Axis</InputLabel>
+								<Select value={x} onChange={this.handleAxesChange.bind(this, 'x')} inputProps={{
+									name: 'x',
+									id: 'x', 
 								}}>
-									
-									{ 
-
-									formVals.y.map(v=> {
+									{
+										formVals.x.map(v=> {
 										return (
 											<MenuItem key={v} value={v}>{v}</MenuItem>
 										)
 									})}
 								</Select>
-							</FormControl> : null
+							</FormControl>
+						</Grid>
+						{ this.props.varname == 'Graph' ?
+							<Grid item xs={4}> 
+								<FormControl className={classes.formControl}>
+									<InputLabel htmlFor="y">Y Axis</InputLabel>
+									<Select value={y} onChange={this.handleAxesChange.bind(this, 'y')} inputProps={{
+										name: 'y',
+										id: 'y', 
+									}}>
+										
+										{ 
+
+										formVals.y.map(v=> {
+											return (
+												<MenuItem key={v} value={v}>{v}</MenuItem>
+											)
+										})}
+									</Select>
+								</FormControl>
+							</Grid>: null
 						}
-					</div>
+						</Grid>
 				)
 
 			case 2:
-				console.log('Form 2', this.state, this.state.selectedFilter.name)
 				const filterVals = formVals.filters
 				const filterValsKeys = Object.keys(filterVals)
-				console.log('filters', filters)
-
 				const paperStyle = {
 					display: 'flex',
 					justifyContent: 'left',

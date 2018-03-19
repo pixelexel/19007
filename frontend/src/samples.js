@@ -44,6 +44,7 @@ const getRandom = (min, max) => Math.ceil(Math.random() * (3000 - 1000) + 1000)
 export const sampleGraphs = () => {
 	let noSamples = 3
 	let graphs = []
+	let types = ['LINE', 'BAR', 'AREA', 'SCATTER', 'RADAR']
 	let axes = ["name","no_of_parents","parent_salary","age","handicapped","no_of_siblingss","caste","religion"]
 	let filters = [
 					{name: "age", type: "int", op:'<', val: 12},
@@ -60,6 +61,7 @@ export const sampleGraphs = () => {
 		let x = axes[Math.floor(Math.random()*axes.length)],
 			y = axes[Math.floor(Math.random()*axes.length)],
 			filter = filters[Math.floor(Math.random()*filters.length)],
+			type = types[Math.floor(Math.random()*types.length)],
 			data = [];
 
 		let d = {}
@@ -67,7 +69,7 @@ export const sampleGraphs = () => {
 			d = {}
 			d[x] = j+1
 			d[y] = Math.ceil(Math.random() * (3000 - 1000) + 1000)
-			d[`${filter.name} ${filter.op} ${filter.val}`] = Math.ceil(Math.random() * (3000 - 1000) + 1000)
+			d[`${filter.name}${filter.op}${filter.val}`] = Math.ceil(Math.random() * (3000 - 1000) + 1000)
 			data.push(d)
 		}
 
@@ -78,6 +80,7 @@ export const sampleGraphs = () => {
 			y: y,
 			filters: [filter],
 			data: data,
+			type: type,
 		})
 	}
 
@@ -134,7 +137,7 @@ export const exampleGraph = (graphdata) => {
 
 		for(let j in filters){
 			const filter = filters[j]
-			d[`${filter.name} ${filter.op} ${filter.val}`] = getRandom(1000, 10000)
+			d[`${filter.name}${filter.op}${filter.val}`] = getRandom(1000, 10000)
 		}
 
 		data.push(d)

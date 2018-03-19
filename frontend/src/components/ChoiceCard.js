@@ -6,9 +6,15 @@ import { withStyles } from 'material-ui/styles'
 const styles = {
 	card: {
 		cursor: 'pointer',
+		paddingTop: 12,
+		paddingLeft: 12,
+		paddingRight: 12,
 	},
 	media:{
 		height: 200,
+		padding: 2,
+		margin: 2,
+		filter: 'grayscale(100%) blur(0.5px)',
 	},
 }
 
