@@ -16,7 +16,7 @@ const mapStateToProps = (state) => ({
 
 const styles = theme => ({
 	primaryAvatar: {
-		color: '#fff',
+		color: theme.palette.secondary.dark,
 		backgroundColor: theme.palette.primary.main,
 		marginRight: 30,
 		height: 40,

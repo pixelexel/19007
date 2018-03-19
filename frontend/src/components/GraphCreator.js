@@ -279,7 +279,7 @@ class GraphCreator extends React.Component {
 						{ this.props.varname == 'Graph' ? (
 						 <Grid item xs={3}>
 						 	<FormControl className={classes.formControl}>
-							 	<InputLabel htmlFor="type">Y Axis</InputLabel>
+							 	<InputLabel htmlFor="type">Type</InputLabel>
 								<Select label="Type" value={type} onChange={this.handleGraphTypeChange} 
 									inputProps={{
 										name: 'type',
