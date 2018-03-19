@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import HomeScreenContainer from './HomeScreenContainer'
 import StudentContainer from './StudentContainer'
 import Header from '../components/Header'
-import DrawerComponent from '../components/DrawerComponent'
+import DrawerComponent from './DrawerComponent'
 import { toggleDrawer } from '../actions/root'
 
 const mapStateToProps = (state) => ({
