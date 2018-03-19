@@ -6,14 +6,21 @@ import StudentContainer from './StudentContainer'
 import Header from '../components/Header'
 import DrawerComponent from './DrawerComponent'
 import { toggleDrawer } from '../actions/root'
+import '../styles/App.scss'
 
 const mapStateToProps = (state) => ({
 	screen: state.root.screen,
+	drawer: state.root.drawer,
 })
 
 class Root extends Component{
 	toggleDrawer = () => {
 		this.props.dispatch(toggleDrawer())
+	}
+
+	closeDrawer = () => {
+		if(this.props.drawer.open)
+			this.toggleDrawer()
 	}
 
 	render(){
@@ -38,8 +45,10 @@ class Root extends Component{
 
 		return (
 			<div>
-				<Header handleMenuClick={this.toggleDrawer}/>
+				<Header handleMenuClick={this.toggleDrawer} {...this.props}/>
+				<div className={this.props.drawer.open ? 'root-screen-hide': ''} onClick={this.closeDrawer}>
 				{screenComponent}
+				</div>
 				<DrawerComponent/>
 			</div>
 		)

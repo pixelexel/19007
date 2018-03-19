@@ -16,6 +16,12 @@ const styles = theme => ({
 		height: 40,
 		width: 40
 	},
+	shiftRight: {
+		marginLeft: 300,
+	},
+	toolbar: {
+		transition: 'margin .1s ease',
+	}
 })
 
 class Header extends Component{
@@ -23,7 +29,7 @@ class Header extends Component{
 		const { classes } = this.props
 		return(
 		<AppBar position="sticky" color="default">
-	       <Toolbar>
+	       <Toolbar className={classes.toolbar + (this.props.drawer.open ? ' ' + classes.shiftRight : '')}>
 	       	  <IconButton
 	              color="inherit"
 	              aria-label="open drawer"
