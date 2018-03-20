@@ -1,7 +1,11 @@
 import { REQUEST_STUDENT_DATA, RECEIVE_STUDENT_DATA } from '../actions/student'
 
 const initialState = {
-	alldata: [],
+	data: [],
+	acad_data: [],
+	sport_data: [],
+	c_data: [],
+	d_data: [],
 	fetchingData: false
 }
 // 'alldata' consists of data, acad_data, sport_data, c_data, d_data, rank_data 
@@ -16,11 +20,11 @@ const studentData = (state = initialState, action) => {
 				fetchingData: true
 			})
 
-		case RECEIVE_STUDENT_DATA:
-			return Object.assign({}, state, {
-				fetchingData: false,
-				alldata: action.data,
-			})
+		case RECEIVE_STUDENT_DATA: {
+			let ret = Object.assign({}, state, action.data )
+			ret['fetchingData'] = false
+			return ret
+		}
 
 		default:
 			return state
