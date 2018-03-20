@@ -7,7 +7,8 @@ const initialState = {
 }
 
 const graph = (state = initialState, action) => {
-	let { x, y, filters, name, id, data, type } = action.data || {}
+	console.log('reducer graph', action.data)
+	let { x, y, filters, name, id, data, type, data_nf } = action.data || {}
 	
 	switch(action.type){
 		case REQUEST_ALL_GRAPHS:
@@ -39,13 +40,37 @@ const graph = (state = initialState, action) => {
 		}
 			
 		case ADD_GRAPH:
+			let dataKeys = Object.keys(data)
+			let datanfKeys = Object.keys(data_nf)
+			let plot = []
+			let done = {}
+
+			for(let  i in dataKeys){
+				let d = {}
+				d[x] = dataKeys[i]
+				d[y] = data[dataKeys[i]]
+				d['filter'] = data_nf[dataKeys[i]] ? data_nf[dataKeys[i]] : null 
+				done[dataKeys[i]] = true
+				plot.push(d)
+			}
+
+			for(let i in datanfKeys){
+				if(done[datanfKeys[i]]) continue
+
+				let d = {}
+				d[x] = datanfKeys[i]
+				d[y] = null
+				d['filter'] = data_nf[datanfKeys[i]]
+				plot.push(d)
+			}
+
 			let newGraph = {
 					x: x,
 					y: y,
 					name: name,
 					id: id,
 					filters: filters,
-					data: data,
+					data: plot,
 					type: type ? type: 'LINE',
 				}
 

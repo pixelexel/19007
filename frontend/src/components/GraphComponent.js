@@ -44,7 +44,7 @@ class GraphComponent extends Component{
 	}
 
 	getLineChart = (min, max, margin) => {
-		let {x, y, filters, data, name} = this.props.data
+		const {x, y, filters, data, name} = this.props.data
 		const { classes, theme } = this.props
 
 		return (
@@ -62,24 +62,32 @@ class GraphComponent extends Component{
 			  		name="none"
 			  		 stroke={this.getNextColor()} 
 			  		 dot={{fill: theme.palette.secondary.light}} />
-			  		 
-			  { filters.map((filter, index) => (
-			  		<Line key={getFilterName(filter)} type="monotone" 
-			  			dataKey={getFilterName(filter)} 
-			  			name={getFilterName(filter)}
-			  			stroke={this.getNextColor()} 
-			  			dot={{fill: theme.palette.secondary.light}}/>
-			  
-			  ))}
+
+			  <Line type="monotone" dataKey={'filter'}
+			  		name={filters.map(filter=> getFilterName(filter) ).join(', ')}
+			  		 stroke={this.getNextColor()} 
+			  		 dot={{fill: theme.palette.secondary.light}} />	  
 			  
 			</LineChart>
 		)
 	}
 
+	/*
+	{ filters.map((filter, index) => (
+			<Line key={getFilterName(filter)} type="monotone" 
+				dataKey={getFilterName(filter)} 
+				name={getFilterName(filter)}
+				stroke={this.getNextColor()} 
+				dot={{fill: theme.palette.secondary.light}}/>
+	
+	))}
+	*/
+
 	getAreaChart = (min, max, margin) => {
 		let {x, y, filters, data, name} = this.props.data
 		const { classes, theme } = this.props
 		let color = this.getNextColor()
+		let color2 = this.getNextColor()
 
 		return(
 			<AreaChart data={data} margin={margin}>
@@ -97,25 +105,36 @@ class GraphComponent extends Component{
 			  	name="none"
 			  	fillOpacity={0.7}
 			  	dot={{fill: theme.palette.secondary.light}}/>
+			  	<Area type="natural" dataKey={'filter'} stroke={color2} 
+			  		fillOpacity={1} fill={color2}
+			  		name={filters.map(filter=> getFilterName(filter) ).join(', ')}
+			  		fillOpacity={0.7}
+			  		dot={{fill: theme.palette.secondary.light}}/>
 
-			  { filters.map((filter, index)=>{
-			  	let color = this.getNextColor()
-			  	return (<Area type="natural"
-					  		key={index}
-					  		name={getFilterName(filter)}
-					  		dataKey={getFilterName(filter)} 
-					  		stroke={color} 
-					  		fillOpacity={0.7 - index*0.15}
-					  		fill={color} 
-					  		dot={{fill: theme.palette.secondary.light}}/>)})
-			}
+				  
 			</AreaChart>
 		)
 	}
 
+	/*
+		  { filters.map((filter, index)=>{
+		  	let color = this.getNextColor()
+		  	return (<Area type="natural"
+				  		key={index}
+				  		name={getFilterName(filter)}
+				  		dataKey={getFilterName(filter)} 
+				  		stroke={color} 
+				  		fillOpacity={0.7 - index*0.15}
+				  		fill={color} 
+				  		dot={{fill: theme.palette.secondary.light}}/>)})
+		}
+
+	*/
+
 	getScatterChart = (min, max, margin) => {
 		let {x, y, filters, data, name} = this.props.data
 		const { classes, theme } = this.props
+		console.log('SCATTER', this.props.data)
 		return (
 			<ScatterChart margin={margin}>
 			  <CartesianGrid strokeDasharray="3 3" />
@@ -127,22 +146,26 @@ class GraphComponent extends Component{
 				  </YAxis>
 			  <Tooltip/>
 			  <Legend verticalAlign="top" height={36}/>
-			  <Scatter name="none" data={data.map(d=> ({x: d[x], y: d[y]}))} fill={this.getNextColor()} />
-			  { filters.map((filter, index) => {
-			  		const filterName = getFilterName(filter)
-			  		return (
-			  			<Scatter name={filterName} 
-			  				key={index}
-			  				data={data.map(d=>({x: d[x], y: d[filterName]}))} 
-			  				fill={this.getNextColor()} />
-			  		)
-			  	})
-			  }
+			  <Scatter name="none" data={data.map(d => ({x: parseInt(d[x]), y: parseInt(d[y])}))} fill={this.getNextColor()} />
+			  <Scatter name={filters.map(filter=> getFilterName(filter) ).join(', ')} 
+			  	data={data.map(d=> ({x: parseInt(d[x]), y: parseInt(d['filter'])}))} 
+			  	fill={this.getNextColor()} />
 			</ScatterChart>
-
-			
 		)
 	}
+
+	/*
+		{ filters.map((filter, index) => {
+				const filterName = getFilterName(filter)
+				return (
+					<Scatter name={filterName} 
+						key={index}
+						data={data.map(d=>({x: d[x], y: d[filterName]}))} 
+						fill={this.getNextColor()} />
+				)
+			})
+		}
+	*/
 
 	getBarChart = (min, max, margin) =>{
 		let {x, y, filters, data, name} = this.props.data
@@ -159,16 +182,20 @@ class GraphComponent extends Component{
 				  </YAxis>
 				<Tooltip/>
 				<Legend verticalAlign="top" height={36}/>
-				<Bar dataKey={y} stackId="a" fill={this.getNextColor()} />
-				{filters.map((filter, index) => (
-					<Bar key={index} dataKey={getFilterName(filter)} 
-						
-						fill={this.getNextColor()} />
-				))}
-				
+				<Bar dataKey={y} name="none" fill={this.getNextColor()} />
+				<Bar dataKey={'filter'} name={filters.map(filter=> getFilterName(filter) ).join(', ')} 
+					fill={this.getNextColor()} />		
 	      	</BarChart>
 		)
 	}
+
+	/*
+		{filters.map((filter, index) => (
+			<Bar key={index} dataKey={getFilterName(filter)} 
+				
+				fill={this.getNextColor()} />
+		))}
+	*/
 
 	getRadarChart = (min, max, margin) => {
 		let {x, y, filters, data, name} = this.props.data
@@ -176,6 +203,7 @@ class GraphComponent extends Component{
 		margin.bottom = 0
 
 		let color = this.getNextColor()
+		let color2 = this.getNextColor()
 
 		return (
 			<RadarChart margin={margin} data={data}>
@@ -184,19 +212,26 @@ class GraphComponent extends Component{
 	          <PolarAngleAxis dataKey={x} />
 	          <PolarRadiusAxis angle={360/data.length } domain={[min, max]}/>
 	          <Radar name={'none'} dataKey={y} stroke={color} fill={color} fillOpacity={0.6}/>
-	          {filters.map((filter, index)=> {
-	          	color = this.getNextColor()
-	          	return (
-	          		<Radar key={index} name={getFilterName(filter)} 
-	          			dataKey={getFilterName(filter)} 
-	          			stroke={color}
-	          			fill={color} fillOpacity={0.6}/>
-	          	)
-	          })}
-	          
+			  <Radar name={filters.map(filter=> getFilterName(filter) ).join(', ')} 
+			  		dataKey={'filter'} 
+			  		stroke={color2} 
+			  		fill={color2} 
+			  		fillOpacity={0.6}/>	                    
 	        </RadarChart>
 		)
 	}
+
+	/*
+		{filters.map((filter, index)=> {
+			color = this.getNextColor()
+			return (
+				<Radar key={index} name={getFilterName(filter)} 
+					dataKey={getFilterName(filter)} 
+					stroke={color}
+					fill={color} fillOpacity={0.6}/>
+			)
+		})}
+	*/
 
 	getGraph = (type, min, max, margin) =>{
 		switch(type){
@@ -222,7 +257,7 @@ class GraphComponent extends Component{
 		const margin = { top: 5, right: 25, left: 20, bottom: 25 }
 		let min = 100000000
 		let max = -100000000
-
+		console.log("Graph comp", this.props)
 		for(let i in data)
 		{
 			let keys = Object.keys(data[i])

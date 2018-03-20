@@ -3,5 +3,6 @@ from django.urls import path, include
 from . import views
 urlpatterns = [
     path('', views.index, name='index'),
-    path('get_form_vals', views.formVal, name='formVal')
+    path('get_form_vals', views.formVal, name='formVal'),
+    path('send_graph', views.getGraph, name='getGraph')
 ]

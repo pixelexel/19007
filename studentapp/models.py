@@ -17,10 +17,13 @@ class Student(models.Model):
 	parent_salary = models.IntegerField(default=0)
 	age = models.IntegerField()
 	handicapped = models.BooleanField(default=False)
-	no_of_siblingss = models.IntegerField(default=0)
-	caste = models.CharField(max_length=30)
-	religion = models.CharField(max_length=30)
-	school = models.ForeignKey(School,on_delete=models.CASCADE)
+	no_of_siblings = models.IntegerField(default=0)
+	school = models.CharField(max_length=30)
+	extra_curr = models.IntegerField(default=0)
+	std = models.IntegerField(default=1)
+	date = models.DateField()
+	marks = models.IntegerField(default=0)
+	gender = models.CharField(max_length=10)
 
 class extra_curricular(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)

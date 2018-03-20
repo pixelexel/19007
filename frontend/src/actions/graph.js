@@ -28,7 +28,8 @@ const receiveAllGraphs = (error, data) => ({
 
 export const addGraph = graphData => {
 	return (dispatch) => {
-		return fetch(BASE_API_URL + 'send_graph/', {
+		console.log('sending ', graphData)
+		return fetch(BASE_API_URL + 'send_graph', {
 					method: 'post',
 					body: JSON.stringify(graphData)
 				})

@@ -86,7 +86,7 @@ export const sampleGraphs = () => {
 
 	return {
 		error: false,
-		graphs: graphs,
+		graphs: [],
 	}
 }
 
@@ -143,5 +143,5 @@ export const exampleGraph = (graphdata) => {
 		data.push(d)
 	}
 
-	return data
+	return []
   }
