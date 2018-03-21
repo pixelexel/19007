@@ -5,6 +5,22 @@ const initialState = {
 	listId: 0,
 }
 
+const convertList = d => {
+	const {x, id, filters, name, data } = d
+	
+	console.log('LIST DATA', d, data)
+	let done = {}
+	let ret = []
+
+	return {
+		name: name,
+		x: x,
+		id: id,
+		filters: filters,
+		data: data,
+	}
+}
+
 const list = (state = initialState, action) => {
 	let { x, filters, name, id, data } = action.data || {}
 
@@ -14,11 +30,24 @@ const list = (state = initialState, action) => {
 				fetchingAllLists: true
 			})
 
-		case RECEIVE_ALL_LISTS:
-			return Object.assign({}, state, {
-				fetchingAllLists: false,
-				lists: action.data,
-			})
+		case RECEIVE_ALL_LISTS: {
+			if(action.error){
+				return Object.assign({}, state, {
+					fetchingAllLists: false
+				})
+			}
+
+			let listData = action.data.map(d => convertList(d))
+
+			console.log('RECIEVE LISTS', action.data, listData)
+
+			if(!action.error)
+				return Object.assign({}, state, {
+					fetchingAllLists: false,
+					lists: listData,
+				})
+			else return state
+		}
 		
 		case REMOVE_LIST: {
 			let id = action.data

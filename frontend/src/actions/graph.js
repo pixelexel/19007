@@ -42,15 +42,13 @@ export const addGraph = graphData => {
 	}
 }
 
-export const removeGraph = graphData => {
+export const removeGraph = id => {
+	console.log('REMOVE_GRAPH', id)
 	return (dispatch) => {
-		return fetch(BASE_API_URL + 'delete_graph/', {
-			method: 'post',
-			body: JSON.stringify(graphData)
-		})
+		return fetch(BASE_API_URL + 'delete_graph/' + id)
 		.then(data => data.json())
-		.then(json => dispatch(removeGraphFromState(graphData)))
-		.catch(err => dispatch(removeGraphFromState(graphData)))
+		.then(json => dispatch(removeGraphFromState(id)))
+		.catch(err => dispatch(removeGraphFromState(id)))
 	}
 }
 
@@ -59,8 +57,8 @@ export const getAllGraphs = () => {
 		dispatch(requestAllGraphs())
 		return fetch(BASE_API_URL + 'get_all_graphs')
 				.then(data => data.json())
-				.then(json => dispatch(receiveAllGraphs(json.error, json.graphs)))
-				.catch(err => dispatch(receiveAllGraphs(false, sampleGraphs().graphs)))
+				.then(json => dispatch(receiveAllGraphs(false, json.data)))
+				.catch(err => dispatch(receiveAllGraphs(err, null)))
 
 	}
 }

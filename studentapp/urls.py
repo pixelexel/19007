@@ -9,5 +9,7 @@ urlpatterns = [
     path('send_graph', views.getGraph, name='getGraph'),
     path('send_list', views.getList, name='getList'),
     path('get_all_graphs', views.allGraphs, name='allGrpahs'),
-    path('get_all_lists', views.allGraphs, name='allGrpahs')
+    path('get_all_lists', views.allLists, name='allLists'),
+    path('delete_graph/<int:id>', views.delete_graph, name='delete_graph'),
+    path('delete_list/<int:id>', views.delete_list, name='delete_list'),
 ]

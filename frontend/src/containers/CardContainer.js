@@ -71,6 +71,7 @@ class CardContainer extends Component{
 
 	getLayout = (props) => {
 		const { graph, list } = props
+		console.log('CARD CONTAINER', props)
 		const graphs = graph.graphs
 		const lists = list.lists
 

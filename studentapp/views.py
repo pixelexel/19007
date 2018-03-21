@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .models import Student,School,extra_curricular,Acads,Graphs,Lists
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
 import json
 import datetime
 # Create your views here.
@@ -14,6 +15,7 @@ def index(req):
 		'error': False,
 		'data': ['Api root', 'nice']
 	})
+	
 @csrf_exempt
 def formVal(request):
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}
@@ -184,3 +186,19 @@ def allLists(request):
 		'data':data
 	})
 
+@csrf_exempt
+def delete_graph(request, id):
+	g = get_object_or_404(Graphs, pk=id)
+	g.delete()
+	return JsonResponse({
+			"error": "false"
+		})
+
+
+@csrf_exempt
+def delete_list(request, id):
+	l = get_object_or_404(Lists, pk=id)
+	l.delete()
+	return JsonResponse({
+		"error": "false"
+	})

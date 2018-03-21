@@ -6,8 +6,46 @@ const initialState = {
 	graphId: 0
 }
 
+const convertGraph = (action_data) => {
+	const { data, data_nf, x, y, id, name, filters, type } = action_data
+	let dataKeys = Object.keys(data)
+	let datanfKeys = Object.keys(data_nf)
+	let plot = []
+	let done = {}
+
+	for(let  i in dataKeys){
+		let d = {}
+		d[x] = dataKeys[i]
+		d[y] = data[dataKeys[i]]
+		d['filter'] = data_nf[dataKeys[i]] ? data_nf[dataKeys[i]] : null 
+		done[dataKeys[i]] = true
+		plot.push(d)
+	}
+
+	for(let i in datanfKeys){
+		if(done[datanfKeys[i]]) continue
+
+		let d = {}
+		d[x] = datanfKeys[i]
+		d[y] = null
+		d['filter'] = data_nf[datanfKeys[i]]
+		plot.push(d)
+	}
+
+	let newGraph = {
+			x: x,
+			y: y,
+			name: name,
+			id: id,
+			filters: filters,
+			data: plot,
+			type: type ? type: 'LINE',
+		}
+
+	return newGraph
+}
+
 const graph = (state = initialState, action) => {
-	console.log('reducer graph', action.data)
 	let { x, y, filters, name, id, data, type, data_nf } = action.data || {}
 	
 	switch(action.type){
@@ -16,11 +54,21 @@ const graph = (state = initialState, action) => {
 				fetchingAllGraphs: true
 			})
 
-		case RECEIVE_ALL_GRAPHS:
-			return Object.assign({}, state, {
-				fetchingAllGraphs: false,
-				graphs: action.data,
-			})
+		case RECEIVE_ALL_GRAPHS: {
+			if(action.error){
+				return Object.assign({}, state, {
+					fetchingAllGraphs: false,
+				})
+			}
+			else {
+				const dataList = action.data.map(d => convertGraph(d))
+				console.log('receivegraphs', dataList)
+				return Object.assign({}, state, {
+					fetchingAllGraphs: false,
+					graphs: dataList,
+				})
+			}
+		}
 
 		case REMOVE_GRAPH: {
 			let id = action.data
@@ -40,39 +88,7 @@ const graph = (state = initialState, action) => {
 		}
 			
 		case ADD_GRAPH:
-			let dataKeys = Object.keys(data)
-			let datanfKeys = Object.keys(data_nf)
-			let plot = []
-			let done = {}
-
-			for(let  i in dataKeys){
-				let d = {}
-				d[x] = dataKeys[i]
-				d[y] = data[dataKeys[i]]
-				d['filter'] = data_nf[dataKeys[i]] ? data_nf[dataKeys[i]] : null 
-				done[dataKeys[i]] = true
-				plot.push(d)
-			}
-
-			for(let i in datanfKeys){
-				if(done[datanfKeys[i]]) continue
-
-				let d = {}
-				d[x] = datanfKeys[i]
-				d[y] = null
-				d['filter'] = data_nf[datanfKeys[i]]
-				plot.push(d)
-			}
-
-			let newGraph = {
-					x: x,
-					y: y,
-					name: name,
-					id: id,
-					filters: filters,
-					data: plot,
-					type: type ? type: 'LINE',
-				}
+			const newGraph = convertGraph(action.data)
 
 			let graphs = state.graphs.slice()
 

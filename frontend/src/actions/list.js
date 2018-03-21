@@ -41,15 +41,12 @@ export const addList = listData => {
 	}
 }
 
-export const removeList = listData =>{
+export const removeList = id =>{
 	return (dispatch) => {
-		return fetch(BASE_API_URL + 'delete_list', {
-					method: 'post',
-					body: JSON.stringify(listData)
-				})
+		return fetch(BASE_API_URL + 'delete_list/' + id)
 				.then(data => data.json())
-				.then(json => dispatch(removeListFromState(listData)))
-				.catch(error => dispatch(removeListFromState(listData)))
+				.then(json => dispatch(removeListFromState(id)))
+				.catch(error => dispatch(removeListFromState(id)))
 	}
 }
 
@@ -58,8 +55,11 @@ export const getAllLists = () => {
 		dispatch(requestAllLists())
 		return fetch(BASE_API_URL + 'get_all_lists')
 				.then(data => data.json())
-				.then(json => dispatch(receiveAllLists(json.error, json.lists)))
-				.catch(err => dispatch(receiveAllLists(false, sampleLists().lists)))
+				.then(json => {
+					console.log('getalllists', json)
+					return dispatch(receiveAllLists(false, json.data))
+				})
+				.catch(err => dispatch(receiveAllLists(err, null)))
 
 	}
 }
