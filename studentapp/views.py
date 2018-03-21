@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from .models import Student,School,extra_curricular,Acads 
+from .models import Student,School,extra_curricular,Acads,Graphs
 from django.views.decorators.csrf import csrf_exempt
 import json
 # Create your views here.
@@ -34,7 +34,6 @@ def formVal(request):
 def getGraph(request):
 	ret = {}
 	if request.method == 'POST':
-		print('hello', json.loads(request.body))
 		dt = json.loads(request.body)
 		x_axis = dt['x']
 		y_axis = dt['y']
@@ -60,11 +59,9 @@ def getGraph(request):
 			for v,k in i.items():
 				if v == 'type':
 					if k == 'int':
-						print('sadfsd',val)
 						val = int(val)
 					elif k == 'bool':
 						val = bool(val)
-						print(val)
 			new_filter[parm] = val
 		tq = Student.objects.filter(**{'marks__gt':30})
 		qs = Student.objects.filter(**new_filter)
@@ -89,10 +86,69 @@ def getGraph(request):
 			else:
 				data_nf[ii[x_axis]] = ii[y_axis]
 				tdata_nf[x_axis] = 1
-		dt['id'] = 32
 		dt['data'] = data
 		dt['data_nf'] = data_nf
+		print(request.user.is_authenticated)
+		if request.user.is_authenticated:
+			if dt['id'] is not None:
+				gd = Graphs.objects.get(id=dt['id'])
+				gd.gD = json.dumps(dt)
+				gd.save()	
+			else :
+				print("hello")
+				gd = Graphs()
+				gd.save()
+				dt['id'] = gd.id
+				gd.gD = json.dumps(dt)
+				gd.user = request.user
+				gd.save()
 		ret = dt
+	print(Graphs.objects.all())
 	#print(ret) 
 	return JsonResponse(ret)
 
+@csrf_exempt
+def getList(request):
+	ret = {}
+	if request.method == 'POST':
+		dt = json.loads(request.body)
+		x_axis = dt['x']
+		filters_all = dt['filters']
+		new_filter = {}
+		for i in filters_all:
+			parm = ''
+			val = ''
+			for v,k in i.items():
+				if v == 'name':
+					parm = k
+				elif v == 'val':
+					val = k 
+				elif v == 'op':
+					if k == '>=':
+						parm += '__gte'
+					elif k == '<=':
+						parm += '__lte'
+					elif k == '>':
+						parm += '__gt'
+					elif k == '<':
+						parm += '__lt'
+			for v,k in i.items():
+				if v == 'type':
+					if k == 'int':
+						val = int(val)
+					elif k == 'bool':
+						val = bool(val)
+			new_filter[parm] = val
+		tq = Student.objects.filter(**{'marks__gt':30})
+		qs = Student.objects.filter(**new_filter)[:30]
+		data = []
+		for i in qs:
+			ii = i.__dict__
+			tem = {}
+			tem['name'] = ii['name']
+			tem['value'] = ii[x_axis]
+			data.append(tem)
+		dt['data'] = data
+		ret = dt
+	print(ret) 
+	return JsonResponse(ret)

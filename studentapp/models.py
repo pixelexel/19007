@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 class School(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
@@ -42,5 +42,7 @@ class Acads(models.Model):
 
 class Graphs(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
+	gD = models.CharField(max_length=550)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 

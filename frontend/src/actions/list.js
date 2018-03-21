@@ -28,7 +28,7 @@ const receiveAllLists = (error, data) => ({
 
 export const addList = listData => {
 	return (dispatch) => {
-		return fetch(BASE_API_URL + 'send_list/', {
+		return fetch(BASE_API_URL + 'send_list', {
 					method: 'post',
 					body: JSON.stringify(listData)
 				})
@@ -43,7 +43,7 @@ export const addList = listData => {
 
 export const removeList = listData =>{
 	return (dispatch) => {
-		return fetch(BASE_API_URL + 'delete_list/', {
+		return fetch(BASE_API_URL + 'delete_list', {
 					method: 'post',
 					body: JSON.stringify(listData)
 				})
@@ -56,7 +56,7 @@ export const removeList = listData =>{
 export const getAllLists = () => {
 	return (dispatch) => {
 		dispatch(requestAllLists())
-		return fetch(BASE_API_URL + 'get_all_lists/')
+		return fetch(BASE_API_URL + 'get_all_lists')
 				.then(data => data.json())
 				.then(json => dispatch(receiveAllLists(json.error, json.lists)))
 				.catch(err => dispatch(receiveAllLists(false, sampleLists().lists)))
