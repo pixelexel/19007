@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from .models import Student,School,extra_curricular,Acads,Graphs
+from .models import Student,School,extra_curricular,Acads,Graphs,Lists
 from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
@@ -93,19 +93,16 @@ def getGraph(request):
 				tdata_nf[x_axis] = 1
 		dt['data'] = data
 		dt['data_nf'] = data_nf
-		if request.user.is_authenticated:
-			if dt['id'] is not None:
-				gd = Graphs.objects.get(id=dt['id'])
-				gd.gD = json.dumps(dt)
-				gd.save()	
-			else :
-				print("hello")
-				gd = Graphs()
-				gd.save()
-				dt['id'] = gd.id
-				gd.gD = json.dumps(dt)
-				gd.user = request.user
-				gd.save()
+		if dt['id'] is not None:
+			gd = Graphs.objects.get(id=dt['id'])
+			gd.gD = json.dumps(dt)
+			gd.save()	
+		else :
+			gd = Graphs()
+			gd.save()
+			dt['id'] = gd.id
+			gd.gD = json.dumps(dt)
+			gd.save()
 		ret = dt
 	print(Graphs.objects.all())
 	#print(ret) 
@@ -153,6 +150,37 @@ def getList(request):
 			tem['value'] = ii[x_axis]
 			data.append(tem)
 		dt['data'] = data
+		if dt['id'] is not None:
+			gd = Lists.objects.get(id=dt['id'])
+			gd.lD = json.dumps(dt)
+			gd.save()	
+		else :
+			gd = Lists()
+			gd.save()
+			dt['id'] = gd.id
+			gd.lD = json.dumps(dt)
+			gd.save()
 		ret = dt
 	print(ret) 
 	return JsonResponse(ret)
+
+@csrf_exempt
+def allGraphs(request):
+	qs = Graphs.objects.all()
+	data = []
+	for i in qs:
+		data.append( json.loads(i.gD) )
+	return JsonResponse( {
+		'data':data
+	})
+
+@csrf_exempt
+def allLists(request):
+	qs = Lists.objects.all()
+	data = []
+	for i in qs:
+		data.append( json.loads(i.lD) )
+	return JsonResponse( {
+		'data':data
+	})
+

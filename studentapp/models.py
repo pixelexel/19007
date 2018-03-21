@@ -43,6 +43,9 @@ class Acads(models.Model):
 class Graphs(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
 	gD = models.CharField(max_length=550)
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Lists(models.Model):
+	id = models.AutoField(primary_key=True,unique=True)
+	lD = models.CharField(max_length=550)
 
 

@@ -57,7 +57,7 @@ export const removeGraph = graphData => {
 export const getAllGraphs = () => {
 	return (dispatch) => {
 		dispatch(requestAllGraphs())
-		return fetch(BASE_API_URL + 'get_all_graphs/')
+		return fetch(BASE_API_URL + 'get_all_graphs')
 				.then(data => data.json())
 				.then(json => dispatch(receiveAllGraphs(json.error, json.graphs)))
 				.catch(err => dispatch(receiveAllGraphs(false, sampleGraphs().graphs)))
