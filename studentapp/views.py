@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from .models import Student,School,extra_curricular,Acads,Graphs
 from django.views.decorators.csrf import csrf_exempt
 import json
+import datetime
 # Create your views here.
 
 def index(req):
@@ -17,7 +18,7 @@ def index(req):
 def formVal(request):
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}
 	rval = Student._meta.get_fields()
-	types = {'CharField':'string','IntegerField':'int','BooleanField':'bool'}
+	types = {'CharField':'string','IntegerField':'int','BooleanField':'bool','DateField':'string'}
 	for i in rval:
 		if types.__contains__(i.get_internal_type()):
 			tem = {}
@@ -70,6 +71,8 @@ def getGraph(request):
 		tdata = {}  
 		for i in qs:
 			ii = i.__dict__
+			if isinstance(ii[x_axis],datetime.date):
+				ii[x_axis] = str(ii[x_axis])
 			if data.__contains__(ii[x_axis]):
 				data[ii[x_axis]] = float(data[ii[x_axis]]*tdata[x_axis] + ii[y_axis])/(tdata[x_axis] + 1)
 				tdata[x_axis] += 1
@@ -80,6 +83,8 @@ def getGraph(request):
 		tdata_nf = {} 
 		for i in qss:
 			ii = i.__dict__
+			if isinstance(ii[x_axis],datetime.date):
+				ii[x_axis] = str(ii[x_axis])
 			if data_nf.__contains__(ii[x_axis]):
 				data_nf[ii[x_axis]] = float(data_nf[ii[x_axis]]*tdata_nf[x_axis] + ii[y_axis])/(tdata_nf[x_axis] + 1)
 				tdata_nf[x_axis] += 1
@@ -88,7 +93,6 @@ def getGraph(request):
 				tdata_nf[x_axis] = 1
 		dt['data'] = data
 		dt['data_nf'] = data_nf
-		print(request.user.is_authenticated)
 		if request.user.is_authenticated:
 			if dt['id'] is not None:
 				gd = Graphs.objects.get(id=dt['id'])
