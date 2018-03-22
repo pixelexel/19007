@@ -150,6 +150,7 @@ export const exampleGraph = (graphdata) => {
 
 
 export const studentData = () =>{
+	const max=100;
 	const data = [
 	    { subject: 'Math', A: 120, fullMark: max },
 	    { subject: 'Chinese', A: 98, fullMark: max },

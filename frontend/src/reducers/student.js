@@ -15,24 +15,14 @@ function asd(dataGet) {
 	const dataPass = []
 	const max = 100;
 
-	for(i=0; i<dataGet.length; i++)
+	for(let i=0; i<dataGet.length; i++)
 	{
 		const k =  Object.keys(dataGet[i])[0];
 		dataPass.push({'subject': k, 'A': dataGet[i][k], 'fullMark': max});
 	}
 	return dataPass;
 }
-
-const dataGet = 
-const dataPass = []
-const max = 100;
-
-for(i=0; i<dataGet.length; i++)
-{
-	const k =  Object.keys(dataGet[i])[0];
-	dataPass.push({'subject': k, 'A': dataGet[i][k], 'fullMark': max});
-}
-
+	
 const studentData = (state = initialState, action) => {
 	let { data, type } = action.data || {}
 	
