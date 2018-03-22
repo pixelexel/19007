@@ -38,7 +38,8 @@ def formVal(request):
 def getGraph(request):
 	ret = {}
 	if request.method == 'POST':
-		dt = json.loads(request.body)
+		print(request.body)
+		dt = json.loads(request.body.decode('ascii'))
 		x_axis = dt['x']
 		y_axis = dt['y']
 		filters_all = dt['filters']
@@ -231,22 +232,22 @@ def suggestions(request):
 				'name': s.name
 			})
 
-		allSchoolsMatching = School.objects.filter(name__contains=query)
-		for s in allSchoolsMatching:
-			schoolList.append({
-				'id': s.id,
-				'name': s.name
-			})
+		schoolsMatching = Q()
+		schoolsMatching = schoolsMatching | Q(school__contains=query)
+		allschoolsMatching = Student.objects.filter(schoolsMatching)
+		for s in allschoolsMatching:
+			schoolList.append({'name': s.school})
+		
 
 		districtsMatching = Q()
 		districtsMatching = districtsMatching | Q(district__contains=query)
-		alldistrictsMatching = School.objects.filter(districtsMatching)
+		alldistrictsMatching = Student.objects.filter(districtsMatching)
 		for s in alldistrictsMatching:
 			districtList.append({'name': s.district})
 
 		statesMatching = Q()
 		statesMatching = statesMatching | Q(state__contains=query)
-		allstatesMatching = School.objects.filter(statesMatching)
+		allstatesMatching = Student.objects.filter(statesMatching)
 		for s in allstatesMatching:
 			stateList.append({'name': s.state})
 

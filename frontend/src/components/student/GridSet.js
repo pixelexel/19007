@@ -13,6 +13,7 @@ import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContaine
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    width: '99%',
   },
   cardstyle: {
     width: '100%',
