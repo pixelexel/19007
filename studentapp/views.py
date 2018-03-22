@@ -209,7 +209,7 @@ def delete_list(request, id):
 def suggestions(request):
 	if request.method == 'POST':
 		print('hiddddd', request.body)
-		qJson = json.loads(request.body)
+		qJson = json.loads(request.body.decode('ascii'))
 
 		query = qJson['query']
 		if query == '':
@@ -226,11 +226,19 @@ def suggestions(request):
 		schoolList = []
 
 		allStudentsMatching = Student.objects.filter(name__contains=query)
+		aadharSet = set()
+
 		for s in allStudentsMatching:
-			studentList.append({
-				'id': s.id,
-				'name': s.name
-			})
+			if not aadharSet.__contains__(s.aadhar_id):
+				studentList.append({
+					'id': s.aadhar_id,
+					'name': s.name
+				})
+
+				aadharSet.add(s.aadhar_id)
+		
+		print(studentList)
+
 
 		schoolsMatching = Q()
 		schoolsMatching = schoolsMatching | Q(school__contains=query)
@@ -259,3 +267,4 @@ def suggestions(request):
 		}
 
 		return JsonResponse(result)
+

@@ -14,6 +14,7 @@ class School(models.Model):
 
 class Student(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
+	aadhar_id = models.IntegerField(default=0)
 	name = models.CharField(max_length=30)
 	no_of_parents = models.IntegerField(default=0)
 	parent_salary = models.IntegerField(default=0)
@@ -26,6 +27,18 @@ class Student(models.Model):
 	date = models.DateField()
 	marks = models.IntegerField(default=0)
 	gender = models.CharField(max_length=10)
+	state = models.CharField(max_length=10)
+	district = models.CharField(max_length=10)
+	english_marks = models.IntegerField(default=0)
+	maths_marks = models.IntegerField(default=0)
+	science_marks = models.IntegerField(default=0)
+	hindi_marks = models.IntegerField(default=0)
+	atten = models.IntegerField(default=0)
+	urban = models.IntegerField(default=False)
+	Fedu = models.IntegerField(default=0)
+	Medu = models.IntegerField(default=0)
+	sport = models.IntegerField(default=0)
+	rank_an = models.IntegerField(default=0)
 	def __str__(self):
 		return str(self.id) + " - " + self.name
 
