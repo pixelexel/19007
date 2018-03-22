@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from .models import Student,School,extra_curricular,Acads,Graphs,Lists
 from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
+from .forms import StudentForm
 # Create your views here.
 
 def index(req):
@@ -183,4 +184,31 @@ def allLists(request):
 	return JsonResponse( {
 		'data':data
 	})
+
+# if request.method == "POST":
+#     	form = StudentForm(request.POST)
+#         if form.is_valid():
+#             studentform = form.save(commit = False)
+#             studentform.publish()
+#             #return redirect('student_detail', pk=student.pk)
+#     else:		
+# 		form = StudentForm()
+# 	    return render(request, '/studentform.html', {'form': form})
+
+@csrf_exempt
+def studentform(request):
+	if request.method == "POST":
+
+		form = StudentForm(request.POST)
+		if form.is_valid():
+			studentdata = form.save(commit = False)
+			studentdata.savedata()
+			return redirect('studentform')
+
+		return HttpResponse('ERROR')
+	else:
+		form = StudentForm()
+		return render(request, 'studentform.html', {'form' : form})
+
+	
 

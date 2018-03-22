@@ -25,6 +25,9 @@ class Student(models.Model):
 	marks = models.IntegerField(default=0)
 	gender = models.CharField(max_length=10)
 
+	def savedata(self):
+		self.save()
+
 class extra_curricular(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
 	student = models.ForeignKey(Student,on_delete=models.CASCADE)
