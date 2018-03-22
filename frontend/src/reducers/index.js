@@ -5,6 +5,7 @@ import list from './list'
 import graph from './graph'
 import rootComp from './root'
 import studentData from './student'
+import searchBar from './searchBar'
 
 // Combine all reducers
 // If you don't give a key, the name of the reducer is it's
@@ -16,6 +17,7 @@ const studentApp = combineReducers({
 	list: list,
 	root: rootComp,
 	student: studentData,
+	searchBar: searchBar,
 })
 
 export default studentApp

@@ -210,7 +210,7 @@ def suggestions(request):
 		print('hiddddd', request.body)
 		qJson = json.loads(request.body)
 
-		query = request.POST['query']
+		query = qJson['query']
 
 		studentList = []
 		stateList = []

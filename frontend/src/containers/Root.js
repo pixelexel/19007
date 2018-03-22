@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import HomeScreenContainer from './HomeScreenContainer'
 import StudentContainer from './StudentContainer'
 import Header from '../components/Header'
+import Search_bar from '../components/Search_bar'
 import DrawerComponent from './DrawerComponent'
 import { toggleDrawer } from '../actions/root'
 import '../styles/App.scss'
@@ -45,6 +46,7 @@ class Root extends Component{
 
 		return (
 			<div>
+				<Search_bar />
 				<Header handleMenuClick={this.toggleDrawer} {...this.props}/>
 				<div className={this.props.drawer.open ? 'root-screen-hide': ''} onClick={this.closeDrawer}>
 				{screenComponent}
