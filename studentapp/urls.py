@@ -12,5 +12,6 @@ urlpatterns = [
     path('get_all_lists', views.allLists, name='allLists'),
     path('delete_graph/<int:id>', views.delete_graph, name='delete_graph'),
     path('delete_list/<int:id>', views.delete_list, name='delete_list'),
-    path('get_suggestions', views.suggestions, name='suggestions')
+    path('get_suggestions', views.suggestions, name='suggestions'),
+    path('get_student_data/<int:id>', views.getStudentData, name='Get_Student_Data')
 ]

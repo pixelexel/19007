@@ -208,7 +208,7 @@ def delete_list(request, id):
 def suggestions(request):
 	if request.method == 'POST':
 		print('hiddddd', request.body)
-		qJson = json.loads(request.body)
+		qJson = json.loads(request.body.decode('ascii'))
 
 		query = qJson['query']
 
@@ -220,7 +220,7 @@ def suggestions(request):
 		allStudentsMatching = Student.objects.filter(name__contains=query)
 		for s in allStudentsMatching:
 			studentList.append({
-				'id': s.id,
+				'id': s.Aadhar_id,
 				'name': s.name
 			})
 
@@ -251,3 +251,4 @@ def suggestions(request):
 		}
 
 		return JsonResponse(result)
+
