@@ -208,7 +208,6 @@ def delete_list(request, id):
 @csrf_exempt
 def suggestions(request):
 	if request.method == 'POST':
-		print('hiddddd', request.body)
 		qJson = json.loads(request.body.decode('ascii'))
 
 		query = qJson['query']
@@ -267,4 +266,38 @@ def suggestions(request):
 		}
 
 		return JsonResponse(result)
+
+
+@csrf_exempt
+def getStudentData(request,aadhar_id):
+	ret = {}
+	if request.method == 'GET':
+		aadhar_id_dt = aadhar_id
+		qs = Student.objects.filter(aadhar_id=aadhar_id_dt)
+		data = []
+		acad_data = []
+		sport_data = []
+		c_data = []
+		d_data = []
+		eng = 0.0
+		maths = 0.0
+		hindi = 0.0
+		sci = 0.0
+		for i in qs:
+			acad_data.append({str(i.date):i.marks})
+			sport_data.append({str(i.date):i.sport})
+			c_data.append({str(i.date):i.extra_curr})
+			d_data.append({str(i.date):i.atten})
+			eng += i.english_marks
+			maths += i.maths_marks
+			sci += i.science_marks
+			hindi += i.hindi_marks
+		eng /= len(qs)
+		maths /= len(qs)
+		sci /= len(qs)
+		hindi /= len(qs)
+		data = [{'english':eng},{'maths':maths},{'science':sci},{'hindi':hindi}]
+		ret = { 'data':data, 'acad_data':acad_data, 'sport_data':sport_data,'c_data':c_data, 'd_data':d_data}
+		print(ret)
+	return JsonResponse(ret) 
 
