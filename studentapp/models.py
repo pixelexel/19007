@@ -9,6 +9,8 @@ class School(models.Model):
 	no_of_facualty = models.IntegerField()
 	state = models.CharField(max_length=30)
 	district = models.CharField(max_length=30)
+	def __str__(self):
+		return str(self.id) + " - " + self.name
 
 class Student(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
@@ -24,6 +26,8 @@ class Student(models.Model):
 	date = models.DateField()
 	marks = models.IntegerField(default=0)
 	gender = models.CharField(max_length=10)
+	def __str__(self):
+		return str(self.id) + " - " + self.name
 
 class extra_curricular(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
@@ -31,6 +35,8 @@ class extra_curricular(models.Model):
 	name = models.CharField(max_length=30)
 	standard = models.IntegerField(default=1)
 	year = models.IntegerField(default=0)
+	def __str__(self):
+		return str(self.id) + " - " + self.name
 
 class Acads(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
@@ -39,6 +45,8 @@ class Acads(models.Model):
 	marks = models.IntegerField(default=0)
 	standard = models.IntegerField(default=1)
 	year = models.IntegerField(default=0)
+	def __str__(self):
+		return str(self.id) + " - " + self.name
 
 class Graphs(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
@@ -47,5 +55,3 @@ class Graphs(models.Model):
 class Lists(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
 	lD = models.CharField(max_length=550)
-
-

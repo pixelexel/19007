@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .models import Student,School,extra_curricular,Acads,Graphs,Lists
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 import json
 import datetime
@@ -202,3 +203,51 @@ def delete_list(request, id):
 	return JsonResponse({
 		"error": "false"
 	})
+
+@csrf_exempt
+def suggestions(request):
+	if request.method == 'POST':
+		print('hiddddd', request.body)
+		qJson = json.loads(request.body)
+
+		query = request.POST['query']
+
+		studentList = []
+		stateList = []
+		districtList = []
+		schoolList = []
+
+		allStudentsMatching = Student.objects.filter(name__contains=query)
+		for s in allStudentsMatching:
+			studentList.append({
+				'id': s.id,
+				'name': s.name
+			})
+
+		allSchoolsMatching = School.objects.filter(name__contains=query)
+		for s in allSchoolsMatching:
+			schoolList.append({
+				'id': s.id,
+				'name': s.name
+			})
+
+		districtsMatching = Q()
+		districtsMatching = districtsMatching | Q(district__contains=query)
+		alldistrictsMatching = School.objects.filter(districtsMatching)
+		for s in alldistrictsMatching:
+			districtList.append({'name': s.district})
+
+		statesMatching = Q()
+		statesMatching = statesMatching | Q(state__contains=query)
+		allstatesMatching = School.objects.filter(statesMatching)
+		for s in allstatesMatching:
+			stateList.append({'name': s.state})
+
+		result= {
+			'student': studentList,
+			'state': stateList,
+			'district': districtList,
+			'school': schoolList
+		}
+
+		return JsonResponse(result)
