@@ -38,11 +38,11 @@ class Root extends Component{
 				break
 
 			case screens.STATE:
-				screenComponent = <StateContainer id={screen}/>
+				screenComponent = <StateContainer id={id}/>
 				break
 
 			case screens.COUNTRY:
-				screenComponent = <CountryContainer id={screen}/>
+				screenComponent = <CountryContainer/>
 				break
 
 			case screens.STUDENT:

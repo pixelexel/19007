@@ -13,10 +13,10 @@ const receiveStateData = (error, data) => ({
 	error: error,
 })
  
-export const getStateData = () => {
+export const getStateData = (id) => {
 	return (dispatch) => {
 		dispatch(requestStateData())
-		return fetch(BASE_API_URL + 'get_state_data/')
+		return fetch(BASE_API_URL + 'get_state_data/' + id)
 				.then(data => data.json())
 				.then(json => dispatch(receiveStateData(json.error, json)))
 				.catch(err => dispatch(receiveStateData(false)))
