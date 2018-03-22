@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from .models import Student,School,extra_curricular,Acads,Graphs,Lists
 from django.views.decorators.csrf import csrf_exempt
@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 import json
 import datetime
+from .forms import StudentForm
 # Create your views here.
 
 def index(req):
@@ -268,3 +269,17 @@ def suggestions(request):
 
 		return JsonResponse(result)
 
+@csrf_exempt
+def studentform(request):
+	if request.method == "POST":
+
+		form = StudentForm(request.POST)
+		if form.is_valid():
+			studentdata = form.save(commit = False)
+			studentdata.savedata()
+			return redirect('studentform')
+
+		return HttpResponse('ERROR')
+	else:
+		form = StudentForm()
+		return render(request, 'studentform.html', {'form' : form})

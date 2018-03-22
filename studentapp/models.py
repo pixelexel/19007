@@ -42,6 +42,9 @@ class Student(models.Model):
 	def __str__(self):
 		return str(self.id) + " - " + self.name
 
+	def savedata(self):
+		self.save()
+
 class extra_curricular(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
 	student = models.ForeignKey(Student,on_delete=models.CASCADE)

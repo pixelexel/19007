@@ -3,6 +3,7 @@ from django.urls import path, include
 from . import views
 from django.contrib.auth import views as auth_views
 
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('get_form_vals', views.formVal, name='formVal'),
@@ -13,4 +14,5 @@ urlpatterns = [
     path('delete_graph/<int:id>', views.delete_graph, name='delete_graph'),
     path('delete_list/<int:id>', views.delete_list, name='delete_list'),
     path('get_suggestions', views.suggestions, name='suggestions'),
+    path('studentform/new', views.studentform, name = 'studentform'),
 ]
