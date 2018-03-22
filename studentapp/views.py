@@ -258,8 +258,6 @@ def suggestions(request):
 
 		return JsonResponse(result)
 
-<<<<<<< HEAD
-
 @csrf_exempt
 def getStudentData(request,aadhar_id):
 	ret = {}
