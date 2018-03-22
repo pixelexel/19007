@@ -293,7 +293,6 @@ def getStudentData(request,aadhar_id):
 		print(ret)
 	return JsonResponse(ret) 
 
-=======
 @csrf_exempt
 def studentform(request):
 	if request.method == "POST":
@@ -308,4 +307,3 @@ def studentform(request):
 	else:
 		form = StudentForm()
 		return render(request, 'studentform.html', {'form' : form})
->>>>>>> ae03cccca74e1f7307b0fccfc62323d1036e5288
