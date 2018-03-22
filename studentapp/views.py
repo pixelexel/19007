@@ -211,6 +211,13 @@ def suggestions(request):
 		qJson = json.loads(request.body)
 
 		query = qJson['query']
+		if query == '':
+			return JsonResponse({
+				'student': [],
+				'state': [],
+				'district': [],
+				'school': []
+			})
 
 		studentList = []
 		stateList = []

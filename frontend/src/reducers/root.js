@@ -4,7 +4,8 @@ const initialState = {
 	screen: screens.DASH,
 	drawer: {
 		open: false,
-	}
+	},
+	id: null,
 }
 
 const rootComp = (state = initialState, action) => {
@@ -12,7 +13,8 @@ const rootComp = (state = initialState, action) => {
 		case CHANGE_SCREEN:
 			if(state.screen != action.screen)
 				return Object.assign({}, state, {
-					screen: action.screen
+					screen: action.screen,
+					id: action.id,
 				})
 			else return state
 

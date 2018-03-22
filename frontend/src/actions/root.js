@@ -9,9 +9,10 @@ export const screens = {
 
 export const CHANGE_SCREEN = 'CHANGE_SCREEN'
 
-export const changeScreen = screen => ({
+export const changeScreen = (screen, id) => ({
 	type: CHANGE_SCREEN,
 	screen: screen, 
+	id: id,
 })
 
 export const TOGGLE_DRAWER = 'TOGGLE_DRAWER'

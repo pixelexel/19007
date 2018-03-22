@@ -12,8 +12,9 @@ function mapStateToProps(state){
 
 class StudentContainer extends Component{
 	componentWillMount(){
-		console.log('student', this.props)
-		this.props.dispatch(getStudentData())
+		const { id } = this.props 
+		console.log('student', this.props, id)
+		this.props.dispatch(getStudentData(id))
 	}
 
 	render(){

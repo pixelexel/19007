@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import HomeScreenContainer from './HomeScreenContainer'
 import StudentContainer from './StudentContainer'
 import Header from '../components/Header'
-import Search_bar from '../components/Search_bar'
 import DrawerComponent from './DrawerComponent'
 import { toggleDrawer } from '../actions/root'
 import '../styles/App.scss'
@@ -12,6 +11,7 @@ import '../styles/App.scss'
 const mapStateToProps = (state) => ({
 	screen: state.root.screen,
 	drawer: state.root.drawer,
+	id: state.root.id,
 })
 
 class Root extends Component{
@@ -25,20 +25,20 @@ class Root extends Component{
 	}
 
 	render(){
-		const { screen } = this.props 
+		const { screen, id } = this.props 
 		let screenComponent = null
 
 		switch(screen){
 			case screens.DASH:
 			case screens.COUNTRY:
-			case screens.STATE: 
-			case screens.SCHOOL: 
+			case screens.STATE:
+			case screens.SCHOOL:
 			case screens.DISTRICT:
-				screenComponent = <HomeScreenContainer id={screen}/>
+				screenComponent = <HomeScreenContainer screen={screen} id={id}/>
 				break
 
 			case screens.STUDENT:
-				screenComponent = <StudentContainer id={screen}/>
+				screenComponent = <StudentContainer id={id}/>
 				break
 			default:
 				screenComponent = null
@@ -46,9 +46,9 @@ class Root extends Component{
 
 		return (
 			<div>
-				<Search_bar />
 				<Header handleMenuClick={this.toggleDrawer} {...this.props}/>
-				<div className={this.props.drawer.open ? 'root-screen-hide': ''} onClick={this.closeDrawer}>
+				<div className={this.props.drawer.open ? 'root-screen-hide': ''} 
+						onClick={this.closeDrawer}>
 				{screenComponent}
 				</div>
 				<DrawerComponent/>

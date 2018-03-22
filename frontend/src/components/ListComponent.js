@@ -39,9 +39,9 @@ class ListComponent extends Component{
 		      	listData.map((d, index) => {
 		      		console.log('list data', d)
 		      		return <ListItem key={index}>
-		      			<ListItemText primary={d.name}/>
-		      			<ListItemText className={classes.alignRight} primary={d.value.toString()}/>
-		      		</ListItem>
+		      					<ListItemText primary={d.name}/>
+		      					<ListItemText className={classes.alignRight} primary={d.value.toString()}/>
+		      				</ListItem>
 		      	})
 		      }
 		      </List>

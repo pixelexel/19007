@@ -14,10 +14,10 @@ const receiveStudentData = (error, data) => ({
 	error: error,
 })
 
-export const getStudentData = () => {
+export const getStudentData = (id) => {
 	return (dispatch) => {
 		dispatch(requestStudentData())
-		return fetch(BASE_API_URL + 'get_student_data/')
+		return fetch(BASE_API_URL + 'get_student_data/' + id)
 				.then(data => data.json())
 				.then(json => dispatch(receiveStudentData(json.error, json)))
 				.catch(err => dispatch(receiveStudentData(false, studentData())))
