@@ -147,14 +147,16 @@ export const exampleGraph = (graphdata) => {
   }
 
 
+
+
 export const studentData = () =>{
 	const data = [
-	    { subject: 'Math', A: 120, B: 110, fullMark: 150 },
-	    { subject: 'Chinese', A: 98, B: 130, fullMark: 150 },
-	    { subject: 'English', A: 86, B: 130, fullMark: 150 },
-	    { subject: 'Geography', A: 99, B: 100, fullMark: 150 },
-	    { subject: 'Physics', A: 85, B: 90, fullMark: 150 },
-	    { subject: 'History', A: 65, B: 85, fullMark: 150 },
+	    { subject: 'Math', A: 120, fullMark: max },
+	    { subject: 'Chinese', A: 98, fullMark: max },
+	    { subject: 'English', A: 86, fullMark: max },
+	    { subject: 'Geography', A: 99, fullMark: max },
+	    { subject: 'Physics', A: 85, fullMark: max },
+	    { subject: 'History', A: 65, fullMark: max },
 	];
 	const  acad_data  = [{name: '2010', uv: 3400, amt: 2400},
 	      {name: '2011', uv: 2700, amt: 2210},
