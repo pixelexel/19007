@@ -6,7 +6,9 @@ import StudentContainer from './StudentContainer'
 import Header from '../components/Header'
 import DrawerComponent from './DrawerComponent'
 import { toggleDrawer } from '../actions/root'
+import { toggleChatbot } from '../actions/chatbot'
 import '../styles/App.scss'
+import Chatbot from '../containers/Chatbot'
 
 const mapStateToProps = (state) => ({
 	screen: state.root.screen,
@@ -22,6 +24,11 @@ class Root extends Component{
 	closeDrawer = () => {
 		if(this.props.drawer.open)
 			this.toggleDrawer()
+	}
+
+	toggleChatbot = () => {
+		console.log('handling chatbot')
+		this.props.dispatch(toggleChatbot())
 	}
 
 	render(){
@@ -46,12 +53,15 @@ class Root extends Component{
 
 		return (
 			<div>
-				<Header handleMenuClick={this.toggleDrawer} {...this.props}/>
+				<Header handleMenuClick={this.toggleDrawer}
+						handleChatbot={this.toggleChatbot} 
+						{...this.props}/>
 				<div className={this.props.drawer.open ? 'root-screen-hide': ''} 
 						onClick={this.closeDrawer}>
 				{screenComponent}
 				</div>
 				<DrawerComponent/>
+				<Chatbot/>
 			</div>
 		)
 	}

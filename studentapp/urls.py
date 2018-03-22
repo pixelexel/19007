@@ -15,4 +15,5 @@ urlpatterns = [
     path('delete_list/<int:id>', views.delete_list, name='delete_list'),
     path('get_suggestions', views.suggestions, name='suggestions'),
     path('studentform/new', views.studentform, name = 'studentform'),
+    path('chatbot', views.chatbot, name='chatbot'),
 ]

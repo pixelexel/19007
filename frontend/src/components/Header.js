@@ -3,6 +3,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import TrendingUpIcon from 'material-ui-icons/TrendingUp'
+import ChatBubbleIcon from 'material-ui-icons/ChatBubble'
 import MenuIcon from 'material-ui-icons/Menu'
 import Avatar from 'material-ui/Avatar'
 import { IconButton } from 'material-ui'
@@ -33,8 +34,8 @@ const styles = theme => ({
 
 class Header extends Component{
 	render(){
-		const { classes } = this.props
-
+		const { classes, theme } = this.props
+		
 		return(
 		<AppBar className={classes.root} position="sticky" color="default">
 	       <Toolbar className={classes.toolbar + (this.props.drawer.open ? ' ' + classes.shiftRight : '')}>
@@ -55,10 +56,16 @@ class Header extends Component{
 	          <div >
 	          	<Search_bar />
 	          </div>
+			  <IconButton
+				  aria-label="open-chatbot"
+				  onClick={this.props.handleChatbot}
+			  >
+						<ChatBubbleIcon style={{color: theme.palette.secondary.light}}/>
+				  </IconButton>
 	        </Toolbar>
 	      </AppBar>
 		)
 	}
 }
 
-export default withStyles(styles)(Header)
+export default withStyles(styles, {withTheme:true})(Header)
