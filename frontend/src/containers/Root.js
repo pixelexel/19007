@@ -7,6 +7,8 @@ import Header from '../components/Header'
 import DrawerComponent from './DrawerComponent'
 import { toggleDrawer } from '../actions/root'
 import '../styles/App.scss'
+import CountryContainer from './CountryContainer'
+import StateContainer from './StateContainer'
 
 const mapStateToProps = (state) => ({
 	screen: state.root.screen,
@@ -30,11 +32,17 @@ class Root extends Component{
 
 		switch(screen){
 			case screens.DASH:
-			case screens.COUNTRY:
-			case screens.STATE:
 			case screens.SCHOOL:
 			case screens.DISTRICT:
 				screenComponent = <HomeScreenContainer screen={screen} id={id}/>
+				break
+
+			case screens.STATE:
+				screenComponent = <StateContainer id={id}/>
+				break
+
+			case screens.COUNTRY:
+				screenComponent = <CountryContainer/>
 				break
 
 			case screens.STUDENT:

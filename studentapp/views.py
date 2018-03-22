@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from .models import Student,School,extra_curricular,Acads,Graphs,Lists
 from django.views.decorators.csrf import csrf_exempt
@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 import json
 import datetime
+from .forms import StudentForm
 # Create your views here.
 
 def index(req):
@@ -220,9 +221,6 @@ def suggestions(request):
 			})
 
 		studentList = []
-		stateList = []
-		districtList = []
-		schoolList = []
 
 		allStudentsMatching = Student.objects.filter(name__contains=query)
 		aadharSet = set()
@@ -235,28 +233,21 @@ def suggestions(request):
 				})
 
 				aadharSet.add(s.aadhar_id)
-		
-		print(studentList)
-
 
 		schoolsMatching = Q()
 		schoolsMatching = schoolsMatching | Q(school__contains=query)
 		allschoolsMatching = Student.objects.filter(schoolsMatching)
-		for s in allschoolsMatching:
-			schoolList.append({'name': s.school})
-		
+		schoolList = list(map(lambda s: {'name': s}, set([s.school for s in allschoolsMatching])))
 
 		districtsMatching = Q()
 		districtsMatching = districtsMatching | Q(district__contains=query)
 		alldistrictsMatching = Student.objects.filter(districtsMatching)
-		for s in alldistrictsMatching:
-			districtList.append({'name': s.district})
+		districtList = list(map(lambda s: {'name': s}, set([s.district for s in alldistrictsMatching])))
 
 		statesMatching = Q()
 		statesMatching = statesMatching | Q(state__contains=query)
 		allstatesMatching = Student.objects.filter(statesMatching)
-		for s in allstatesMatching:
-			stateList.append({'name': s.state})
+		stateList = list(map(lambda s: {'name': s}, set([s.state for s in allstatesMatching])))
 
 		result= {
 			'student': studentList,
@@ -267,6 +258,7 @@ def suggestions(request):
 
 		return JsonResponse(result)
 
+<<<<<<< HEAD
 
 @csrf_exempt
 def getStudentData(request,aadhar_id):
@@ -301,3 +293,19 @@ def getStudentData(request,aadhar_id):
 		print(ret)
 	return JsonResponse(ret) 
 
+=======
+@csrf_exempt
+def studentform(request):
+	if request.method == "POST":
+
+		form = StudentForm(request.POST)
+		if form.is_valid():
+			studentdata = form.save(commit = False)
+			studentdata.savedata()
+			return redirect('studentform')
+
+		return HttpResponse('ERROR')
+	else:
+		form = StudentForm()
+		return render(request, 'studentform.html', {'form' : form})
+>>>>>>> ae03cccca74e1f7307b0fccfc62323d1036e5288

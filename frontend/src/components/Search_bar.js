@@ -53,7 +53,6 @@ class Search_bar extends Component{
 	handleClick = (e) => {
 		const eid = e.target.id
 		const [ type, value, id ] = eid.split('-')
-		console.log(type, value, id)
 		
 		switch(type){
 			case 'student':
@@ -70,11 +69,14 @@ class Search_bar extends Component{
 				break
 			default:
 		}
+
+		this.setState({
+			searchText: '',
+		})
+		this.props.dispatch(getSuggestion({query: ''}))
 	}
 
-	render(){
-		console.log('SearchBar', this.props)
-		
+	render(){		
 		const { school, student, state, district, classes, theme } = this.props
 		const keys = Object.keys(this.props)
 		const totalLength = school.length + student.length + state.length + district.length
@@ -105,8 +107,8 @@ class Search_bar extends Component{
 					className={classes.textField}/>
 				<div className={classes.root}>
 				<List >
-					{ allValues.map(d => (
-						<ListItem className={classes.listItem + ' hoverlistitem'} 
+					{ allValues.map((d, index) => (
+						<ListItem key={index} className={classes.listItem + ' hoverlistitem'} 
 								onClick={this.handleClick} 
 								id={`${d.type}-${d.name}-${d.id}`}>
 							<ListItemText className={classes.removePointerEvents} primary={d.name} secondary={d.type}/>
