@@ -222,9 +222,6 @@ def suggestions(request):
 			})
 
 		studentList = []
-		stateList = []
-		districtList = []
-		schoolList = []
 
 		allStudentsMatching = Student.objects.filter(name__contains=query)
 		aadharSet = set()
@@ -237,28 +234,21 @@ def suggestions(request):
 				})
 
 				aadharSet.add(s.aadhar_id)
-		
-		print(studentList)
-
 
 		schoolsMatching = Q()
 		schoolsMatching = schoolsMatching | Q(school__contains=query)
 		allschoolsMatching = Student.objects.filter(schoolsMatching)
-		for s in allschoolsMatching:
-			schoolList.append({'name': s.school})
-		
+		schoolList = list(map(lambda s: {'name': s}, set([s.school for s in allschoolsMatching])))
 
 		districtsMatching = Q()
 		districtsMatching = districtsMatching | Q(district__contains=query)
 		alldistrictsMatching = Student.objects.filter(districtsMatching)
-		for s in alldistrictsMatching:
-			districtList.append({'name': s.district})
+		districtList = list(map(lambda s: {'name': s}, set([s.district for s in alldistrictsMatching])))
 
 		statesMatching = Q()
 		statesMatching = statesMatching | Q(state__contains=query)
 		allstatesMatching = Student.objects.filter(statesMatching)
-		for s in allstatesMatching:
-			stateList.append({'name': s.state})
+		stateList = list(map(lambda s: {'name': s}, set([s.state for s in allstatesMatching])))
 
 		result= {
 			'student': studentList,
