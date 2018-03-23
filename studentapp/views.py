@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from .models import Student,School,extra_curricular,Acads,Graphs,Lists
+from .models import Student, School, extra_curricular, Acads, Graphs, Lists
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 import json
 import datetime
 from pprint import pprint
+import pandas as pd
 from .forms import StudentForm
 # Create your views here.
+
 
 def index(req):
 	import time
@@ -19,11 +21,16 @@ def index(req):
 		'data': ['Api root', 'nice']
 	})
 	
+
 @csrf_exempt
 def formVal(request):
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}
 	rval = Student._meta.get_fields()
-	types = {'CharField':'string','IntegerField':'int','BooleanField':'bool','DateField':'string'}
+	types = {'CharField':'string', 
+			'IntegerField':'int',
+			'BooleanField':'bool',
+			'DateField':'string'}
+
 	for i in rval:
 		if types.__contains__(i.get_internal_type()):
 			tem = {}
@@ -35,6 +42,7 @@ def formVal(request):
 
 	retr = {'graph':retGraph,'list':retGraph}
 	return JsonResponse(retr)
+
 
 @csrf_exempt
 def getGraph(request):
@@ -395,7 +403,7 @@ def chatbot(request):
 
 			datalen = len(listData)
 			listData = listData[:30]
-			
+
 			pprint(listData)
 
 			if result['action'] == 'get_filters':

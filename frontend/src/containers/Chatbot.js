@@ -12,6 +12,7 @@ const styles = theme => ({
         top: 65,
         right: 15,
         backgroundColor: theme.palette.secondary.main,
+        boxShadow: theme.shadows[5],
     },
 
     paper: {
@@ -113,7 +114,6 @@ class Chatbot extends Component{
 
     render(){
         const { classes, messages, fetching, open } = this.props
-        console.log('chatbot', this.props)
         const display = open ? 'block' : 'none'
 
         return(
