@@ -6,6 +6,10 @@ import StudentContainer from './StudentContainer'
 import Header from '../components/Header'
 import DrawerComponent from './DrawerComponent'
 import { toggleDrawer } from '../actions/root'
+import { toggleChatbot } from '../actions/chatbot'
+import CountryContainer from './CountryContainer'
+import StateContainer from './StateContainer'
+import Chatbot from '../containers/Chatbot'
 import '../styles/App.scss'
 
 const mapStateToProps = (state) => ({
@@ -24,17 +28,28 @@ class Root extends Component{
 			this.toggleDrawer()
 	}
 
+	toggleChatbot = () => {
+		console.log('handling chatbot')
+		this.props.dispatch(toggleChatbot())
+	}
+
 	render(){
 		const { screen, id } = this.props 
 		let screenComponent = null
 
 		switch(screen){
 			case screens.DASH:
-			case screens.COUNTRY:
-			case screens.STATE:
 			case screens.SCHOOL:
 			case screens.DISTRICT:
 				screenComponent = <HomeScreenContainer screen={screen} id={id}/>
+				break
+
+			case screens.STATE:
+				screenComponent = <StateContainer id={id}/>
+				break
+
+			case screens.COUNTRY:
+				screenComponent = <CountryContainer/>
 				break
 
 			case screens.STUDENT:
@@ -46,12 +61,15 @@ class Root extends Component{
 
 		return (
 			<div>
-				<Header handleMenuClick={this.toggleDrawer} {...this.props}/>
+				<Header handleMenuClick={this.toggleDrawer}
+						handleChatbot={this.toggleChatbot} 
+						{...this.props}/>
 				<div className={this.props.drawer.open ? 'root-screen-hide': ''} 
 						onClick={this.closeDrawer}>
 				{screenComponent}
 				</div>
 				<DrawerComponent/>
+				<Chatbot/>
 			</div>
 		)
 	}

@@ -14,5 +14,7 @@ urlpatterns = [
     path('delete_graph/<int:id>', views.delete_graph, name='delete_graph'),
     path('delete_list/<int:id>', views.delete_list, name='delete_list'),
     path('get_suggestions', views.suggestions, name='suggestions'),
+    path('get_student_data/<int:aadhar_id>/', views.getStudentData, name='getStudentData'),
     path('studentform/new', views.studentform, name = 'studentform'),
+    path('chatbot', views.chatbot, name='chatbot'),
 ]

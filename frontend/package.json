@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "ajv": "^6.2.1",
+    "api-ai-javascript": "^2.0.0-beta.21",
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
