@@ -1,7 +1,8 @@
 import { createMuiTheme } from 'material-ui/styles'
 import { pink, amber, grey } from 'material-ui/colors'
 
-export const BASE_URL = 'http://localhost:8000/'
+export const BASE_URL = '/'
+// export const BASE_URL = 'http://localhost:8000/'
 // export const BASE_URL = 'http://192.168.43.110:8000/'
 
 export const BASE_API_URL = BASE_URL + 'api/'

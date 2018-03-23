@@ -16,4 +16,5 @@ urlpatterns = [
     path('get_suggestions', views.suggestions, name='suggestions'),
     path('get_student_data/<int:aadhar_id>/', views.getStudentData, name='getStudentData'),
     path('studentform/new', views.studentform, name = 'studentform'),
+    path('chatbot', views.chatbot, name='chatbot'),
 ]

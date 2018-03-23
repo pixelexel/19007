@@ -20,7 +20,7 @@ const styles = theme => ({
 	root: {
 		position: 'absolute',
 		top: 50,
-		right: 0,
+		right: 50,
 		maxHeight: 250,
 		minWidth: 330,
 		overflow: 'auto',

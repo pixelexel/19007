@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 import json
 import datetime
+from pprint import pprint
 from .forms import StudentForm
 # Create your views here.
 
@@ -113,59 +114,82 @@ def getGraph(request):
 	#print(ret) 
 	return JsonResponse(ret)
 
+def get_list_data(dt, save=True):
+	x_axis = dt['x']
+	filters_all = dt['filters']
+	new_filter = {}
+	for i in filters_all:
+		parm = ''
+		val = ''
+		for v, k in i.items():
+			if v == 'name':
+				parm = k
+			elif v == 'val':
+				val = k
+			elif v == 'op':
+				if k == '>=':
+					parm += '__gte'
+				elif k == '<=':
+					parm += '__lte'
+				elif k == '>':
+					parm += '__gt'
+				elif k == '<':
+					parm += '__lt'
+					
+		for v, k in i.items():
+			if v == 'type':
+				if k == 'int':
+					val = int(val)
+				elif k == 'bool':
+					val = bool(val)
+		new_filter[parm] = val
+
+	tq = Student.objects.filter(**{'marks__gt': 30})
+	qs = Student.objects.filter(**new_filter)
+	data = []
+	ret = {}
+
+	for i in qs:
+		ii = i.__dict__
+		tem = {}
+		if not ii['aadhar_id'] in ret:
+			ret[ii['aadhar_id']] = {'name': ii['name'], 
+					'value': ii[x_axis], 
+					'std': ii['std']}
+		else:
+			if ret[ii['aadhar_id']]['std'] < ii['std']:
+				ret[ii['aadhar_id']] = {
+					'name': ii['name'], 'value': ii[x_axis], 
+					'std': ii['std']}
+
+	for k, v in ret.items():
+		data.append(v)
+
+	data = sorted(data, key= lambda k : k['value'])[:30]
+
+	if not save:
+		return data
+
+	dt['data'] = data
+	if dt['id'] is not None:
+		gd = Lists.objects.get(id=dt['id'])
+		gd.lD = json.dumps(dt)
+		gd.save()
+	else:
+		gd = Lists()
+		gd.save()
+		dt['id'] = gd.id
+		gd.lD = json.dumps(dt)
+		gd.save()
+	return dt
+	
 @csrf_exempt
 def getList(request):
 	ret = {}
 	if request.method == 'POST':
 		dt = json.loads(request.body)
-		x_axis = dt['x']
-		filters_all = dt['filters']
-		new_filter = {}
-		for i in filters_all:
-			parm = ''
-			val = ''
-			for v,k in i.items():
-				if v == 'name':
-					parm = k
-				elif v == 'val':
-					val = k 
-				elif v == 'op':
-					if k == '>=':
-						parm += '__gte'
-					elif k == '<=':
-						parm += '__lte'
-					elif k == '>':
-						parm += '__gt'
-					elif k == '<':
-						parm += '__lt'
-			for v,k in i.items():
-				if v == 'type':
-					if k == 'int':
-						val = int(val)
-					elif k == 'bool':
-						val = bool(val)
-			new_filter[parm] = val
-		tq = Student.objects.filter(**{'marks__gt':30})
-		qs = Student.objects.filter(**new_filter)[:30]
-		data = []
-		for i in qs:
-			ii = i.__dict__
-			tem = {}
-			tem['name'] = ii['name']
-			tem['value'] = ii[x_axis]
-			data.append(tem)
-		dt['data'] = data
-		if dt['id'] is not None:
-			gd = Lists.objects.get(id=dt['id'])
-			gd.lD = json.dumps(dt)
-			gd.save()	
-		else :
-			gd = Lists()
-			gd.save()
-			dt['id'] = gd.id
-			gd.lD = json.dumps(dt)
-			gd.save()
-		ret = dt
+		ret = get_list_data(dt)
+
 	print(ret) 
 	return JsonResponse(ret)
 
@@ -305,3 +329,70 @@ def studentform(request):
 	else:
 		form = StudentForm()
 		return render(request, 'studentform.html', {'form' : form})
+
+@csrf_exempt
+def chatbot(request):
+	if request.method == 'POST':
+		data = json.loads(request.body)
+		pprint(data)
+		if not data['status']['code'] == 200:
+			return JsonResponse({
+				error: 'true',
+			})
+
+		result = data['result']
+		if not result['action'] == 'get_filters':
+			return JsonResponse({
+				error: false,	
+			})
+
+		elif result['action'] == 'get_filters':
+			operands = ['=', '>', '>=', '<=', '<']
+			filters = result['parameters']['Filter']
+			x = result['parameters']['Parameter']
+
+			if len(x.split()) > 1:
+				x = '_'.join(x.split())
+			sendfilters = []
+
+			for y in filters:
+				r = {}
+				if not type(y) is dict:
+					continue
+
+				for k, v in y.items():
+					if k == 'parameter':
+						r['name'] = v
+						if v == 'number of parents':
+							r['name'] = 'no_of_parents'
+						elif v == 'number of siblings':
+							r['name'] = 'no_of_siblings'
+						elif len(v.split()) > 1:
+							r['name'] = '_'.join(v.split())
+
+					elif k == 'operator':
+						r['op'] = v
+					else:
+						if k == 'number':
+							r['type'] = 'number'
+						else:
+							if v == 'True' or v == 'False':
+								r['type'] = 'bool'
+							else:
+								r['type'] = 'string'
+
+						r['val'] = v
+				sendfilters.append(r)
+
+			listData = get_list_data({
+				'x': x,
+				'filters': sendfilters,
+			}, False)
+
+			pprint(listData)
+			
+			return JsonResponse({
+				'speech': 'Here is a list of top students satisfying your query',
+				'displayText': 'Here is a list of top students satisfying your query',
+				'data': listData,
+			})
