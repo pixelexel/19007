@@ -5,7 +5,7 @@ import { withStyles } from 'material-ui/styles'
 
 const styles = theme => ({
     paper: { 
-        width: '80%', 
+        maxWidth: '80%', 
         marginTop: 8, 
         marginBottom: 8, 
         marginRight: 10, 

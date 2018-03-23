@@ -15,9 +15,9 @@ const convertGraph = (action_data) => {
 
 	for(let  i in dataKeys){
 		let d = {}
-		d[x] = dataKeys[i]
-		d[y] = data[dataKeys[i]]
-		d['filter'] = data_nf[dataKeys[i]] ? data_nf[dataKeys[i]] : null 
+		d[x] = isNaN(dataKeys[i]) ? dataKeys[i] : parseFloat(dataKeys[i])
+		d['filter'] = data[dataKeys[i]]
+		d[y] = data_nf[dataKeys[i]] ? data_nf[dataKeys[i]] : null 
 		done[dataKeys[i]] = true
 		plot.push(d)
 	}
@@ -26,11 +26,13 @@ const convertGraph = (action_data) => {
 		if(done[datanfKeys[i]]) continue
 
 		let d = {}
-		d[x] = datanfKeys[i]
-		d[y] = null
-		d['filter'] = data_nf[datanfKeys[i]]
+		d[x] = isNaN(datanfKeys[i]) ? datanfKeys[i] : parseFloat(datanfKeys[i])
+		d['filter'] = null
+		d[y] = data_nf[datanfKeys[i]]
 		plot.push(d)
 	}
+
+	const sortplot = plot.slice().sort((a, b) => a[x] > b[x])
 
 	let newGraph = {
 			x: x,
@@ -38,7 +40,7 @@ const convertGraph = (action_data) => {
 			name: name,
 			id: id,
 			filters: filters,
-			data: plot,
+			data: sortplot,
 			type: type ? type: 'LINE',
 		}
 

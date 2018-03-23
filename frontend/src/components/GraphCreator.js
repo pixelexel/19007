@@ -117,6 +117,8 @@ class GraphCreator extends React.Component {
 						break
 						case 'string': sFilter.val = ''
 						break
+						case 'date': sFilter.val = ''
+						break
 						default:
 						break
 					}
@@ -209,6 +211,7 @@ class GraphCreator extends React.Component {
 		let a = []
 		switch(type){
 			case 'int':
+			case 'date':
 				a = ['=', '>', '<', '>=', '<=']
 				break
 			case 'string':
