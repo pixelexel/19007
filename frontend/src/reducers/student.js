@@ -61,7 +61,7 @@ function asd(allData) {
 		d_dataPass.push({'name': k, 'uv': d_dataGet[i][k] });
 	}
 
-	allDataPass = {
+	const allDataPass = {
 		'data': dataPass,
 		'acad_data': acad_dataPass,
 		'sport_data': sport_dataPass,
@@ -82,7 +82,7 @@ const studentData = (state = initialState, action) => {
 			})
 
 		case RECEIVE_STUDENT_DATA: {
-			console('gaurav',action.data)
+			console.log('gaurav',action.data)
 			let ret = Object.assign({}, state, asd(action.data) )
 			ret['fetchingData'] = false
 			return ret
