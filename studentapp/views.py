@@ -135,6 +135,7 @@ def get_list_data(dt, save=True):
 					parm += '__gt'
 				elif k == '<':
 					parm += '__lt'
+					
 		for v, k in i.items():
 			if v == 'type':
 				if k == 'int':
@@ -142,15 +143,29 @@ def get_list_data(dt, save=True):
 				elif k == 'bool':
 					val = bool(val)
 		new_filter[parm] = val
+
 	tq = Student.objects.filter(**{'marks__gt': 30})
-	qs = Student.objects.filter(**new_filter)[:30]
+	qs = Student.objects.filter(**new_filter)
 	data = []
+	ret = {}
+
 	for i in qs:
 		ii = i.__dict__
 		tem = {}
-		tem['name'] = ii['name']
-		tem['value'] = ii[x_axis]
-		data.append(tem)
+		if not ii['aadhar_id'] in ret:
+			ret[ii['aadhar_id']] = {'name': ii['name'], 
+					'value': ii[x_axis], 
+					'std': ii['std']}
+		else:
+			if ret[ii['aadhar_id']]['std'] < ii['std']:
+				ret[ii['aadhar_id']] = {
+					'name': ii['name'], 'value': ii[x_axis], 
+					'std': ii['std']}
+
+	for k, v in ret.items():
+		data.append(v)
+
+	data = sorted(data, key= lambda k : k['value'])[:30]
 
 	if not save:
 		return data
@@ -294,17 +309,35 @@ def chatbot(request):
 			})
 
 		result = data['result']
-		if result['action'] == 'get_filters':
+		if not result['action'] == 'get_filters':
+			return JsonResponse({
+				error: false,	
+			})
+
+		elif result['action'] == 'get_filters':
 			operands = ['=', '>', '>=', '<=', '<']
 			filters = result['parameters']['Filter']
 			x = result['parameters']['Parameter']
+
+			if len(x.split()) > 1:
+				x = '_'.join(x.split())
 			sendfilters = []
-			
+
 			for y in filters:
 				r = {}
+				if not type(y) is dict:
+					continue
+
 				for k, v in y.items():
 					if k == 'parameter':
 						r['name'] = v
+						if v == 'number of parents':
+							r['name'] = 'no_of_parents'
+						elif v == 'number of siblings':
+							r['name'] = 'no_of_siblings'
+						elif len(v.split()) > 1:
+							r['name'] = '_'.join(v.split())
+
 					elif k == 'operator':
 						r['op'] = v
 					else:
@@ -325,13 +358,9 @@ def chatbot(request):
 			}, False)
 
 			pprint(listData)
-			answer = 'Here is a list of top students\n'
-			answer += '\n'.join(
-				map(lambda y: '{}, {}'.format(y['name'], y['value']),
-					listData ))
-			print(answer)
-
+			
 			return JsonResponse({
-				'speech': answer,
-				'displayText': answer,
+				'speech': 'Here is a list of top students satisfying your query',
+				'displayText': 'Here is a list of top students satisfying your query',
+				'data': listData,
 			})

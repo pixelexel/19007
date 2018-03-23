@@ -30,9 +30,15 @@ const chatbot = (state = initialState, action) => {
         case RECEIVE_CHATBOT_MESSAGE: {
             console.log('receive chatbot response', action.data, state.messages)
             let newmessages = state.messages.slice()
+            
+            if(action.data === null)
+                return state
+
             newmessages.push({
                 type: 'received',
                 value: action.data.fulfillment.speech,
+                data: action.data.fulfillment.data,
+                action: action.data.action,
             })
             return Object.assign({}, state, {
                 fetching: false,
