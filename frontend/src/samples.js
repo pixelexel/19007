@@ -203,3 +203,30 @@ export const studentData = () =>{
 	}
 
 }
+
+export const countryData = () =>{
+	
+	const  pp_data  = [{State: 'Maharashtra', percentage: 90},
+	      {State: 'Uttar Pradesh', percentage: 60},
+	      {State: 'Kerela', percentage: 75},
+	      {State: 'Goa', percentage: 50},
+	      {State: 'Tamil Nadu', percentage: 85},
+	      {State: 'Haryana', percentage: 40},
+	];
+	const no_ss =[];
+	const ex_curr =[];
+	const sports_list = [];
+	const sports_data = [];
+	const acad_list = [];
+
+
+	return {
+		pp_data : pp_data,
+		no_ss : no_ss,
+		ex_curr : ex_curr,
+		sports_data : sports_data,
+		acad_list : acad_list,
+		sports_list : sports_list,
+	}
+
+}

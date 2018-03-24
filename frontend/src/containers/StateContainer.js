@@ -8,7 +8,10 @@ function mapStateToProps(state){
 		state : state.state,
 		pp_data: state.state.pp_data,
 		no_ss: state.state.no_ss,
-		ex_curr: state.state.ex_curr,		
+		ex_curr: state.state.ex_curr,	
+		sports_data: state.country.sports_data,
+    	acad_list: state.country.acad_list,
+    	sports_list: state.country.sports_list, 	
 	}
 }
 

@@ -27,7 +27,7 @@ class DistrictGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const { pp_data,no_ss,ex_curr} = this.props.district
+  const { pp_data,no_ss,ex_curr,sports_data,acad_list,sports_list} = this.props.district
 
   return (
     <div className={classes.root}>

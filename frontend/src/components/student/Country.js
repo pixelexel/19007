@@ -4,7 +4,8 @@ import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Card from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
-import GraphComponent2 from './GraphComponent2'
+import GraphBar from './GraphBar'
+import GraphLine from './GraphLine'
 import GraphComponent from './GraphComponent'
 import List from './List.js'
 import Chips from './Chips'
@@ -12,6 +13,7 @@ import FaceIcon from 'material-ui-icons/Face'
 import MoodIcon from 'material-ui-icons/Mood'
 import AssIcon from 'material-ui-icons/Assessment'
 import WorldIcon from 'material-ui-icons/Language'
+import { ListItem, ListItemText, ListSubheader } from 'material-ui/List'
 import { addGraph, getAllGraphs, removeGraph } from '../../actions/graph'
 import { addList, getAllLists, removeList } from '../../actions/list'
 import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
@@ -28,7 +30,7 @@ class CountryGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const { pp_data,no_ss,ex_curr} = this.props.country
+  const { pp_data,no_ss,ex_curr,sports_data,acad_list,sports_list} = this.props.country
 
   return (
     <div className={classes.root}>
@@ -73,7 +75,7 @@ render() {
            New Orders
           </header>
         <Paper  style={{height:'250px',marginLeft: '10px',}}>
-        
+        <GraphLine value={pp_data} />
         </Paper>
         </Grid>
         <Grid item xs={6}>
@@ -81,7 +83,8 @@ render() {
            Montly Sales
           </header>
           <Paper style={{height:'250px',marginLeft: '10px',}}>
-           
+        <GraphBar value={pp_data} />
+          
           </Paper>
         </Grid>
       </Grid>
@@ -94,8 +97,13 @@ render() {
           Recent Lists
           </header>
           <Paper style={{height:'300px',marginLeft: '10px',}}>
-          
-           
+             { pp_data.map((d) => {
+              return <ListItem>
+                        <ListItemText primary={d.State} style={{textAlign:'left', fontSize:'50px'}}/>
+                        <ListItemText primary={d.percentage} style={{textAlign:'right', fontSize:'50px'}}/>
+                      </ListItem>
+             })
+             }
           </Paper>
         </Grid>
         <Grid item xs={4}>
@@ -103,7 +111,13 @@ render() {
            Browser Usage
           </header>
           <Paper style={{height:'300px',marginLeft: '10px',}}>
-        
+             { pp_data.map((d) => {
+              return <ListItem>
+                        <ListItemText primary={d.State} style={{textAlign:'left', fontSize:'50px'}}/>
+                        <ListItemText primary={d.percentage} style={{textAlign:'right', fontSize:'50px'}}/>
+                      </ListItem>
+             })
+             }
           </Paper>
         </Grid>
         <Grid item xs={4}>
@@ -111,7 +125,13 @@ render() {
           Recent Lists
           </header>
           <Paper style={{height:'300px',marginLeft: '10px',}}>
-          
+             { pp_data.map((d) => {
+              return <ListItem>
+                        <ListItemText primary={d.State} style={{textAlign:'left', fontSize:'50px'}}/>
+                        <ListItemText primary={d.percentage} style={{textAlign:'right', fontSize:'50px'}}/>
+                      </ListItem>
+             })
+             }
            
           </Paper>
         </Grid>

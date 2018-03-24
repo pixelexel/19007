@@ -27,7 +27,7 @@ class SchoolGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const { pp_data,no_ss,ex_curr} = this.props.school
+  const { pp_data,no_ss,ex_curr,sports_data,acad_list,sports_list} = this.props.school
 
   return (
     <div className={classes.root}>

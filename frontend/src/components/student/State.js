@@ -27,7 +27,7 @@ class StateGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const { pp_data,no_ss,ex_curr} = this.props.state
+  const { pp_data,no_ss,ex_curr,sports_data,acad_list,sports_list} = this.props.state
 
   return (
     <div className={classes.root}>
