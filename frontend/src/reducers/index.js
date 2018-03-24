@@ -9,6 +9,8 @@ import searchBar from './searchBar'
 import countryData from './country'
 import stateData from './state'
 import chatbot from './chatbot'
+import districtData from './district'
+import schoolData from './school'
 // Combine all reducers
 // If you don't give a key, the name of the reducer is it's
 // state's key
@@ -22,6 +24,8 @@ const studentApp = combineReducers({
 	searchBar: searchBar,
 	country: countryData,
 	state : stateData,
+	district : districtData,
+	school : schoolData,
 	chatbot: chatbot,
 })
 

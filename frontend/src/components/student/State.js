@@ -34,28 +34,28 @@ render() {
       <br/>
       <Grid container spacing={24}>
          <Grid item xs={3} style={{}}>
-        <Paper style={{background:'#E6004C',marginLeft: '10px',}}>
+        <Paper style={{background:'#E6004C',marginLeft: '10px',height:'90%'}}>
           <h2 style={{color:'black'}}>Scholars</h2>
                 <FaceIcon style={{fontSize:'100px',marginTop:'0px'}}/>
           
         </Paper>
         </Grid>
         <Grid item xs={3} >
-        <Paper style={{background:'#ff9900',marginLeft: '10px',}}>
+        <Paper style={{background:'#ff9900',marginLeft: '10px',height:'90%'}}>
             <h2 style={{color:'black'}}>Students</h2>
           <MoodIcon style={{fontSize:'100px',marginTop:'0px'}}/>
         </Paper>
         </Grid>
 
         <Grid item xs={3}>
-          <Paper style={{background:'#B300B3',marginLeft: '10px',}}>
+          <Paper style={{background:'#B300B3',marginLeft: '10px',height:'90%'}}>
               <h2 style={{color:'black'}}>Percentage</h2>
           <AssIcon style={{fontSize:'100px',marginTop:'0px'}}/>
 
           </Paper>
         </Grid>
         <Grid item xs={3}>
-          <Paper style={{background:'#00E6E6',marginLeft: '10px',}}>
+          <Paper style={{background:'#00E6E6',marginLeft: '10px',height:'90%'}}>
 
               <h2 style={{color:'black'}}>India</h2>
           <WorldIcon style={{fontSize:'100px',marginTop:'0px'}}/>
@@ -89,16 +89,25 @@ render() {
       <br />
     
       <Grid container spacing={24}>
-        <Grid item xs={6}>
-        <header style={{marginLeft:'1.5%',backgroundColor:'#990099', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
+         <Grid item xs={4}>
+        <header style={{marginLeft:'2%',backgroundColor:'#00CCCC', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
+          Recent Lists
+          </header>
+          <Paper style={{height:'300px',marginLeft: '10px',}}>
+          
+           
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+        <header style={{marginLeft:'2%',backgroundColor:'#990099', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
            Browser Usage
           </header>
           <Paper style={{height:'300px',marginLeft: '10px',}}>
         
           </Paper>
         </Grid>
-        <Grid item xs={6}>
-        <header style={{marginLeft:'1.5%',backgroundColor:'#00CCCC', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
+        <Grid item xs={4}>
+        <header style={{marginLeft:'2%',backgroundColor:'#00CCCC', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
           Recent Lists
           </header>
           <Paper style={{height:'300px',marginLeft: '10px',}}>

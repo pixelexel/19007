@@ -18,17 +18,16 @@ import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContaine
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    width: '99%',
+    width : '99%',
+    
   },
- 
 });
 
-
-class CountryGrid extends Component {
+class DistrictGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const { pp_data,no_ss,ex_curr} = this.props.country
+  const { pp_data,no_ss,ex_curr} = this.props.district
 
   return (
     <div className={classes.root}>
@@ -68,16 +67,24 @@ render() {
       <br/>
         <br/>
       <Grid container spacing={24}>
-        <Grid item xs={6}>
-        <header style={{marginLeft:'1.5%',backgroundColor:'#990099', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
+        <Grid item xs={4}>
+        <header style={{marginLeft:'2%',backgroundColor:'#990099', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
            New Orders
           </header>
         <Paper  style={{height:'250px',marginLeft: '10px',}}>
         
         </Paper>
         </Grid>
-        <Grid item xs={6}>
-        <header style={{marginLeft:'1.5%',backgroundColor:'#00CCCC', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
+        <Grid item xs={4}>
+        <header style={{marginLeft:'2%',backgroundColor:'#00CCCC', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
+           Montly Sales
+          </header>
+          <Paper style={{height:'250px',marginLeft: '10px',}}>
+           
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+        <header style={{marginLeft:'2%',backgroundColor:'#990099', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
            Montly Sales
           </header>
           <Paper style={{height:'250px',marginLeft: '10px',}}>
@@ -91,16 +98,15 @@ render() {
       <Grid container spacing={24}>
         <Grid item xs={4}>
         <header style={{marginLeft:'2%',backgroundColor:'#00CCCC', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
-          Recent Lists
+           Browser Usage
           </header>
           <Paper style={{height:'300px',marginLeft: '10px',}}>
-          
-           
+        
           </Paper>
         </Grid>
         <Grid item xs={4}>
-         <header style={{marginLeft:'2%',backgroundColor:'#990099', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
-           Browser Usage
+        <header style={{marginLeft:'2%',backgroundColor:'#990099', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
+           CPU Usage
           </header>
           <Paper style={{height:'300px',marginLeft: '10px',}}>
         
@@ -124,4 +130,4 @@ render() {
 
 
 
-export default withStyles(styles)(CountryGrid);
+export default withStyles(styles)(DistrictGrid);

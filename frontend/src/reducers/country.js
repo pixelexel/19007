@@ -6,8 +6,7 @@ const initialState = {
 	ex_curr : [],
 	fetchingData: false
 }
-// 'alldata' consists of data, acad_data, sport_data, c_data, d_data, rank_data 
-// refer components/student/GridSet.js 
+
 
 const countryData = (state = initialState, action) => {
 	let { data, type } = action.data || {}

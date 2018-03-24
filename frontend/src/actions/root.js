@@ -3,8 +3,9 @@ export const screens = {
 	STUDENT: 'STUDENT',
 	COUNTRY: 'COUNTRY',
 	STATE: 'STATE',
-	SCHOOL: 'SCHOOL',
 	DISTRICT: 'DISTRICT',
+	SCHOOL: 'SCHOOL',
+	
 }
 
 export const CHANGE_SCREEN = 'CHANGE_SCREEN'

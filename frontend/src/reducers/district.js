@@ -1,4 +1,4 @@
-import { REQUEST_STATE_DATA, RECEIVE_STATE_DATA } from '../actions/state'
+import { REQUEST_DISTRICT_DATA, RECEIVE_DISTRICT_DATA } from '../actions/district'
 
 const initialState = {
 	pp_data : [],
@@ -7,17 +7,16 @@ const initialState = {
 	fetchingData: false
 }
 
-
-const stateData = (state = initialState, action) => {
+const districtData = (state = initialState, action) => {
 	let { data, type } = action.data || {}
 	
 	switch(action.type){
-		case REQUEST_STATE_DATA:
+		case REQUEST_DISTRICT_DATA:
 			return Object.assign({}, state, {
 				fetchingData: true
 			})
 
-		case RECEIVE_STATE_DATA: {
+		case RECEIVE_DISTRICT_DATA: {
 			let ret = Object.assign({}, state, action.data )
 			ret['fetchingData'] = false
 			return ret
@@ -28,4 +27,4 @@ const stateData = (state = initialState, action) => {
 	}
 }
 
-export default stateData
+export default districtData
