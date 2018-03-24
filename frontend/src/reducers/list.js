@@ -7,8 +7,6 @@ const initialState = {
 
 const convertList = d => {
 	const {x, id, filters, name, data } = d
-	
-	console.log('LIST DATA', d, data)
 	let done = {}
 	let ret = []
 
@@ -38,9 +36,6 @@ const list = (state = initialState, action) => {
 			}
 
 			let listData = action.data.map(d => convertList(d))
-
-			console.log('RECIEVE LISTS', action.data, listData)
-
 			if(!action.error)
 				return Object.assign({}, state, {
 					fetchingAllLists: false,

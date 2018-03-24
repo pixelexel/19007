@@ -38,6 +38,9 @@ class IDCard extends Component{
                 <Typography component='p' className={classes.textCenter}>
                     {this.props.school}
                 </Typography>
+                <Typography component='p' className={classes.textCenter}>
+                    {this.props.district}, {this.props.state}
+                </Typography>
             </CardContent>
         </Card>)
     }

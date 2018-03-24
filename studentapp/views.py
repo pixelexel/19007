@@ -9,6 +9,7 @@ import datetime
 from pprint import pprint
 import pandas as pd
 from .forms import StudentForm
+from django.forms.models import model_to_dict
 # Create your views here.
 
 
@@ -219,7 +220,7 @@ def get_list_data(dt, save=True, limit=True):
 	
 @csrf_exempt
 def getList(request):
-	ret = {}
+	ret = {} 
 	if request.method == 'POST':
 		dt = json.loads(request.body)
 		ret = get_list_data(dt)
@@ -331,6 +332,11 @@ def getStudentData(request,aadhar_id):
 		maths = 0.0
 		hindi = 0.0
 		sci = 0.0
+		name = ''
+		school = ''
+		district = ''
+		state = ''
+		d = {}
 		for i in qs:
 			acad_data.append({str(i.date):i.marks})
 			sport_data.append({str(i.date):i.sport})
@@ -340,12 +346,32 @@ def getStudentData(request,aadhar_id):
 			maths += i.maths_marks
 			sci += i.science_marks
 			hindi += i.hindi_marks
+			name = i.name
+			school = i.school
+			district = i.district
+			state = i.state
+			d = model_to_dict(i)
+
 		eng /= len(qs)
 		maths /= len(qs)
 		sci /= len(qs)
 		hindi /= len(qs)
 		data = [{'english':eng},{'maths':maths},{'science':sci},{'hindi':hindi}]
-		ret = { 'data':data, 'acad_data':acad_data, 'sport_data':sport_data,'c_data':c_data, 'd_data':d_data}
+		print('ddd', d)
+		ret = { 
+			'data':data, 
+			'acad_data':acad_data, 
+			'sport_data':sport_data,
+			'c_data':c_data, 
+			'd_data':d_data,
+			'details': {
+				'name': name,
+				'school': school,
+				'district': district,
+				'state': state,
+			},
+			'params': d
+		}
 		print(ret)
 	return JsonResponse(ret) 
 

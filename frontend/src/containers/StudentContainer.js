@@ -57,7 +57,7 @@ class StudentContainer extends Component{
 		const { classes, theme } = this.props
 		// x, y, filters, data, name, type
 		console.log('student', this.props)
-		const { data, acad_data, sport_data, c_data, d_data } = this.props.student
+		const { data, acad_data, sport_data, c_data, d_data, details } = this.props.student
 		let last_acad, last_sport, last_curr
 		let ret = {}
 
@@ -82,7 +82,7 @@ class StudentContainer extends Component{
 		return (
 				<Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
 					<Grid item xs={3}>
-						<IDCard {...this.props.details}/>
+						<IDCard {...details}/>
 					</Grid>
 					<Grid item xs={3}>
 						<Progress data={data[0]} style={{marginBottom: 25}}/>
