@@ -6,6 +6,7 @@ import { ResponsiveContainer, Label, LineChart, CartesianGrid,
 import { VictoryChart, VictoryBar, VictoryTheme, VictoryStack, VictoryLegend, VictoryAxis } from 'victory'
 import { withStyles } from 'material-ui/styles' 
 import '../styles/graph.scss'
+import convert from 'color-convert'
 
 export const graphTypes = {
 	LINE: 'LINE',
@@ -35,13 +36,13 @@ const getFilterName = filter => `${filter.name}${filter.op}${filter.val}`
 class GraphComponent extends Component{
 	constructor(props){
 		super(props)
-		this.colorIndex = 11
+		this.colorIndex = convert.hex.hsl(this.props.theme.palette.primary.main)	
 	}
 
 	getNextColor = () => {
-		this.colorIndex += 25
-		this.colorIndex %= 360
-		return `hsl(${this.colorIndex}, 92%, 59%)`
+		this.colorIndex[2] += 25
+		this.colorIndex[2] %= 360
+		return `hsl(${this.colorIndex[0]}, ${this.colorIndex[1]}%, ${this.colorIndex[2]}%)`
 	}
 
 	getLineChart = (min, max, margin) => {
@@ -50,7 +51,7 @@ class GraphComponent extends Component{
 
 		return (
 			<LineChart data={data} margin={margin}>
-			  <CartesianGrid strokeDasharray="1 1" />
+			  
 			  <XAxis dataKey={x}>
 			  	<Label value={x} offset={-15} position="insideBottom" />
 			  </XAxis>
@@ -97,7 +98,7 @@ class GraphComponent extends Component{
 
 		return(
 			<AreaChart data={data} margin={margin}>
-			  <CartesianGrid strokeDasharray="1 1" />
+			  
 			  <XAxis dataKey={x}>
 			  	<Label value={x} offset={-15} position="insideBottom" />
 			  </XAxis>
@@ -109,12 +110,12 @@ class GraphComponent extends Component{
 			  <Area type="natural" dataKey={y} stroke={color} 
 			  	fillOpacity={1} fill={color}
 			  	name="none"
-			  	fillOpacity={0.7}
+			  	fillOpacity={0.5}
 			  	dot={{fill: theme.palette.secondary.light}}/>
 			  	<Area type="natural" dataKey={'filter'} stroke={color2} 
 			  		fillOpacity={1} fill={color2}
 			  		name={filters.map(filter=> getFilterName(filter) ).join(', ')}
-			  		fillOpacity={0.7}
+			  		fillOpacity={0.5}
 			  		dot={{fill: theme.palette.secondary.light}}/>
 
 				  
@@ -123,6 +124,7 @@ class GraphComponent extends Component{
 	}
 
 	/*
+	<CartesianGrid strokeDasharray="1 1" />
 		  { filters.map((filter, index)=>{
 		  	let color = this.getNextColor()
 		  	return (<Area type="natural"
@@ -302,7 +304,7 @@ class GraphComponent extends Component{
 	          <PolarGrid />
 				{ !this.props.legendOff && <Legend verticalAlign="top" height={36}/> }
 	          <PolarAngleAxis dataKey={x} />
-	          <PolarRadiusAxis angle={360/data.length } domain={[min, max]}/>
+	          
 	          <Radar name={'none'} dataKey={y} stroke={color} fill={color} fillOpacity={0.6}/>
 			  <Radar name={filters.map(filter=> getFilterName(filter) ).join(', ')} 
 			  		dataKey={'filter'} 
@@ -343,7 +345,9 @@ class GraphComponent extends Component{
 	}
 
 	render(){
-		this.colorIndex = 11
+		this.colorIndex = convert.hex.hsl(this.props.theme.palette.primary.main)
+		this.colorIndex[2] -= 25
+
 		let { x, y, filters, data, name, type } = this.props.data
 		const { classes, theme } = this.props
 		const margin = this.props.margin ? this.props.margin : { top: 5, right: 25, left: 20, bottom: 25 } 
