@@ -5,18 +5,19 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 import json
+import os
 import datetime
 from pprint import pprint
 import pandas as pd
 from .forms import StudentForm
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.forms.models import model_to_dict
 # Create your views here.
-
+CSV_STORAGE = os.path.join(os.getcwd(), 'studentapp', 'static', 'csv')
 
 def index(req):
 	import time
 	time.sleep(1)
-
 	return JsonResponse({
 		'error': False,
 		'data': ['Api root', 'nice']
@@ -187,25 +188,41 @@ def get_list_data(dt, save=True, limit=True):
 
 		if not ii['aadhar_id'] in ret:
 			x_vals = []
+			x_unpack = {}
 			for k, v in x_axis.items():
 				x_vals.append(ii[k])
+				x_unpack[k] = ii[k]
 				
 			ret[ii['aadhar_id']] = {'name': ii['name'], 
 					'value': x_vals, 
-					'std': ii['std']}
+                    'std': ii['std'], 'unpacked': x_unpack}
 		
 		else:
 			if ret[ii['aadhar_id']]['std'] < ii['std']:
 				x_vals = []
+				x_unpack = {}
 				for k, v in x_axis.items():
 					x_vals.append(ii[k])
+					x_unpack[k] = ii[k]
+
 
 				ret[ii['aadhar_id']] = {
 					'name': ii['name'], 'value': x_vals, 
-					'std': ii['std']}
+					'std': ii['std'], 'unpacked': x_unpack }
 
+	pddata = []
 	for k, v in ret.items():
-		data.append(v)
+		data.append({
+			'name': v['name'],
+			'value': v['value'],
+			'aadhar_id': k,
+		})
+		
+		udata = {'aadhar_id': k, 'name': v['name']}
+		for kx, vx in v['unpacked'].items():
+			udata[kx] = vx
+		
+		pddata.append(udata)
 	
 	data = sorted(data, key= lambda k : k['value'])
 	
@@ -216,17 +233,24 @@ def get_list_data(dt, save=True, limit=True):
 	if not save:
 		return dt
 	
+	df = pd.DataFrame(pddata)
+
 	if dt['id'] is not None:
 		gd = Lists.objects.get(id=dt['id'])
-		gd.lD = json.dumps(dt)
+		df.to_csv(os.path.join(CSV_STORAGE, str(dt['id']) + '.csv'), index=False)
+		dt['csv_path'] = 'static/csv/' + str(dt['id']) + '.csv'
+		gd.lD = json.dumps(dt)	
 		gd.save()
 
 	else:
 		gd = Lists()
 		gd.save()
 		dt['id'] = gd.id
+		df.to_csv(os.path.join(CSV_STORAGE, str(dt['id']) + '.csv'), index=False)
+		dt['csv_path'] = 'static/csv/' + str(dt['id']) + '.csv'
 		gd.lD = json.dumps(dt)
 		gd.save()
+
 	return dt
 	
 @csrf_exempt

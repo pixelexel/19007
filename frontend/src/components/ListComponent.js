@@ -53,7 +53,7 @@ class ListComponent extends Component{
 						  <TableRow key={index}>
 							<TableCell>{d['name']}</TableCell>
 							  { d['value'].map((v, vindex) => (
-								  <TableCell key={vindex}>{v}</TableCell>
+								  <TableCell key={vindex}>{v.toString()}</TableCell>
 							  ))}
 						  </TableRow>
 					  )) }
