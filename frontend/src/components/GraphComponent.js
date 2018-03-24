@@ -191,16 +191,15 @@ class GraphComponent extends Component{
 		const color1 = this.getNextColor()
 		const color2 = this.getNextColor()
 
-		console.log('bar data', data, vdata)
+		console.log('bar data', data, vdata, vfdata)
 
 		return (
 			<VictoryChart
 				domainPadding={{ x: 15 }}>
 				<VictoryLegend 
 					orientation="horizontal"
-					gutter={20}
-					style={{ margin: 'auto', position: 'relative', fill: '#fff', 
-						labels: { fill: "#fff" }, }}
+					x={250}
+					style={{ labels: { fill: "#fff" }, }}
 					data={[
 						{ name: "No Filter", symbol: { fill: color1,} },
 						{ name: filters.map(filter => getFilterName(filter)).join(', '), symbol: { fill: color2 } }
@@ -243,7 +242,7 @@ class GraphComponent extends Component{
 				/>
 				
 
-				<VictoryStack>
+				
 					<VictoryBar
 						key={0}
 						style={{
@@ -264,7 +263,6 @@ class GraphComponent extends Component{
 						}}
 						data={vfdata}
 					/>
-				</VictoryStack>
 			</VictoryChart>
 		)
 	}

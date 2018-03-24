@@ -304,10 +304,11 @@ class GraphCreator extends React.Component {
 						<Grid item xs={4}>
 							<FormControl className={classes.formControl}>
 								<InputLabel htmlFor="x">X Axis</InputLabel>
-								<Select value={x} onChange={this.handleAxesChange.bind(this, 'x')} inputProps={{
-									name: 'x',
-									id: 'x', 
-								}}>
+								<Select value={x} 
+									onChange={this.handleAxesChange.bind(this, 'x')} inputProps={{
+										name: 'x',
+										id: 'x', 
+									}} >
 									{
 										formVals.x.map(v=> {
 										return (

@@ -199,7 +199,7 @@ def get_list_data(dt, save=True, limit=True):
 	data = sorted(data, key= lambda k : k['value'])
 	
 	if limit:
-		data = data[:30]
+		data = data[::-1][:300]
 
 	if not save:
 		return data
@@ -426,9 +426,7 @@ def chatbot(request):
 			}, False, False)
 
 			datalen = len(listData)
-
-			listData = listData[:30]
-
+			listData = listData[::-1][:30]
 			pprint(listData)
 
 			if result['action'] == 'get_filters':
