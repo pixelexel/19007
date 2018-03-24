@@ -38,7 +38,7 @@ class ListComponent extends Component{
 		return(
 			<div style={this.props.style} className={classes.root}>
 		      <Table className={classes.table}>
-				  <TableHead>
+				  <TableHead style={{position: 'sticky'}}>
 						<TableRow>
 							<TableCell> name </TableCell>
 							{

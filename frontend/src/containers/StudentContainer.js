@@ -46,6 +46,12 @@ class StudentContainer extends Component{
 		this.props.dispatch(getStudentData(id))
 	}
 
+	componentWillReceiveProps(newProps){
+		if(newProps.id != this.props.id){
+			this.props.dispatch(getStudentData(newProps.id))
+		}
+	}
+
 	static defaultProps = {
 		details: {
 			name: 'Saumitra Bose',

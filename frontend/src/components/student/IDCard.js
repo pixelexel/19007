@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { Card, CardContent, Avatar, Typography } from 'material-ui'
 import { withStyles } from 'material-ui/styles'
+import LocationOnIcon from 'material-ui-icons/LocationOn'
 
 const styles = theme => ({
     avatar: {
@@ -20,6 +21,8 @@ const styles = theme => ({
     },
     card: {
         padding: 15,
+        paddingBottom: 0,
+        paddingTop: 11,
     }
 })
 

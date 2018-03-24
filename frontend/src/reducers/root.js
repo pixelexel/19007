@@ -11,12 +11,12 @@ const initialState = {
 const rootComp = (state = initialState, action) => {
 	switch(action.type){
 		case CHANGE_SCREEN:
-			if(state.screen != action.screen)
+			// if(state.screen != action.screen)
 				return Object.assign({}, state, {
 					screen: action.screen,
 					id: action.id,
 				})
-			else return state
+			// else return state
 
 		case TOGGLE_DRAWER:
 			return Object.assign({}, state, {
