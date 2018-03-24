@@ -114,7 +114,7 @@ def getGraph(request):
 	#print(ret) 
 	return JsonResponse(ret)
 
-def get_list_data(dt, save=True):
+def get_list_data(dt, save=True, limit=True):
 	x_axis = dt['x']
 	filters_all = dt['filters']
 	new_filter = {}
@@ -164,8 +164,10 @@ def get_list_data(dt, save=True):
 
 	for k, v in ret.items():
 		data.append(v)
-
+	
 	data = sorted(data, key= lambda k : k['value'])[:30]
+	if limit:
+		data = data[:30]
 
 	if not save:
 		return data
@@ -330,6 +332,38 @@ def studentform(request):
 		form = StudentForm()
 		return render(request, 'studentform.html', {'form' : form})
 
+def convert_filters(filters):
+	sendfilters = []
+	for y in filters:
+		r = {}
+		if not type(y) is dict:
+			continue
+
+		for k, v in y.items():
+			if k == 'parameter':
+				r['name'] = v
+				if v == 'number of parents':
+					r['name'] = 'no_of_parents'
+				elif v == 'number of siblings':
+					r['name'] = 'no_of_siblings'
+				elif len(v.split()) > 1:
+					r['name'] = '_'.join(v.split())
+
+			elif k == 'operator':
+				r['op'] = v
+			else:
+				if k == 'number':
+					r['type'] = 'number'
+				else:
+					if v == 'True' or v == 'False':
+						r['type'] = 'bool'
+					else:
+						r['type'] = 'string'
+
+				r['val'] = v
+		sendfilters.append(r)
+	return sendfilters
+
 @csrf_exempt
 def chatbot(request):
 	if request.method == 'POST':
@@ -341,58 +375,44 @@ def chatbot(request):
 			})
 
 		result = data['result']
-		if not result['action'] == 'get_filters':
-			return JsonResponse({
-				error: false,	
-			})
 
-		elif result['action'] == 'get_filters':
-			operands = ['=', '>', '>=', '<=', '<']
+		if result['action'] in ['get_filters', 'get_number_filters']:
 			filters = result['parameters']['Filter']
-			x = result['parameters']['Parameter']
+			sendfilters = convert_filters(filters)
+
+			try:
+				x = result['parameters']['Parameter']
+			except KeyError:
+				x = 'marks'
 
 			if len(x.split()) > 1:
 				x = '_'.join(x.split())
-			sendfilters = []
-
-			for y in filters:
-				r = {}
-				if not type(y) is dict:
-					continue
-
-				for k, v in y.items():
-					if k == 'parameter':
-						r['name'] = v
-						if v == 'number of parents':
-							r['name'] = 'no_of_parents'
-						elif v == 'number of siblings':
-							r['name'] = 'no_of_siblings'
-						elif len(v.split()) > 1:
-							r['name'] = '_'.join(v.split())
-
-					elif k == 'operator':
-						r['op'] = v
-					else:
-						if k == 'number':
-							r['type'] = 'number'
-						else:
-							if v == 'True' or v == 'False':
-								r['type'] = 'bool'
-							else:
-								r['type'] = 'string'
-
-						r['val'] = v
-				sendfilters.append(r)
 
 			listData = get_list_data({
 				'x': x,
 				'filters': sendfilters,
-			}, False)
+			}, False, False)
 
-			pprint(listData)
+			datalen = len(listData)
+			listData = listData[:30]
 			
+			pprint(listData)
+
+			if result['action'] == 'get_filters':
+				
+				return JsonResponse({
+					'speech': 'Here is a list of top students satisfying your query',
+					'displayText': 'Here is a list of top students satisfying your query',
+					'data': listData,
+				})
+
+			elif result['action'] == 'get_number_filters':
+				return JsonResponse({
+					'speech': 'There are {} students satisfying your query'.format(datalen),
+					'displayText': 'There are {} students satisfying your query'.format(datalen)
+				})
+
+		else:
 			return JsonResponse({
-				'speech': 'Here is a list of top students satisfying your query',
-				'displayText': 'Here is a list of top students satisfying your query',
-				'data': listData,
+				'error': 'false',
 			})
