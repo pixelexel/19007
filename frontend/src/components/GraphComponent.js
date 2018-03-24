@@ -240,9 +240,6 @@ class GraphComponent extends Component{
 						}
 					}
 				/>
-				
-
-				
 					<VictoryBar
 						key={0}
 						style={{
@@ -303,7 +300,7 @@ class GraphComponent extends Component{
 		return (
 			<RadarChart margin={margin} data={data}>
 	          <PolarGrid />
-	          <Legend verticalAlign="top" height={36}/>
+				{ !this.props.legendOff && <Legend verticalAlign="top" height={36}/> }
 	          <PolarAngleAxis dataKey={x} />
 	          <PolarRadiusAxis angle={360/data.length } domain={[min, max]}/>
 	          <Radar name={'none'} dataKey={y} stroke={color} fill={color} fillOpacity={0.6}/>
@@ -349,7 +346,7 @@ class GraphComponent extends Component{
 		this.colorIndex = 11
 		let { x, y, filters, data, name, type } = this.props.data
 		const { classes, theme } = this.props
-		const margin = { top: 5, right: 25, left: 20, bottom: 25 }
+		const margin = this.props.margin ? this.props.margin : { top: 5, right: 25, left: 20, bottom: 25 } 
 		let min = 100000000
 		let max = -100000000
 		console.log("Graph comp", this.props)
@@ -366,9 +363,14 @@ class GraphComponent extends Component{
 
 		max = Math.ceil(max + max*0.15)
 		min = Math.floor(min - min*0.15)
+		let newStyle = style
+		if(this.props.height){
+			newStyle = Object.assign({}, style, {
+				height: this.props.height})
+		}
 
 		return(
-			<div style={style} className={classes.root}>
+			<div style={newStyle} className={classes.root}>
 				<ResponsiveContainer width='100%' height="100%">
 					{this.getGraph(type, min, max, margin)}
 				</ResponsiveContainer>
