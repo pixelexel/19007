@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from .models import Student,School,extra_curricular,Acads,Graphs,Lists
+from .models import Student, School, extra_curricular, Acads, Graphs, Lists
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 import json
 import datetime
 from pprint import pprint
+import pandas as pd
 from .forms import StudentForm
 # Create your views here.
+
 
 def index(req):
 	import time
@@ -19,11 +21,16 @@ def index(req):
 		'data': ['Api root', 'nice']
 	})
 	
+
 @csrf_exempt
 def formVal(request):
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}
 	rval = Student._meta.get_fields()
-	types = {'CharField':'string','IntegerField':'int','BooleanField':'bool','DateField':'string'}
+	types = {'CharField':'string', 
+			'IntegerField':'int',
+			'BooleanField':'bool',
+			'DateField':'date'}
+
 	for i in rval:
 		if types.__contains__(i.get_internal_type()):
 			tem = {}
@@ -36,6 +43,7 @@ def formVal(request):
 	retr = {'graph':retGraph,'list':retGraph}
 	return JsonResponse(retr)
 
+
 @csrf_exempt
 def getGraph(request):
 	ret = {}
@@ -46,6 +54,9 @@ def getGraph(request):
 		y_axis = dt['y']
 		filters_all = dt['filters']
 		new_filter = {}
+		x_filter_present = False
+		x_filter = {}
+
 		for i in filters_all:
 			parm = ''
 			val = ''
@@ -63,46 +74,66 @@ def getGraph(request):
 						parm += '__gt'
 					elif k == '<':
 						parm += '__lt'
+
 			for v,k in i.items():
 				if v == 'type':
 					if k == 'int':
 						val = int(val)
 					elif k == 'bool':
 						val = bool(val)
+
 			new_filter[parm] = val
-		tq = Student.objects.filter(**{'marks__gt':30})
+
+			if i['name'] == x_axis:
+				x_filter_present = True
+				x_filter[parm] = val
+		
 		qs = Student.objects.filter(**new_filter)
-		qss = Student.objects.all()
+		if not x_filter_present:
+			qss = Student.objects.all()
+		else:
+			qss = Student.objects.filter(**x_filter)
+
 		data = {}
 		tdata = {}  
+
+		# Filtered objects
 		for i in qs:
 			ii = i.__dict__
-			if isinstance(ii[x_axis],datetime.date):
+			if isinstance(ii[x_axis], datetime.date):
 				ii[x_axis] = str(ii[x_axis])
+			
 			if data.__contains__(ii[x_axis]):
 				data[ii[x_axis]] = float(data[ii[x_axis]]*tdata[x_axis] + ii[y_axis])/(tdata[x_axis] + 1)
 				tdata[x_axis] += 1
+			
 			else:
 				data[ii[x_axis]] = ii[y_axis]
 				tdata[x_axis] = 1
+		
 		data_nf = {}
 		tdata_nf = {} 
+
 		for i in qss:
 			ii = i.__dict__
-			if isinstance(ii[x_axis],datetime.date):
+			if isinstance(ii[x_axis], datetime.date):
 				ii[x_axis] = str(ii[x_axis])
+
 			if data_nf.__contains__(ii[x_axis]):
 				data_nf[ii[x_axis]] = float(data_nf[ii[x_axis]]*tdata_nf[x_axis] + ii[y_axis])/(tdata_nf[x_axis] + 1)
 				tdata_nf[x_axis] += 1
 			else:
 				data_nf[ii[x_axis]] = ii[y_axis]
 				tdata_nf[x_axis] = 1
+
 		dt['data'] = data
 		dt['data_nf'] = data_nf
+
 		if dt['id'] is not None:
 			gd = Graphs.objects.get(id=dt['id'])
 			gd.gD = json.dumps(dt)
 			gd.save()	
+		
 		else :
 			gd = Graphs()
 			gd.save()
@@ -110,8 +141,7 @@ def getGraph(request):
 			gd.gD = json.dumps(dt)
 			gd.save()
 		ret = dt
-	print(Graphs.objects.all())
-	#print(ret) 
+
 	return JsonResponse(ret)
 
 def get_list_data(dt, save=True, limit=True):
@@ -144,7 +174,6 @@ def get_list_data(dt, save=True, limit=True):
 					val = bool(val)
 		new_filter[parm] = val
 
-	tq = Student.objects.filter(**{'marks__gt': 30})
 	qs = Student.objects.filter(**new_filter)
 	data = []
 	ret = {}
@@ -152,10 +181,12 @@ def get_list_data(dt, save=True, limit=True):
 	for i in qs:
 		ii = i.__dict__
 		tem = {}
+
 		if not ii['aadhar_id'] in ret:
 			ret[ii['aadhar_id']] = {'name': ii['name'], 
 					'value': ii[x_axis], 
 					'std': ii['std']}
+		
 		else:
 			if ret[ii['aadhar_id']]['std'] < ii['std']:
 				ret[ii['aadhar_id']] = {
@@ -165,9 +196,10 @@ def get_list_data(dt, save=True, limit=True):
 	for k, v in ret.items():
 		data.append(v)
 	
-	data = sorted(data, key= lambda k : k['value'])[:30]
+	data = sorted(data, key= lambda k : k['value'])
+	
 	if limit:
-		data = data[:30]
+		data = data[::-1][:300]
 
 	if not save:
 		return data
@@ -394,8 +426,7 @@ def chatbot(request):
 			}, False, False)
 
 			datalen = len(listData)
-			listData = listData[:30]
-			
+			listData = listData[::-1][:30]
 			pprint(listData)
 
 			if result['action'] == 'get_filters':
@@ -411,8 +442,3 @@ def chatbot(request):
 					'speech': 'There are {} students satisfying your query'.format(datalen),
 					'displayText': 'There are {} students satisfying your query'.format(datalen)
 				})
-
-		else:
-			return JsonResponse({
-				'error': 'false',
-			})

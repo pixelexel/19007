@@ -2,7 +2,7 @@ import { ApiAiClient } from "api-ai-javascript"
 export const RECEIVE_CHATBOT_MESSAGE = 'RECEIVE_CHATBOT_MESSAGE'
 export const SEND_CHATBOT_MESSAGE = 'SEND_CHATBOT_MESSAGE'
 export const TOGGLE_CHATBOT = 'TOGGLE_CHATBOT'
-
+console.log('ApiAiClient', ApiAiClient)
 const receiveChatbotMessage = (error, data) => ({
     type: RECEIVE_CHATBOT_MESSAGE,
     data: data,

@@ -12,6 +12,7 @@ const styles = theme => ({
         top: 65,
         right: 15,
         backgroundColor: theme.palette.secondary.main,
+        boxShadow: theme.shadows[5],
     },
 
     paper: {
@@ -50,20 +51,23 @@ class Chatbot extends Component{
 
     send = (e) => {
         if(e.key == 'Enter'){
-            const {text} = this.state
+            // const {text} = this.state
+            const text = this.refs.inp.value
             this.props.dispatch(sendMessage(text))
-            this.setState({
-                'text': ''
-            })
+            // this.setState({
+            //     'text': ''
+            // })
+
+            this.refs.inp.value = ''
         }
     }
 
-    handleChange = (e) => {
-        const value = e.target.value
-        this.setState({
-            'text': value,
-        })
-    }
+    // handleChange = (e) => {
+        // const value = e.target.value
+        // this.setState({
+        //     'text': value,
+        // })
+    // }
 
     componentDidUpdate(prevProps, prevState){
         
@@ -78,7 +82,7 @@ class Chatbot extends Component{
         if (message.type == 'received') {
             if (message.action == 'get_filters') {
                 rend = (
-                    <div key={index} style={{ textAlign: 'right', width: '100%' }}>
+                    <div key={index} >
                         <ChatbotMessage
                             type={message.type}
                             contentType='text'
@@ -91,7 +95,7 @@ class Chatbot extends Component{
                 )
             }
             else {
-                rend = (<div key={index} style={{ textAlign: 'right', width: '100%' }}>
+                rend = (<div key={index} >
                     <ChatbotMessage
                         type={message.type}
                         contentType='text'
@@ -100,7 +104,7 @@ class Chatbot extends Component{
             }
         }
         else {
-            rend = (<div key={index}>
+            rend = (<div key={index} style={{ textAlign: 'right'}}>
                 <ChatbotMessage
                     type={message.type}
                     contentType='text'
@@ -112,8 +116,8 @@ class Chatbot extends Component{
     }
 
     render(){
+        console.log('rendering', this.refs)
         const { classes, messages, fetching, open } = this.props
-        console.log('chatbot', this.props)
         const display = open ? 'block' : 'none'
 
         return(
@@ -128,7 +132,7 @@ class Chatbot extends Component{
                     placeholder='Ask something'
                     onChange={this.handleChange} 
                     onKeyPress={this.send} 
-                    value={this.state.text} />
+                    ref='inp' />
                 
             </div>
         </div> )

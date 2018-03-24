@@ -3,6 +3,7 @@ import { ResponsiveContainer, Label, LineChart, CartesianGrid,
 		XAxis, YAxis, ZAxis, Tooltip, Legend, Line,
 		AreaChart, Area, ScatterChart, Scatter, BarChart, Bar,
 		Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts'
+import { VictoryChart, VictoryBar, VictoryTheme, VictoryStack, VictoryLegend, VictoryAxis } from 'victory'
 import { withStyles } from 'material-ui/styles' 
 import '../styles/graph.scss'
 
@@ -60,17 +61,22 @@ class GraphComponent extends Component{
 			  <Legend verticalAlign="top" height={36}/>
 			  <Line type="monotone" dataKey={y}
 			  		name="none"
-			  		 stroke={this.getNextColor()} 
-			  		 dot={{fill: theme.palette.secondary.light}} />
+					   stroke={this.getNextColor()} 
+					   dot={null}
+			  		  />
 
 			  <Line type="monotone" dataKey={'filter'}
 			  		name={filters.map(filter=> getFilterName(filter) ).join(', ')}
 			  		 stroke={this.getNextColor()} 
-			  		 dot={{fill: theme.palette.secondary.light}} />	  
+			  		 dot={null} />	  
 			  
 			</LineChart>
 		)
 	}
+
+	/*
+	dot={{fill: theme.palette.secondary.light}}
+	*/
 
 	/*
 	{ filters.map((filter, index) => (
@@ -170,9 +176,96 @@ class GraphComponent extends Component{
 	getBarChart = (min, max, margin) =>{
 		let {x, y, filters, data, name} = this.props.data
 		const { classes, theme } = this.props
+		
+
+		const vdata = data.map(d => ({
+			x: d[x],
+			y: d[y],
+		}))
+
+		const vfdata = data.map(d => ({
+			x: d[x],
+			y: d['filter'],
+		}))
+
+		const color1 = this.getNextColor()
+		const color2 = this.getNextColor()
+
+		console.log('bar data', data, vdata, vfdata)
 
 		return (
-			<BarChart data={data} margin={margin}>
+			<VictoryChart
+				domainPadding={{ x: 15 }}>
+				<VictoryLegend 
+					orientation="horizontal"
+					x={250}
+					style={{ labels: { fill: "#fff" }, }}
+					data={[
+						{ name: "No Filter", symbol: { fill: color1,} },
+						{ name: filters.map(filter => getFilterName(filter)).join(', '), symbol: { fill: color2 } }
+					]}
+				/>
+				<VictoryAxis
+					label={x}
+					tickValues={data.map(d=>d[x])}
+					style={
+						{
+							tickLabels: {
+								stroke: '#fff',
+								fill: '#fff',
+								color: '#fff',
+							},
+							axis: {
+								stroke: '#fff'
+							},
+							axisLabel: {stroke: '#fff'}
+						}
+					}
+				/>
+
+				<VictoryAxis
+					label={y}
+					dependentAxis
+					style={
+						{
+							tickLabels: {
+								stroke: '#fff',
+								fill: '#fff',
+								color: '#fff',
+							},
+							axis: {
+								stroke: '#fff'
+							},
+							axisLabel: { stroke: '#fff' }
+						}
+					}
+				/>
+					<VictoryBar
+						key={0}
+						style={{
+							data: {
+								fill: color1,
+								width: 22
+							},
+						}}
+						data={vdata}
+					/>
+					<VictoryBar
+						key={1}
+						style={{
+							data: {
+								fill: color2,
+								width: 22,
+							}
+						}}
+						data={vfdata}
+					/>
+			</VictoryChart>
+		)
+	}
+
+	/*
+		<BarChart data={data} margin={margin}>
 		       <CartesianGrid strokeDasharray="3 3" />
 				<XAxis dataKey={'x'}>
 				  	<Label value={x} offset={-15} position="insideBottom" />
@@ -183,12 +276,11 @@ class GraphComponent extends Component{
 				<Tooltip/>
 				<Legend verticalAlign="top" height={36}/>
 				<Bar dataKey={y} name="none" fill={this.getNextColor()} />
-				<Bar dataKey={'filter'} name={filters.map(filter=> getFilterName(filter) ).join(', ')} 
-					fill={this.getNextColor()} />		
+				<Bar dataKey={'filter'}
+					name={filters.map(filter=> getFilterName(filter) ).join(', ')}
+					fill={this.getNextColor()} />
 	      	</BarChart>
-		)
-	}
-
+	*/
 	/*
 		{filters.map((filter, index) => (
 			<Bar key={index} dataKey={getFilterName(filter)} 
@@ -208,7 +300,7 @@ class GraphComponent extends Component{
 		return (
 			<RadarChart margin={margin} data={data}>
 	          <PolarGrid />
-	          <Legend verticalAlign="top" height={36}/>
+				{ !this.props.legendOff && <Legend verticalAlign="top" height={36}/> }
 	          <PolarAngleAxis dataKey={x} />
 	          <PolarRadiusAxis angle={360/data.length } domain={[min, max]}/>
 	          <Radar name={'none'} dataKey={y} stroke={color} fill={color} fillOpacity={0.6}/>
@@ -254,7 +346,7 @@ class GraphComponent extends Component{
 		this.colorIndex = 11
 		let { x, y, filters, data, name, type } = this.props.data
 		const { classes, theme } = this.props
-		const margin = { top: 5, right: 25, left: 20, bottom: 25 }
+		const margin = this.props.margin ? this.props.margin : { top: 5, right: 25, left: 20, bottom: 25 } 
 		let min = 100000000
 		let max = -100000000
 		console.log("Graph comp", this.props)
@@ -271,9 +363,14 @@ class GraphComponent extends Component{
 
 		max = Math.ceil(max + max*0.15)
 		min = Math.floor(min - min*0.15)
+		let newStyle = style
+		if(this.props.height){
+			newStyle = Object.assign({}, style, {
+				height: this.props.height})
+		}
 
 		return(
-			<div style={style} className={classes.root}>
+			<div style={newStyle} className={classes.root}>
 				<ResponsiveContainer width='100%' height="100%">
 					{this.getGraph(type, min, max, margin)}
 				</ResponsiveContainer>

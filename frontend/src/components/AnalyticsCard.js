@@ -30,7 +30,21 @@ class AnalyticsCard extends Component{
 	}
 
 	render(){
-		const { classes, name, subheader } = this.props
+		const { classes, name, subheader, actionDisabled } = this.props
+		let action
+		if(!this.props.actionDisabled){
+			action = (<div>
+				<IconButton onClick={this.edit} aria-label="Edit">
+					<EditIcon />
+				</IconButton>
+				<IconButton aria-label="Delete">
+					<DeleteIcon onClick={this.edit} onClick={this.delete} />
+				</IconButton>
+			</div>)
+		}
+		else {
+			action = null
+		}
 
 		return(
 			<Card className={classes.card}>
@@ -42,16 +56,7 @@ class AnalyticsCard extends Component{
 		            }
 		            title={name}
 		            subheader={subheader}
-		            action={
-		            	<div>
-		            		<IconButton onClick={this.edit} aria-label="Edit">
-		            		  <EditIcon />
-		            		</IconButton>
-		            		<IconButton aria-label="Delete">
-		            		  <DeleteIcon onClick={this.edit} onClick={this.delete} />
-		            		</IconButton>
-		            	</div>
-		            }
+		            action={action}
 		         />
 		        
 				{ this.props.children }
