@@ -147,8 +147,10 @@ def getGraph(request):
 
 def get_list_data(dt, save=True, limit=True):
 	x_axis = dt['x']
+	print('x_axis', x_axis)
 	filters_all = dt['filters']
 	new_filter = {}
+
 	for i in filters_all:
 		parm = ''
 		val = ''
@@ -184,14 +186,22 @@ def get_list_data(dt, save=True, limit=True):
 		tem = {}
 
 		if not ii['aadhar_id'] in ret:
+			x_vals = []
+			for k, v in x_axis.items():
+				x_vals.append(ii[k])
+				
 			ret[ii['aadhar_id']] = {'name': ii['name'], 
-					'value': ii[x_axis], 
+					'value': x_vals, 
 					'std': ii['std']}
 		
 		else:
 			if ret[ii['aadhar_id']]['std'] < ii['std']:
+				x_vals = []
+				for k, v in x_axis.items():
+					x_vals.append(ii[k])
+
 				ret[ii['aadhar_id']] = {
-					'name': ii['name'], 'value': ii[x_axis], 
+					'name': ii['name'], 'value': x_vals, 
 					'std': ii['std']}
 
 	for k, v in ret.items():
@@ -202,14 +212,15 @@ def get_list_data(dt, save=True, limit=True):
 	if limit:
 		data = data[::-1][:300]
 
-	if not save:
-		return data
-
 	dt['data'] = data
+	if not save:
+		return dt
+	
 	if dt['id'] is not None:
 		gd = Lists.objects.get(id=dt['id'])
 		gd.lD = json.dumps(dt)
 		gd.save()
+
 	else:
 		gd = Lists()
 		gd.save()
@@ -437,30 +448,33 @@ def chatbot(request):
 		if result['action'] in ['get_filters', 'get_number_filters']:
 			filters = result['parameters']['Filter']
 			sendfilters = convert_filters(filters)
+			x_ans = {}
 
 			try:
 				x = result['parameters']['Parameter']
+				for v in x:
+					if len(v.split()) > 1:
+						v = '_'.join(v.split())
+					x_ans[v] = True
+
 			except KeyError:
-				x = 'marks'
+				x_ans = {}
 
-			if len(x.split()) > 1:
-				x = '_'.join(x.split())
-
-			listData = get_list_data({
-				'x': x,
+			payload = get_list_data({
+				'x': x_ans,
 				'filters': sendfilters,
 			}, False, False)
 
-			datalen = len(listData)
-			listData = listData[::-1][:30]
-			pprint(listData)
+			datalen = len(payload['data'])
+			payload['data'] = payload['data'][::-1][:30]
+			pprint(payload)
 
 			if result['action'] == 'get_filters':
 				
 				return JsonResponse({
 					'speech': 'Here is a list of top students satisfying your query',
 					'displayText': 'Here is a list of top students satisfying your query',
-					'data': listData,
+					'data': payload,
 				})
 
 			elif result['action'] == 'get_number_filters':
