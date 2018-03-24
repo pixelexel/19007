@@ -68,7 +68,6 @@ function asd(allData) {
 		'c_data': c_dataPass,
 		'd_data': d_dataPass,
 	}
-	console.log('consoleeeeeeeeeeeeeeeeeeeeeeeeee',allDataPass);
 	return allDataPass;
 }
 
