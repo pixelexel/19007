@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import List, { ListItem, ListItemText, ListSubheader } from 'material-ui/List'
+import { Table, TableBody, TableCell, TableHead, TableRow } from 'material-ui'
 import Avatar from 'material-ui/Avatar'
 import { withStyles } from 'material-ui/styles'
 import ImageIcon from 'material-ui-icons/Image'
@@ -19,48 +20,48 @@ const styles = (theme) => ({
 	},
 	unsticky: {
 		position: 'relative',
+	},
+	table:{
+		overflow: 'auto'
 	}
 })
 
 class ListComponent extends Component{
 	render(){
+		console.log('LIST COMPONENT', listData, this.props)
 		const { classes, data } = this.props
 		const listData = data.data
 		const { x, filters } = data
 		const filterNames = filters.map(f => `${f.name}${f.op}${f.val}`).join(', ')
 
-		console.log('LIST COMPONENT', listData, this.props)
+		
 		return(
-			<div className={classes.root}>
-		      <List
-		      	subheader={<ListSubheader className={classes.unsticky} component="div">{`Students ${x} with ${filterNames}`}</ListSubheader>}>
-
-		      {
-		      	listData.map((d, index) => {
-		      		console.log('list data', d)
-		      		return <ListItem key={index}>
-		      					<ListItemText primary={d.name}/>
-		      					<ListItemText className={classes.alignRight} primary={d.value.toString()}/>
-		      				</ListItem>
-		      	})
-		      }
-		      </List>
+			<div style={this.props.style} className={classes.root}>
+		      <Table className={classes.table}>
+				  <TableHead style={{position: 'sticky'}}>
+						<TableRow>
+							<TableCell> name </TableCell>
+							{
+								Object.keys(x).map((k, index) => (
+									<TableCell key={index}>{k}</TableCell>
+								))
+							}
+						</TableRow>
+				  </TableHead>
+				  <TableBody>
+					  { listData.map((d, index) => (
+						  <TableRow key={index}>
+							<TableCell>{d['name']}</TableCell>
+							  { d['value'].map((v, vindex) => (
+								  <TableCell key={vindex}>{v.toString()}</TableCell>
+							  ))}
+						  </TableRow>
+					  )) }
+					</TableBody>
+			  </Table>
 		    </div>
 		)
 	}
 }
 
-/*
-{ listData.map(v => (
-	<ListItem key={v}>
-	  <Avatar>
-	    <ImageIcon />
-	  </Avatar>
-	  <ListItemText primary={v} secondary="" />
-	</ListItem>
-))}
-*/
-/*
-	<ListItemText key={index} primary={d['name']} secondary={d['value']}/>
-*/
 export default withStyles(styles)(ListComponent)

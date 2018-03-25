@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import DrawerComponent from './DrawerComponent'
 import { toggleDrawer } from '../actions/root'
 import { toggleChatbot } from '../actions/chatbot'
+import { changeScreen } from '../actions/root'
 import CountryContainer from './CountryContainer'
 import StateContainer from './StateContainer'
 import DistrictContainer from './DistrictContainer'
@@ -70,7 +71,8 @@ class Root extends Component{
 		return (
 			<div>
 				<Header handleMenuClick={this.toggleDrawer}
-						handleChatbot={this.toggleChatbot} 
+						handleChatbot={this.toggleChatbot}
+						changeScreen={changeScreen} 
 						{...this.props}/>
 				<div className={this.props.drawer.open ? 'root-screen-hide': ''} 
 						onClick={this.closeDrawer}>

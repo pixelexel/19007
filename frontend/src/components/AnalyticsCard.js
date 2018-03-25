@@ -3,6 +3,7 @@ import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
 import  DeleteIcon from 'material-ui-icons/Delete'
+import FileDownloadIcon from 'material-ui-icons/FileDownload'
 import EditIcon from 'material-ui-icons/Edit'
 import { withStyles } from 'material-ui/styles'
 
@@ -29,8 +30,30 @@ class AnalyticsCard extends Component{
 		this.props.onDelete(this.props.id, this.props.type)
 	}
 
+	download = () => {
+		this.props.onDownload(this.props.id, this.props.type)
+	}
+
 	render(){
-		const { classes, name, subheader } = this.props
+		const { classes, name, subheader, actionDisabled } = this.props
+		let action
+		if(!this.props.actionDisabled){
+			action = (<div>
+				<IconButton onClick={this.edit} aria-label="Edit">
+					<EditIcon />
+				</IconButton>
+				<IconButton aria-label="Delete">
+					<DeleteIcon onClick={this.delete}/>
+				</IconButton>
+				{ this.props.onDownload && (
+				<IconButton aria-label="Delete">
+					<FileDownloadIcon onClick={this.download} />
+				</IconButton> )}
+			</div>)
+		}
+		else {
+			action = null
+		}
 
 		return(
 			<Card className={classes.card}>
@@ -42,16 +65,7 @@ class AnalyticsCard extends Component{
 		            }
 		            title={name}
 		            subheader={subheader}
-		            action={
-		            	<div>
-		            		<IconButton onClick={this.edit} aria-label="Edit">
-		            		  <EditIcon />
-		            		</IconButton>
-		            		<IconButton aria-label="Delete">
-		            		  <DeleteIcon onClick={this.edit} onClick={this.delete} />
-		            		</IconButton>
-		            	</div>
-		            }
+		            action={action}
 		         />
 		        
 				{ this.props.children }

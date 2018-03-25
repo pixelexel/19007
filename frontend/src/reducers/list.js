@@ -6,9 +6,7 @@ const initialState = {
 }
 
 const convertList = d => {
-	const {x, id, filters, name, data } = d
-	
-	console.log('LIST DATA', d, data)
+	const {x, id, filters, name, data, csv_path } = d
 	let done = {}
 	let ret = []
 
@@ -18,11 +16,12 @@ const convertList = d => {
 		id: id,
 		filters: filters,
 		data: data,
+		csv_path: csv_path,
 	}
 }
 
 const list = (state = initialState, action) => {
-	let { x, filters, name, id, data } = action.data || {}
+	let { x, filters, name, id, data, csv_path } = action.data || {}
 
 	switch(action.type){
 		case REQUEST_ALL_LISTS:
@@ -38,8 +37,6 @@ const list = (state = initialState, action) => {
 			}
 
 			let listData = action.data.map(d => convertList(d))
-
-			console.log('RECIEVE LISTS', action.data, listData)
 
 			if(!action.error)
 				return Object.assign({}, state, {
@@ -74,6 +71,7 @@ const list = (state = initialState, action) => {
 				filters: filters,
 				id: id,
 				data: data,
+				csv_path: csv_path,
 			}
 
 			for(let i = 0 ; i < lists.length; i ++){

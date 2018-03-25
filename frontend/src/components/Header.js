@@ -19,7 +19,8 @@ const styles = theme => ({
 		backgroundColor: theme.palette.primary.main,
 		marginRight: 30,
 		height: 40,
-		width: 40
+		width: 40,
+		cursor: 'pointer',
 	},
 	shiftRight: {
 		marginLeft: 300,
@@ -46,7 +47,7 @@ class Header extends Component{
 	            <MenuIcon />
 	          </IconButton>
 
-	       	  <Avatar className={classes.primaryAvatar}>
+	       	  <Avatar onClick={e => { this.props.dispatch(this.props.changeScreen('DASH')) }} className={classes.primaryAvatar}>
 	       	  	<TrendingUpIcon/>
 	       	  </Avatar>
 	          
