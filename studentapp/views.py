@@ -24,8 +24,7 @@ def index(req):
 	})
 	
 
-@csrf_exempt
-def formVal(request):
+def get_formvals():
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}
 	rval = Student._meta.get_fields()
 	types = {'CharField':'string', 
@@ -43,6 +42,11 @@ def formVal(request):
 			retGraph['y'].append(i.name)
 
 	retr = {'graph':retGraph,'list':retGraph}
+	return retr
+
+@csrf_exempt
+def formVal(request):
+	retr = get_formvals()
 	return JsonResponse(retr)
 
 
@@ -457,6 +461,30 @@ def convert_filters(filters):
 		sendfilters.append(r)
 	return sendfilters
 
+def fix_param(param):
+	if len(param.strip().split()) > 1:
+		return '_'.join(param.strip().split())
+	else:
+		return param
+
+
+def fix_param_display(param):
+	if param == 'atten':
+		return 'attendance'
+	elif param  == 'no of parents':
+		return 'number of parents'
+	elif param == 'no of siblings':
+		return 'number of siblings'
+	elif param == 'std':
+		return 'standard'
+	elif param == 'Fedu':
+		return 'Father\'s education'
+	elif param == 'Medu':
+		return 'Mother\'s education'
+	else:
+		return param
+
+
 @csrf_exempt
 def chatbot(request):
 	if request.method == 'POST':
@@ -469,7 +497,43 @@ def chatbot(request):
 
 		result = data['result']
 
-		if result['action'] in ['get_filters', 'get_number_filters']:
+		if result['action'] == 'get_param_list':
+			ret = get_formvals()
+			print(ret)
+			s = ', '.join(ret['graph']['x'])
+			ans = 'The possible list of parameters are {}'.format(s)
+			return JsonResponse({
+				'speech': ans,
+				'displayText': ans,
+			})
+
+		elif result['action'] == 'get_correlation':
+			df = pd.read_csv(os.path.join(os.getcwd(), 'studentapp', 'static', 'misc', 'corr.csv'))
+			df = df.set_index(df.columns[0])
+
+			print(df)
+			p1 = result['parameters']['Parameter']
+			p2 = result['parameters']['Parameter1']
+			p1f = fix_param(p1)
+			p2f = fix_param(p2)
+
+			corr_value = df[p1f][p2f]
+			if corr_value >= 0.15:
+				comp = 'strongly and positively correlated'
+			elif corr_value <= -0.15:
+				comp = 'strongly and negatively correlated'
+			else:
+				comp = 'not correlated'
+
+			p1 = fix_param_display(p1)
+			p2 = fix_param_display(p2)
+
+			return JsonResponse({
+				'speech': 'The factors {} and {} are {}'.format(p1, p2, comp),
+				'displayText': 'The factors {} and {} are {}'.format(p1, p2, comp),
+			})
+
+		elif result['action'] in ['get_filters', 'get_number_filters']:
 			filters = result['parameters']['Filter']
 			sendfilters = convert_filters(filters)
 			x_ans = {}
