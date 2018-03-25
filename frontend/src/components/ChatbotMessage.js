@@ -5,7 +5,7 @@ import { withStyles } from 'material-ui/styles'
 
 const styles = theme => ({
     paper: { 
-        width: '80%', 
+        maxWidth: '80%', 
         marginTop: 8, 
         marginBottom: 8, 
         marginRight: 10, 
@@ -36,15 +36,12 @@ class ChatbotMessage extends Component{
                         {content} 
                     </Typography>)
 
-        else if (contentType == 'list')
-            rend = (<List className={classes.list}>
-                {content.map((c, index) => (
-                    <ListItem key={index}>
-                        <ListItemText primary={c.name}/>
-                        <ListItemText primary={c.value} style={{textAlign: 'right'}}/>
-                    </ListItem>
-                ))}
-            </List>)
+        else if (contentType == 'list'){
+            console.log('chatbot', content)
+           rend = (
+               <ListComponent style={{maxHeight: 200}} data={content}/>
+           )
+        }
         
         return (<Paper className={classes.paper} style={{backgroundColor: backgroundColor}}>
             {rend}
@@ -53,3 +50,15 @@ class ChatbotMessage extends Component{
 }
 
 export default withStyles(styles, {withTheme: true})(ChatbotMessage)
+
+/*
+ rend = (<List className={classes.list}>
+                {content.map((c, index) => (
+                    <ListItem key={index}>
+                        <ListItemText primary={c.name}/>
+                        <ListItemText primary={c.value} style={{textAlign: 'right'}}/>
+                    </ListItem>
+                ))}
+            </List>)
+
+*/

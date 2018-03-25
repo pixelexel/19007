@@ -18,7 +18,7 @@ const initialState = {
 	},
 	list: {
 		id: null,
-		x: '',
+		x: {},
 		filters: [],
 		name: '',
 		formVals: {},

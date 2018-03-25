@@ -98,6 +98,9 @@ class Search_bar extends Component{
 			}
 		}
 
+		const ordering = { 'student': 0, 'school': 1, 'state': 2, 'district': 3 }
+		allValues.sort((a, b) => ordering[a.type] - ordering[b.type])
+
 		return(
 			<div>
 				<TextField type="text" 

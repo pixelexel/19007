@@ -42,6 +42,7 @@ class GraphCreator extends React.Component {
 				val: null,
 				type: '',
 			},
+			selectedListXAxis: '',
 		}
 	}
 
@@ -116,6 +117,8 @@ class GraphCreator extends React.Component {
 						case 'bool': sFilter.val = 'False'
 						break
 						case 'string': sFilter.val = ''
+						break
+						case 'date': sFilter.val = ''
 						break
 						default:
 						break
@@ -209,6 +212,7 @@ class GraphCreator extends React.Component {
 		let a = []
 		switch(type){
 			case 'int':
+			case 'date':
 				a = ['=', '>', '<', '>=', '<=']
 				break
 			case 'string':
@@ -260,17 +264,47 @@ class GraphCreator extends React.Component {
 		)		
 	}
 
+	handleListXAxisChange = (action, index, e) => {
+		const {x} = this.props
+		console.log(action, index, e)
+		
+		switch(action){
+			case 'add': {
+				let newX = Object.assign({}, x)
+				newX[e.target.value] = true
+
+				this.props.update(Object.assign({}, this.props, {
+					x: newX 
+				}))
+				break
+			}
+			case 'delete':
+				let newX = Object.assign({}, x)
+				delete newX[index]
+				this.props.update(Object.assign({}, this.props, {
+					x: newX
+				}))
+				break
+			default:
+				break
+		}
+	}
+
 	formChip = v => `${v.name} ${v.op} ${v.val}`
 
 	getForm = (step) => {
 		const {x, y, name, filters, classes, formVals, type} = this.props
-
+		const paperStyle = {
+			display: 'flex',
+			justifyContent: 'left',
+			flexWrap: 'wrap',
+			padding: 4,
+		}
 		switch(step){
 			case 0:
 				return (
 					
 					<Grid container>
-						
 						<Grid item xs={3}>
 							<FormControl className={classes.formControl}>
 								<TextField label="Name" value={name} onChange={this.handleNameChange} />
@@ -296,15 +330,15 @@ class GraphCreator extends React.Component {
 				)
 
 			case 1:
-				return (
-					<Grid container>
+				return ( this.props.varname == 'Graph' ? (<Grid container>
 						<Grid item xs={4}>
 							<FormControl className={classes.formControl}>
 								<InputLabel htmlFor="x">X Axis</InputLabel>
-								<Select value={x} onChange={this.handleAxesChange.bind(this, 'x')} inputProps={{
-									name: 'x',
-									id: 'x', 
-								}}>
+								<Select value={x} 
+									onChange={this.handleAxesChange.bind(this, 'x')} inputProps={{
+										name: 'x',
+										id: 'x', 
+									}} >
 									{
 										formVals.x.map(v=> {
 										return (
@@ -314,7 +348,7 @@ class GraphCreator extends React.Component {
 								</Select>
 							</FormControl>
 						</Grid>
-						{ this.props.varname == 'Graph' ?
+						
 							<Grid item xs={4}> 
 								<FormControl className={classes.formControl}>
 									<InputLabel htmlFor="y">Y Axis</InputLabel>
@@ -332,20 +366,42 @@ class GraphCreator extends React.Component {
 										})}
 									</Select>
 								</FormControl>
-							</Grid>: null
-						}
-						</Grid>
-				)
+							</Grid>
+						</Grid>) : (<div className="chips-container"> 
+								<Paper style={paperStyle} className={classes.root}>
+								{
+									Object.keys(x).map( (v, index) => {
+									return (
+										<Chip id={index}
+											key={index} 
+											onDelete={this.handleListXAxisChange.bind(this, 'delete', v)} 
+											className={classes.chip} 
+											label={v}/>
+									)
+								} )}
+								</Paper>
+								<br/>
+								<InputLabel htmlFor='add-listx'>Filter name</InputLabel>
+								<Select value={this.state.selectedListXAxis}
+									onChange={this.handleListXAxisChange.bind(this, 'add', 'meh')}
+									inputProps={{
+										name: 'add-listx',
+										id: 'add-listx',
+									}}>
+									{
+										formVals.x.map(k => {
+
+											return (
+												<MenuItem key={k} value={k}>{k}</MenuItem>
+											)
+										})}
+								</Select>
+							</div>))
+						
 
 			case 2:
 				const filterVals = formVals.filters
 				const filterValsKeys = Object.keys(filterVals)
-				const paperStyle = {
-					display: 'flex',
-					justifyContent: 'left',
-					flexWrap: 'wrap',
-					padding: 4,
-				}
 
 				return (
 				<div>
