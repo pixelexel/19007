@@ -416,3 +416,119 @@ def chatbot(request):
 			return JsonResponse({
 				'error': 'false',
 			})
+
+
+@csrf_exempt
+def getStateData(request,state_name):
+	ret = {}
+	if request.method == 'GET':
+		pp_data = {}
+		ex_curr = {}
+		state_ct = {}
+		sport_d = {}
+		top_marks = []
+		top_sport = []
+		top_extra_curr = [] 
+		qs = Student.objects.filter(state=state_name)
+		for i in qs:
+			c_state = i.district
+			if state_ct.__contains__(c_state):
+				pp_data[c_state] = float(pp_data[c_state]*state_ct[c_state] + i.marks)/(state_ct[c_state] + 1)
+				ex_curr[c_state] = float(ex_curr[c_state]*state_ct[c_state] + i.extra_curr)/(state_ct[c_state] + 1)
+				sport_d[c_state] = float(sport_d[c_state]*state_ct[c_state] + i.sport)/(state_ct[c_state] + 1)
+				state_ct[c_state] += 1
+			else:
+				pp_data[c_state] = float(i.marks)
+				ex_curr[c_state] = float(i.extra_curr)
+				sport_d[c_state] = float(i.sport)
+				state_ct[c_state] = 1
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		for i in qs:
+			top_marks.append({'name':i.name,'marks':i.marks,'district':i.district})
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		for i in qs:
+			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'district':i.district})
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		for i in qs:
+			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
+		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr}
+		print(ret)
+	return JsonResponse(ret)
+
+@csrf_exempt
+def getDistrictData(request,district_name):
+	ret = {}
+	if request.method == 'GET':
+		pp_data = {}
+		ex_curr = {}
+		state_ct = {}
+		sport_d = {}
+		top_marks = []
+		top_sport = []
+		top_extra_curr = [] 
+		qs = Student.objects.filter(district=district_name)
+		for i in qs:
+			c_state = i.school
+			if state_ct.__contains__(c_state):
+				pp_data[c_state] = float(pp_data[c_state]*state_ct[c_state] + i.marks)/(state_ct[c_state] + 1)
+				ex_curr[c_state] = float(ex_curr[c_state]*state_ct[c_state] + i.extra_curr)/(state_ct[c_state] + 1)
+				sport_d[c_state] = float(sport_d[c_state]*state_ct[c_state] + i.sport)/(state_ct[c_state] + 1)
+				state_ct[c_state] += 1
+			else:
+				pp_data[c_state] = float(i.marks)
+				ex_curr[c_state] = float(i.extra_curr)
+				sport_d[c_state] = float(i.sport)
+				state_ct[c_state] = 1
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		for i in qs:
+			top_marks.append({'name':i.name,'marks':i.marks,'district':i.district})
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		for i in qs:
+			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'district':i.district})
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		for i in qs:
+			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
+		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr}
+		print(ret)
+	return JsonResponse(ret)
+
+@csrf_exempt
+def getCountryData(request):
+	ret = {}
+	if request.method == 'GET':
+		pp_data = {}
+		ex_curr = {}
+		state_ct = {}
+		sport_d = {}
+		top_marks = []
+		top_sport = []
+		top_extra_curr = [] 
+		qs = Student.objects.all()
+		for i in qs:
+			c_state = i.state
+			if state_ct.__contains__(c_state):
+				pp_data[c_state] = float(pp_data[c_state]*state_ct[c_state] + i.marks)/(state_ct[c_state] + 1)
+				ex_curr[c_state] = float(ex_curr[c_state]*state_ct[c_state] + i.extra_curr)/(state_ct[c_state] + 1)
+				sport_d[c_state] = float(sport_d[c_state]*state_ct[c_state] + i.sport)/(state_ct[c_state] + 1)
+				state_ct[c_state] += 1
+			else:
+				pp_data[c_state] = float(i.marks)
+				ex_curr[c_state] = float(i.extra_curr)
+				sport_d[c_state] = float(i.sport)
+				state_ct[c_state] = 1
+
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		for i in qs:
+			top_marks.append({'name':i.name,'marks':i.marks,'state':i.state})
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		for i in qs:
+			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'state':i.state})
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		for i in qs:
+			top_sport.append({'name':i.name,'sport':i.sport,'state':i.state})
+		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr}
+		print(ret)
+	return JsonResponse(ret)
+
+
+
