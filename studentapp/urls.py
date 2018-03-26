@@ -17,4 +17,8 @@ urlpatterns = [
     path('get_student_data/<int:aadhar_id>/', views.getStudentData, name='getStudentData'),
     path('studentform/new', views.studentform, name = 'studentform'),
     path('chatbot', views.chatbot, name='chatbot'),
+    path('get_state_data/<state_name>', views.getStateData, name='getStateData'),
+    path('get_district_data/<district_name>', views.getDistrictData, name='getDistrictData'),
+    path('get_country_data/', views.getCountryData, name='getCountryData'),
+	path('get_filter_data/', views.filter_data, name='filter_data'),
 ]

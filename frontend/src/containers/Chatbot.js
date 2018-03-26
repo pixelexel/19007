@@ -51,23 +51,11 @@ class Chatbot extends Component{
 
     send = (e) => {
         if(e.key == 'Enter'){
-            // const {text} = this.state
             const text = this.refs.inp.value
             this.props.dispatch(sendMessage(text))
-            // this.setState({
-            //     'text': ''
-            // })
-
             this.refs.inp.value = ''
         }
     }
-
-    // handleChange = (e) => {
-        // const value = e.target.value
-        // this.setState({
-        //     'text': value,
-        // })
-    // }
 
     componentDidUpdate(prevProps, prevState){
         

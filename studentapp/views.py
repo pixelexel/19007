@@ -5,25 +5,26 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 import json
+import os
 import datetime
 from pprint import pprint
 import pandas as pd
 from .forms import StudentForm
+from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.forms.models import model_to_dict
 # Create your views here.
-
+CSV_STORAGE = os.path.join(os.getcwd(), 'studentapp', 'static', 'csv')
 
 def index(req):
 	import time
 	time.sleep(1)
-
 	return JsonResponse({
 		'error': False,
 		'data': ['Api root', 'nice']
 	})
 	
 
-@csrf_exempt
-def formVal(request):
+def get_formvals():
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}
 	rval = Student._meta.get_fields()
 	types = {'CharField':'string', 
@@ -41,8 +42,12 @@ def formVal(request):
 			retGraph['y'].append(i.name)
 
 	retr = {'graph':retGraph,'list':retGraph}
-	return JsonResponse(retr)
+	return retr
 
+@csrf_exempt
+def formVal(request):
+	retr = get_formvals()
+	return JsonResponse(retr)
 
 @csrf_exempt
 def getGraph(request):
@@ -146,8 +151,10 @@ def getGraph(request):
 
 def get_list_data(dt, save=True, limit=True):
 	x_axis = dt['x']
+	print('x_axis', x_axis)
 	filters_all = dt['filters']
 	new_filter = {}
+
 	for i in filters_all:
 		parm = ''
 		val = ''
@@ -183,45 +190,77 @@ def get_list_data(dt, save=True, limit=True):
 		tem = {}
 
 		if not ii['aadhar_id'] in ret:
+			x_vals = []
+			x_unpack = {}
+			for k, v in x_axis.items():
+				x_vals.append(ii[k])
+				x_unpack[k] = ii[k]
+				
 			ret[ii['aadhar_id']] = {'name': ii['name'], 
-					'value': ii[x_axis], 
-					'std': ii['std']}
+					'value': x_vals, 
+                    'std': ii['std'], 'unpacked': x_unpack}
 		
 		else:
 			if ret[ii['aadhar_id']]['std'] < ii['std']:
-				ret[ii['aadhar_id']] = {
-					'name': ii['name'], 'value': ii[x_axis], 
-					'std': ii['std']}
+				x_vals = []
+				x_unpack = {}
+				for k, v in x_axis.items():
+					x_vals.append(ii[k])
+					x_unpack[k] = ii[k]
 
+
+				ret[ii['aadhar_id']] = {
+					'name': ii['name'], 'value': x_vals, 
+					'std': ii['std'], 'unpacked': x_unpack }
+
+	pddata = []
 	for k, v in ret.items():
-		data.append(v)
+		data.append({
+			'name': v['name'],
+			'value': v['value'],
+			'aadhar_id': k,
+		})
+		
+		udata = {'aadhar_id': k, 'name': v['name']}
+		for kx, vx in v['unpacked'].items():
+			udata[kx] = vx
+		
+		pddata.append(udata)
 	
 	data = sorted(data, key= lambda k : k['value'])
 	
 	if limit:
 		data = data[::-1][:300]
 
-	if not save:
-		return data
-
 	dt['data'] = data
+	if not save:
+		return dt
+	
+	df = pd.DataFrame(pddata)
+
 	if dt['id'] is not None:
 		gd = Lists.objects.get(id=dt['id'])
-		gd.lD = json.dumps(dt)
+		df.to_csv(os.path.join(CSV_STORAGE, str(dt['id']) + '.csv'), index=False)
+		dt['csv_path'] = 'static/csv/' + str(dt['id']) + '.csv'
+		gd.lD = json.dumps(dt)	
 		gd.save()
+
 	else:
 		gd = Lists()
 		gd.save()
 		dt['id'] = gd.id
+		df.to_csv(os.path.join(CSV_STORAGE, str(dt['id']) + '.csv'), index=False)
+		dt['csv_path'] = 'static/csv/' + str(dt['id']) + '.csv'
 		gd.lD = json.dumps(dt)
 		gd.save()
+
 	return dt
 	
 @csrf_exempt
 def getList(request):
-	ret = {}
+	ret = {} 
 	if request.method == 'POST':
-		dt = json.loads(request.body)
+		dt = json.loads(request.body.decode('ascii'))
 		ret = get_list_data(dt)
 
 	print(ret) 
@@ -331,6 +370,11 @@ def getStudentData(request,aadhar_id):
 		maths = 0.0
 		hindi = 0.0
 		sci = 0.0
+		name = ''
+		school = ''
+		district = ''
+		state = ''
+		d = {}
 		for i in qs:
 			acad_data.append({str(i.date):i.marks})
 			sport_data.append({str(i.date):i.sport})
@@ -340,12 +384,32 @@ def getStudentData(request,aadhar_id):
 			maths += i.maths_marks
 			sci += i.science_marks
 			hindi += i.hindi_marks
+			name = i.name
+			school = i.school
+			district = i.district
+			state = i.state
+			d = model_to_dict(i)
+
 		eng /= len(qs)
 		maths /= len(qs)
 		sci /= len(qs)
 		hindi /= len(qs)
 		data = [{'english':eng},{'maths':maths},{'science':sci},{'hindi':hindi}]
-		ret = { 'data':data, 'acad_data':acad_data, 'sport_data':sport_data,'c_data':c_data, 'd_data':d_data}
+		print('ddd', d)
+		ret = { 
+			'data':data, 
+			'acad_data':acad_data, 
+			'sport_data':sport_data,
+			'c_data':c_data, 
+			'd_data':d_data,
+			'details': {
+				'name': name,
+				'school': school,
+				'district': district,
+				'state': state,
+			},
+			'params': d
+		}
 		print(ret)
 	return JsonResponse(ret) 
 
@@ -396,6 +460,30 @@ def convert_filters(filters):
 		sendfilters.append(r)
 	return sendfilters
 
+def fix_param(param):
+	if len(param.strip().split()) > 1:
+		return '_'.join(param.strip().split())
+	else:
+		return param
+
+
+def fix_param_display(param):
+	if param == 'atten':
+		return 'attendance'
+	elif param  == 'no of parents':
+		return 'number of parents'
+	elif param == 'no of siblings':
+		return 'number of siblings'
+	elif param == 'std':
+		return 'standard'
+	elif param == 'Fedu':
+		return 'Father\'s education'
+	elif param == 'Medu':
+		return 'Mother\'s education'
+	else:
+		return param
+
+
 @csrf_exempt
 def chatbot(request):
 	if request.method == 'POST':
@@ -408,33 +496,72 @@ def chatbot(request):
 
 		result = data['result']
 
-		if result['action'] in ['get_filters', 'get_number_filters']:
+		if result['action'] == 'get_param_list':
+			ret = get_formvals()
+			print(ret)
+			s = ', '.join(ret['graph']['x'])
+			ans = 'The possible list of parameters are {}'.format(s)
+			return JsonResponse({
+				'speech': ans,
+				'displayText': ans,
+			})
+
+		elif result['action'] == 'get_correlation':
+			df = pd.read_csv(os.path.join(os.getcwd(), 'studentapp', 'static', 'misc', 'corr.csv'))
+			df = df.set_index(df.columns[0])
+
+			print(df)
+			p1 = result['parameters']['Parameter']
+			p2 = result['parameters']['Parameter1']
+			p1f = fix_param(p1)
+			p2f = fix_param(p2)
+
+			corr_value = df[p1f][p2f]
+			if corr_value >= 0.15:
+				comp = 'strongly and positively correlated'
+			elif corr_value <= -0.15:
+				comp = 'strongly and negatively correlated'
+			else:
+				comp = 'not correlated'
+
+			p1 = fix_param_display(p1)
+			p2 = fix_param_display(p2)
+
+			return JsonResponse({
+				'speech': 'The factors {} and {} are {}'.format(p1, p2, comp),
+				'displayText': 'The factors {} and {} are {}'.format(p1, p2, comp),
+			})
+
+		elif result['action'] in ['get_filters', 'get_number_filters']:
 			filters = result['parameters']['Filter']
 			sendfilters = convert_filters(filters)
+			x_ans = {}
 
 			try:
 				x = result['parameters']['Parameter']
+				for v in x:
+					if len(v.split()) > 1:
+						v = '_'.join(v.split())
+					x_ans[v] = True
+
 			except KeyError:
-				x = 'marks'
+				x_ans = {}
 
-			if len(x.split()) > 1:
-				x = '_'.join(x.split())
-
-			listData = get_list_data({
-				'x': x,
+			payload = get_list_data({
+				'x': x_ans,
 				'filters': sendfilters,
 			}, False, False)
 
-			datalen = len(listData)
-			listData = listData[::-1][:30]
-			pprint(listData)
+			datalen = len(payload['data'])
+			payload['data'] = payload['data'][::-1][:30]
+			pprint(payload)
 
 			if result['action'] == 'get_filters':
 				
 				return JsonResponse({
 					'speech': 'Here is a list of top students satisfying your query',
 					'displayText': 'Here is a list of top students satisfying your query',
-					'data': listData,
+					'data': payload,
 				})
 
 			elif result['action'] == 'get_number_filters':
@@ -442,3 +569,172 @@ def chatbot(request):
 					'speech': 'There are {} students satisfying your query'.format(datalen),
 					'displayText': 'There are {} students satisfying your query'.format(datalen)
 				})
+
+		else:
+			return JsonResponse({
+				'error': 'false',
+			})
+
+
+@csrf_exempt
+def getStateData(request,state_name):
+	ret = {}
+	if request.method == 'GET':
+		pp_data = {}
+		ex_curr = {}
+		state_ct = {}
+		sport_d = {}
+		top_marks = []
+		top_sport = []
+		top_extra_curr = [] 
+		qs = Student.objects.filter(state=state_name)
+		for i in qs:
+			c_state = i.district
+			if state_ct.__contains__(c_state):
+				pp_data[c_state] = float(pp_data[c_state]*state_ct[c_state] + i.marks)/(state_ct[c_state] + 1)
+				ex_curr[c_state] = float(ex_curr[c_state]*state_ct[c_state] + i.extra_curr)/(state_ct[c_state] + 1)
+				sport_d[c_state] = float(sport_d[c_state]*state_ct[c_state] + i.sport)/(state_ct[c_state] + 1)
+				state_ct[c_state] += 1
+			else:
+				pp_data[c_state] = float(i.marks)
+				ex_curr[c_state] = float(i.extra_curr)
+				sport_d[c_state] = float(i.sport)
+				state_ct[c_state] = 1
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		for i in qs:
+			top_marks.append({'name':i.name,'marks':i.marks,'district':i.district})
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		for i in qs:
+			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'district':i.district})
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		for i in qs:
+			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
+		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr}
+		print(ret)
+	return JsonResponse(ret)
+
+@csrf_exempt
+def getDistrictData(request,district_name):
+	ret = {}
+	if request.method == 'GET':
+		pp_data = {}
+		ex_curr = {}
+		state_ct = {}
+		sport_d = {}
+		top_marks = []
+		top_sport = []
+		top_extra_curr = [] 
+		qs = Student.objects.filter(district=district_name)
+		for i in qs:
+			c_state = i.school
+			if state_ct.__contains__(c_state):
+				pp_data[c_state] = float(pp_data[c_state]*state_ct[c_state] + i.marks)/(state_ct[c_state] + 1)
+				ex_curr[c_state] = float(ex_curr[c_state]*state_ct[c_state] + i.extra_curr)/(state_ct[c_state] + 1)
+				sport_d[c_state] = float(sport_d[c_state]*state_ct[c_state] + i.sport)/(state_ct[c_state] + 1)
+				state_ct[c_state] += 1
+			else:
+				pp_data[c_state] = float(i.marks)
+				ex_curr[c_state] = float(i.extra_curr)
+				sport_d[c_state] = float(i.sport)
+				state_ct[c_state] = 1
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		for i in qs:
+			top_marks.append({'name':i.name,'marks':i.marks,'district':i.district})
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		for i in qs:
+			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'district':i.district})
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		for i in qs:
+			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
+		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr}
+		print(ret)
+	return JsonResponse(ret)
+
+@csrf_exempt
+def getCountryData(request):
+	ret = {}
+	if request.method == 'GET':
+		pp_data = {}
+		ex_curr = {}
+		state_ct = {}
+		sport_d = {}
+		top_marks = []
+		top_sport = []
+		top_extra_curr = [] 
+		qs = Student.objects.all()
+		for i in qs:
+			c_state = i.state
+			if state_ct.__contains__(c_state):
+				pp_data[c_state] = float(pp_data[c_state]*state_ct[c_state] + i.marks)/(state_ct[c_state] + 1)
+				ex_curr[c_state] = float(ex_curr[c_state]*state_ct[c_state] + i.extra_curr)/(state_ct[c_state] + 1)
+				sport_d[c_state] = float(sport_d[c_state]*state_ct[c_state] + i.sport)/(state_ct[c_state] + 1)
+				state_ct[c_state] += 1
+			else:
+				pp_data[c_state] = float(i.marks)
+				ex_curr[c_state] = float(i.extra_curr)
+				sport_d[c_state] = float(i.sport)
+				state_ct[c_state] = 1
+
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		for i in qs:
+			top_marks.append({'name':i.name,'marks':i.marks,'state':i.state})
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		for i in qs:
+			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'state':i.state})
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		for i in qs:
+			top_sport.append({'name':i.name,'sport':i.sport,'state':i.state})
+		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr}
+		print(ret)
+	return JsonResponse(ret)
+
+@csrf_exempt
+def filter_data(request):
+	if request.method == 'GET':
+		students_all = Student.objects.all()
+		arr = []
+		for a in students_all:
+			arr.append({'id':a.aadhar_id, 'name': a.name})
+		print(arr)
+		return JsonResponse({'data':arr})
+	else:
+		filter_info = json.loads(request.body.decode('ascii'))
+		fil_name = filter_info['filter_name']
+		fil_type = filter_info['filter_type']
+		stu_sel = filter_info['students_selected']
+		for i in stu_sel:
+			t,v = list(i.items())[0]
+			s = Student,objects.filter(aadhar_id=t)
+			if s.filter1_active == False:
+				s.filter1_name = fil_name
+				s.filter1_type = fil_type
+				s.filter1_active = true
+				s.filter1_val = v
+				s.save()
+			elif s.filter2_active == False:
+				s.filter2_name = fil_name
+				s.filter2_type = fil_type
+				s.filter2_active = true
+				s.filter2_val = v
+				s.save()
+			elif s.filter3_active == False:
+				s.filter3_name = fil_name
+				s.filter3_type = fil_type
+				s.filter3_active = true
+				s.filter3_val = v
+				s.save()
+			elif s.filter4_active == False:
+				s.filter4_name = fil_name
+				s.filter4_type = fil_type
+				s.filter4_active = true
+				s.filter4_val = v
+				s.save()
+			else:
+				s.filter5_name = fil_name
+				s.filter5_type = fil_type
+				s.filter5_active = true
+				s.filter5_val = v
+				s.save()
+	return JsonResponse({'error':false})
+
+

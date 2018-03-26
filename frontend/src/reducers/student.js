@@ -25,7 +25,8 @@ function asd(allData) {
 	const sport_dataGet = allData['sport_data']
 	const c_dataGet = allData['c_data']
 	const d_dataGet = allData['d_data']
-	
+	const { details } = allData
+ 	
 	// filling up data, i.e. subject wise data
 	for(let i=0; i<dataGet.length; i++)
 	{
@@ -67,6 +68,7 @@ function asd(allData) {
 		'sport_data': sport_dataPass,
 		'c_data': c_dataPass,
 		'd_data': d_dataPass,
+		'details': details
 	}
 	return allDataPass;
 }

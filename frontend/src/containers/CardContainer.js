@@ -60,6 +60,18 @@ class CardContainer extends Component{
 		}
 	}
 
+	downloadCard = (id, type) => {
+		switch(type){
+			case 'list':
+				const selected = this.props.list.lists.filter(v => v.id.toString() == id)[0]
+				console.log('selectedlist', selected)
+				window.location = selected['csv_path']
+				break
+			default:
+				break
+		}
+	}
+
 
 	componentWillReceiveProps(newProps){
 		if(newProps.graph !== this.props.graph || newProps.list !== this.props.list){
@@ -140,6 +152,7 @@ class CardContainer extends Component{
 							subheader={k.data.filters.map(v => `${v.name} ${v.op} ${v.val}`).join(', ')}
 							onEdit={this.editCard}
 							onDelete={this.deleteCard}
+							onDownload={k.type == 'list' && this.downloadCard }
 							type={k.type}>
 
 							{ k.type == 'graph' ? 

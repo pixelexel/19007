@@ -39,6 +39,32 @@ class Student(models.Model):
 	Medu = models.IntegerField(default=0)
 	sport = models.IntegerField(default=0)
 	rank_an = models.IntegerField(default=0)
+	
+	filter1_name = models.CharField(max_length=100, default='')
+	filter1_active = models.BooleanField(default=False)
+	filter1_val = models.TextField( default='')
+	filter1_type = models.TextField( default='')
+
+	filter2_name = models.CharField(max_length=100, default='')
+	filter2_active = models.BooleanField(default=False)
+	filter2_val = models.TextField( default='')
+	filter2_type = models.TextField( default='')
+
+	filter3_name = models.CharField(max_length=100, default='')
+	filter3_active = models.BooleanField(default=False)
+	filter3_val = models.TextField( default='')
+	filter3_type = models.TextField( default='')
+
+	filter4_name = models.CharField(max_length=100, default='')
+	filter4_active = models.BooleanField(default=False)
+	filter4_val = models.TextField( default='')
+	filter4_type = models.TextField( default='')
+
+	filter5_name = models.CharField(max_length=100, default='')
+	filter5_active = models.BooleanField(default=False)
+	filter5_val = models.TextField( default='')
+	filter5_type = models.TextField( default='')
+
 	def __str__(self):
 		return str(self.id) + " - " + self.name
 
