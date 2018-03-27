@@ -5,7 +5,7 @@ export const screens = {
 	STATE: 'STATE',
 	DISTRICT: 'DISTRICT',
 	SCHOOL: 'SCHOOL',
-	
+	ADD_FILTER: 'ADD FILTER',
 }
 
 export const CHANGE_SCREEN = 'CHANGE_SCREEN'
