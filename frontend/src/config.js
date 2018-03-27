@@ -12,16 +12,15 @@ export const SECONDARY_PALETTE_COLOR = '#BF360C'
 export const AppTheme = createMuiTheme({
   palette: {
   	type:'dark',
-    primary: {
-      light: '#FFB3BF',
-      main: '#FF8195',
-      dark: '#FF5570',
-      contrastText: '#000'
+    primary: amber,
+    background: {
+      paper: '#2d3035',
+      default: '#22252b',
     },
     secondary: {
-    	dark:'#000000',
-    	light: '#484848',
-    	main: '#212121',
+      dark:'#22252b',
+    	light: '#898c93',
+      main: '#2d3035',
     	contrastText: '#fff',
     },
     button:amber,
@@ -35,4 +34,8 @@ export const AppTheme = createMuiTheme({
       light: 'rgb(255, 175, 190)',
       contrastText: '#000'
     }
+*/
+
+/*
+
 */

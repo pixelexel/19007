@@ -19,7 +19,7 @@ const mapStateToProps = (state) => {
 const styles = theme => ({
 	root: {
 		position: 'absolute',
-		top: 50,
+		top: 48,
 		right: 50,
 		maxHeight: 250,
 		minWidth: 330,

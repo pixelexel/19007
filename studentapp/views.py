@@ -15,14 +15,13 @@ from django.forms.models import model_to_dict
 # Create your views here.
 CSV_STORAGE = os.path.join(os.getcwd(), 'studentapp', 'static', 'csv')
 
+
 def index(req):
-	import time
-	time.sleep(1)
 	return JsonResponse({
 		'error': False,
 		'data': ['Api root', 'nice']
 	})
-	
+
 
 def get_formvals():
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}

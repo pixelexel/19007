@@ -30,6 +30,7 @@ const styles = theme => ({
 	},
 	toolbar: {
 		transition: 'margin .1s ease',
+		backgroundColor: theme.palette.secondary.main,
 	}
 })
 
