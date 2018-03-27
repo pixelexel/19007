@@ -10,6 +10,8 @@ import { toggleChatbot } from '../actions/chatbot'
 import { changeScreen } from '../actions/root'
 import CountryContainer from './CountryContainer'
 import StateContainer from './StateContainer'
+import DistrictContainer from './DistrictContainer'
+import SchoolContainer from './SchoolContainer'
 import Chatbot from '../containers/Chatbot'
 import '../styles/App.scss'
 
@@ -40,9 +42,15 @@ class Root extends Component{
 
 		switch(screen){
 			case screens.DASH:
-			case screens.SCHOOL:
-			case screens.DISTRICT:
 				screenComponent = <HomeScreenContainer screen={screen} id={id}/>
+				break
+
+			case screens.SCHOOL:
+				screenComponent = <SchoolContainer id={id}/>
+				break
+
+			case screens.DISTRICT:
+				screenComponent = <DistrictContainer id={id}/>
 				break
 
 			case screens.STATE:

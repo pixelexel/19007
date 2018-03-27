@@ -23,39 +23,27 @@ import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContaine
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    width: '99%',
+    width : '99%',
+    
   },
-  root1: {
+   root1: {
     height: '265px',
     backgroundColor: theme.palette.secondary.light,
     margin: '0 auto',
     overflow: 'auto',
     paddingBottom: 15,
   },
- 
 });
 
-
-class CountryGrid extends Component {
+class SchoolGrid extends Component {
 
 render() {
-  const { classes,theme } = this.props
-  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr} = this.props.country
-  let ret = {
-        x: 'domain',
-        y: 'strength',
-        data: [
-            {'domain': pp_data.name, 'strength': pp_data.value, 'filter': 0},
-            { 'domain': ss_no.name, 'strength': ss_no.value, 'filter': 0 },
-            { 'domain': ex_curr.name, 'strength': ex_curr.value, 'filter': 0 },
-        ],
-        filters: [],
-        type: 'RADAR',
-      }
+  const { classes } = this.props
+  const {pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr} = this.props.school
 
   return (
     <div className={classes.root}>
-     <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
+      <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
 
           <Grid item xs={3}>
             <Progress data={pp_data[0]} style={{marginBottom: 25}}/>
@@ -162,4 +150,4 @@ render() {
 
 
 
-export default withStyles(styles)(CountryGrid);
+export default withStyles(styles)(SchoolGrid);
