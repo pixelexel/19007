@@ -30,15 +30,38 @@ def get_formvals():
 			'IntegerField':'int',
 			'BooleanField':'bool',
 			'DateField':'date'}
-
+	ss = Student.objects.all()[0]
 	for i in rval:
 		if types.__contains__(i.get_internal_type()):
 			tem = {}
-			tem['name'] = i.name
-			tem['type'] = types[i.get_internal_type()]
+			if i.name == 'filter1_name':
+				if ss.filter1_active:
+					tem['name'].append(filter1_name)
+					tem['type'].append(filter1_type)
+			if i.name == 'filter2_name':
+				if ss.filter2_active:
+					tem['name'].append(filter2_name)
+					tem['type'].append(filter2_type)
+			if i.name == 'filter3_name':
+				if ss.filter3_active:
+					tem['name'].append(filter3_name)
+					tem['type'].append(filter3_type)
+			if i.name == 'filter4_name':
+				if ss.filter4_active:
+					tem['name'].append(filter4_name)
+					tem['type'].append(filter4_type)
+			if i.name == 'filter5_name':
+				if ss.filter5_active:
+					tem['name'].append(filter5_name)
+					tem['type'].append(filter5_type)
+			if i.name not in ['filter1_name','filter2_name','filter3_name','filter4_name','filter5_name']:
+				tem['name'] = i.name
+				tem['type'] = types[i.get_internal_type()]
+
 			retGraph['filters'][i.name] = tem
-			retGraph['x'].append(i.name)
-			retGraph['y'].append(i.name)
+			if 'filter' not in i.name:
+				retGraph['x'].append(i.name)
+				retGraph['y'].append(i.name)
 
 	retr = {'graph':retGraph,'list':retGraph}
 	return retr
@@ -697,43 +720,78 @@ def filter_data(request):
 		print(arr)
 		return JsonResponse({'data':arr})
 	else:
-		filter_info = json.loads(request.body.decode('ascii'))
+		filter_info = json.loads(request.body.decode('utf-8'))
 		fil_name = filter_info['filter_name']
 		fil_type = filter_info['filter_type']
 		stu_sel = filter_info['students_selected']
-		for i in stu_sel:
-			t,v = list(i.items())[0]
-			s = Student,objects.filter(aadhar_id=t)
+		filter_default = filter_info['filter_default']
+		s_All = Student.objects.all()
+		for s in s_All:
 			if s.filter1_active == False:
 				s.filter1_name = fil_name
 				s.filter1_type = fil_type
-				s.filter1_active = true
-				s.filter1_val = v
+				s.filter1_active = True
+				s.filter1_val = filter_default
 				s.save()
 			elif s.filter2_active == False:
 				s.filter2_name = fil_name
 				s.filter2_type = fil_type
-				s.filter2_active = true
-				s.filter2_val = v
+				s.filter2_active = True
+				s.filter2_val =filter_default
 				s.save()
 			elif s.filter3_active == False:
 				s.filter3_name = fil_name
 				s.filter3_type = fil_type
-				s.filter3_active = true
-				s.filter3_val = v
+				s.filter3_active = True
+				s.filter3_val = filter_default
 				s.save()
 			elif s.filter4_active == False:
 				s.filter4_name = fil_name
 				s.filter4_type = fil_type
-				s.filter4_active = true
-				s.filter4_val = v
+				s.filter4_active = True
+				s.filter4_val = filter_default
 				s.save()
 			else:
 				s.filter5_name = fil_name
 				s.filter5_type = fil_type
-				s.filter5_active = true
-				s.filter5_val = v
+				s.filter5_active = True
+				s.filter5_val = filter_default
 				s.save()
+		for i in stu_sel:
+			t,v = list(i.items())[0]
+			ss = Student.objects.filter(aadhar_id=t)
+			for s in ss:
+				if s.filter1_active == False:
+					s.filter1_name = fil_name
+					s.filter1_type = fil_type
+					s.filter1_active = True
+					s.filter1_val = v
+					s.save()
+				elif s.filter2_active == False:
+					s.filter2_name = fil_name
+					s.filter2_type = fil_type
+					s.filter2_active = True
+					s.filter2_val = v
+					s.save()
+				elif s.filter3_active == False:
+					s.filter3_name = fil_name
+					s.filter3_type = fil_type
+					s.filter3_active = True
+					s.filter3_val = v
+					s.save()
+				elif s.filter4_active == False:
+					s.filter4_name = fil_name
+					s.filter4_type = fil_type
+					s.filter4_active = True
+					s.filter4_val = v
+					s.save()
+				else:
+					s.filter5_name = fil_name
+					s.filter5_type = fil_type
+					s.filter5_active = True
+					s.filter5_val = v
+					s.save()
+			
 	return JsonResponse({'error':false})
 
 
