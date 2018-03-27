@@ -15,14 +15,13 @@ from django.forms.models import model_to_dict
 # Create your views here.
 CSV_STORAGE = os.path.join(os.getcwd(), 'studentapp', 'static', 'csv')
 
+
 def index(req):
-	import time
-	time.sleep(1)
 	return JsonResponse({
 		'error': False,
 		'data': ['Api root', 'nice']
 	})
-	
+
 
 def get_formvals():
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}
@@ -48,7 +47,6 @@ def get_formvals():
 def formVal(request):
 	retr = get_formvals()
 	return JsonResponse(retr)
-
 
 @csrf_exempt
 def getGraph(request):
@@ -261,7 +259,7 @@ def get_list_data(dt, save=True, limit=True):
 def getList(request):
 	ret = {} 
 	if request.method == 'POST':
-		dt = json.loads(request.body)
+		dt = json.loads(request.body.decode('ascii'))
 		ret = get_list_data(dt)
 
 	print(ret) 
@@ -621,13 +619,13 @@ def getStateData(request,state_name):
 		p_c = len(Student.objects.filter(state=state_name,marks__gte=35))*100.0/(len(qs))
 		p_b = len(Student.objects.filter(state=state_name,gender="m"))*100.0/(len(qs))
 		p_g = len(Student.objects.filter(state=state_name,gender="f"))*100.0/(len(qs))
-		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
 		for i in qs:
 			top_marks.append({'name':i.name,'marks':i.marks,'district':i.district})
-		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
 		for i in qs:
 			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'district':i.district})
-		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
 		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
@@ -678,13 +676,13 @@ def getDistrictData(request,district_name):
 		p_c = len(Student.objects.filter(district=district_name,marks__gte=35))*100.0/(len(qs))
 		p_b = len(Student.objects.filter(district=district_name,gender="m"))*100.0/(len(qs))
 		p_g = len(Student.objects.filter(district=district_name,gender="f"))*100.0/(len(qs))
-		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
 		for i in qs:
 			top_marks.append({'name':i.name,'marks':i.marks,'district':i.district})
-		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
 		for i in qs:
 			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'district':i.district})
-		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
 		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
@@ -735,13 +733,13 @@ def getCountryData(request):
 		p_c = len(Student.objects.filter(marks__gte=35))*100.0/(len(qs))
 		p_b = len(Student.objects.filter(gender="m"))*100.0/(len(qs))
 		p_g = len(Student.objects.filter(gender="f"))*100.0/(len(qs))
-		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
 		for i in qs:
 			top_marks.append({'name':i.name,'marks':i.marks,'state':i.state})
-		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
 		for i in qs:
 			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'state':i.state})
-		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'state':i.state})
 		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
@@ -749,6 +747,7 @@ def getCountryData(request):
 	return JsonResponse(ret)
 
 @csrf_exempt
+
 def getSchoolData(request,school_name):
 	ret = {}
 	if request.method == 'GET':
@@ -792,5 +791,53 @@ def getSchoolData(request,school_name):
 		ret = {'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks}
 		print(ret)
 	return JsonResponse(ret)
+
+def filter_data(request):
+	if request.method == 'GET':
+		students_all = Student.objects.all()
+		arr = []
+		for a in students_all:
+			arr.append({'id':a.aadhar_id, 'name': a.name})
+		print(arr)
+		return JsonResponse({'data':arr})
+	else:
+		filter_info = json.loads(request.body.decode('ascii'))
+		fil_name = filter_info['filter_name']
+		fil_type = filter_info['filter_type']
+		stu_sel = filter_info['students_selected']
+		for i in stu_sel:
+			t,v = list(i.items())[0]
+			s = Student,objects.filter(aadhar_id=t)
+			if s.filter1_active == False:
+				s.filter1_name = fil_name
+				s.filter1_type = fil_type
+				s.filter1_active = true
+				s.filter1_val = v
+				s.save()
+			elif s.filter2_active == False:
+				s.filter2_name = fil_name
+				s.filter2_type = fil_type
+				s.filter2_active = true
+				s.filter2_val = v
+				s.save()
+			elif s.filter3_active == False:
+				s.filter3_name = fil_name
+				s.filter3_type = fil_type
+				s.filter3_active = true
+				s.filter3_val = v
+				s.save()
+			elif s.filter4_active == False:
+				s.filter4_name = fil_name
+				s.filter4_type = fil_type
+				s.filter4_active = true
+				s.filter4_val = v
+				s.save()
+			else:
+				s.filter5_name = fil_name
+				s.filter5_type = fil_type
+				s.filter5_active = true
+				s.filter5_val = v
+				s.save()
+	return JsonResponse({'error':false})
 
 

@@ -33,6 +33,8 @@ function asd(allData) {
 		const k =  Object.keys(dataGet[i])[0];
 		dataPass.push({'subject': k, 'A': dataGet[i][k], 'fullMark': max});
 	}
+	console.log('check student Pass',acad_dataPass);
+	console.log('check student Pass',allData);
 
 	// filling up acad_data
 	for(let i=0; i<acad_dataGet.length; i++)
@@ -70,7 +72,6 @@ function asd(allData) {
 		'd_data': d_dataPass,
 		'details': details
 	}
-	console.log('consoleeeeeeeeeeeeeeeeeeeeeeeeee',allDataPass);
 	return allDataPass;
 }
 

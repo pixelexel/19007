@@ -1,4 +1,4 @@
-import { REQUEST_COUNTRY_DATA, RECEIVE_COUNTRY_DATA } from '../actions/country'
+import { REQUEST_DISTRICT_DATA, RECEIVE_DISTRICT_DATA } from '../actions/district'
 
 const initialState = {
 	pp_data : [],
@@ -27,7 +27,7 @@ function ind(getData){
 	const acadl_Get = getData['top_marks']
 	const sportsl_Get = getData['top_sport']
 	const currl_Get = getData['top_extra_curr']
-	console.log('check country data', pp_Get );
+	console.log('check state data', pp_Get );
 	
 	const pp_keys = Object.keys(pp_Get);
 	const ssno_keys = Object.keys(noss_Get);
@@ -65,21 +65,20 @@ function ind(getData){
 		'top_sport' : sportsl_Get,
 		'top_extra_curr' : currl_Get,
 	}
-	console.log('Country Data Passed',allDataPass);
+	console.log('State Data Passed',allDataPass);
 	return allDataPass; 
 }
 
-const countryData = (state = initialState, action) => {
+const districtData = (state = initialState, action) => {
 	let { data, type } = action.data || {}
 	
 	switch(action.type){
-		case REQUEST_COUNTRY_DATA:
+		case REQUEST_DISTRICT_DATA:
 			return Object.assign({}, state, {
 				fetchingData: true
 			})
 
-		case RECEIVE_COUNTRY_DATA: {
-			console.log('country data recieved', action.data)
+		case RECEIVE_DISTRICT_DATA: {
 			let ret = Object.assign({}, state, ind(action.data) )
 			ret['fetchingData'] = false
 			return ret
@@ -90,4 +89,4 @@ const countryData = (state = initialState, action) => {
 	}
 }
 
-export default countryData
+export default districtData

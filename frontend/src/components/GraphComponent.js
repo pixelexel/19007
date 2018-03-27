@@ -26,7 +26,7 @@ const style = {
 
 const styles = (theme) => ({
 	root: {
-		backgroundColor: theme.palette.secondary.light,
+		backgroundColor: theme.palette.secondary.main,
 		color: theme.palette.secondary.contrastText + ' !important',
 	}
 })

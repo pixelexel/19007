@@ -26,7 +26,7 @@ const styles = theme => ({
     width : '99%',
     
   },
-    root1: {
+   root1: {
     height: '265px',
     backgroundColor: theme.palette.secondary.light,
     margin: '0 auto',
@@ -34,16 +34,16 @@ const styles = theme => ({
     paddingBottom: 15,
   },
 });
- 
-class StateGrid extends Component {
+
+class SchoolGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr} = this.props.state
- 
+  const {pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr} = this.props.school
+
   return (
     <div className={classes.root}>
-     <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
+      <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
 
           <Grid item xs={3}>
             <Progress data={pp_data[0]} style={{marginBottom: 25}}/>
@@ -150,4 +150,4 @@ render() {
 
 
 
-export default withStyles(styles)(StateGrid);
+export default withStyles(styles)(SchoolGrid);
