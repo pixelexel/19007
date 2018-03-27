@@ -1,5 +1,5 @@
 import { BASE_API_URL } from '../config'
-import { countryData } from '../samples'
+import  { countryData } from '../samples'
 
 export const REQUEST_COUNTRY_DATA = 'REQUEST_COUNTRY_DATA'
 export const RECEIVE_COUNTRY_DATA = 'RECEIVE_COUNTRY_DATA'
@@ -20,6 +20,6 @@ export const getCountryData = () => {
 		return fetch(BASE_API_URL + 'get_country_data/')
 				.then(data => data.json())
 				.then(json => dispatch(receiveCountryData(json.error, json)))
-				.catch(err => dispatch(receiveCountryData(false, countryData())))
+				.catch(err => dispatch(receiveCountryData(false,countryData() )))
 	}
 }

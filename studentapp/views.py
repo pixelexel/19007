@@ -601,13 +601,13 @@ def getStateData(request,state_name):
 				ex_curr[c_state] = float(i.extra_curr)
 				sport_d[c_state] = float(i.sport)
 				state_ct[c_state] = 1
-		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
 		for i in qs:
 			top_marks.append({'name':i.name,'marks':i.marks,'district':i.district})
-		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
 		for i in qs:
 			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'district':i.district})
-		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
 		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr}
@@ -638,13 +638,13 @@ def getDistrictData(request,district_name):
 				ex_curr[c_state] = float(i.extra_curr)
 				sport_d[c_state] = float(i.sport)
 				state_ct[c_state] = 1
-		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
 		for i in qs:
 			top_marks.append({'name':i.name,'marks':i.marks,'district':i.district})
-		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
 		for i in qs:
 			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'district':i.district})
-		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
 		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr}
@@ -676,13 +676,13 @@ def getCountryData(request):
 				sport_d[c_state] = float(i.sport)
 				state_ct[c_state] = 1
 
-		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-marks')[:10]
 		for i in qs:
 			top_marks.append({'name':i.name,'marks':i.marks,'state':i.state})
-		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-extra_curr')[:10]
 		for i in qs:
 			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'state':i.state})
-		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2018-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
+		qs = Student.objects.filter(date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'state':i.state})
 		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr}

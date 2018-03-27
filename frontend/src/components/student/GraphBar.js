@@ -7,15 +7,14 @@ export default class GraphBar extends Component{
 	render () {
   	return (
       <div>
-      <ResponsiveContainer width="100%" aspect={3.0/1.0}>
+      <ResponsiveContainer width="100%" aspect={3.0/1.1}>
     	<BarChart width={600} height={300} data={this.props.value}
             margin={{top: 20, right: 30, left: 20, bottom: 5}}>
-       <XAxis dataKey="State"/>
+       <XAxis dataKey="name"/>
        <YAxis/>
-       <CartesianGrid strokeDasharray="3 3"/>
        <Tooltip/>
        <Legend />
-       <Bar dataKey="percentage" fill="#8884d8" />
+       <Bar dataKey="value" fill="#FFC200" />
       </BarChart>
       </ResponsiveContainer>
       </div>

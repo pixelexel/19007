@@ -5,13 +5,14 @@ import { getStateData } from '../actions/state'
 import State from '../components/student/State';
 function mapStateToProps(state){
 	return {
-		state : state.state,
-		pp_data: state.state.pp_data,
-		no_ss: state.state.no_ss,
-		ex_curr: state.state.ex_curr,	
-		sports_data: state.country.sports_data,
-    	acad_list: state.country.acad_list,
-    	sports_list: state.country.sports_list, 	
+		state: state.state,
+    pp_data: state.state.pp_data,
+    ss_no: state.state.ss_no,
+    ex_curr: state.state.ex_curr,  
+    sport_d: state.state.sport_d,
+    top_marks: state.state.top_marks,
+    top_sport: state.state.top_sport,
+    top_extra_curr : state.state.top_extra_curr, 	
 	}
 }
 

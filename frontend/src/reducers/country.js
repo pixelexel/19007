@@ -2,11 +2,12 @@ import { REQUEST_COUNTRY_DATA, RECEIVE_COUNTRY_DATA } from '../actions/country'
 
 const initialState = {
 	pp_data : [],
-	no_ss : [],
+	ss_no : [],
 	ex_curr : [],
-	sports_data : [],
-	acad_list : [],
-	sports_list : [],
+	sport_d : [],
+	top_marks : [],
+	top_sport : [],
+	top_extra_curr : [],
 	fetchingData: false
 }
 
@@ -15,65 +16,56 @@ function ind(getData){
 	const noss_Pass = []
 	const curr_Pass = []
 	const sports_Pass = []
-	const acadl_Pass = []
+	
 	const sportsl_Pass = []
+	const currl_Pass = []
 		
 	const pp_Get = getData['pp_data']
-	const noss_Get = getData['no_ss']
+	const noss_Get = getData['ss_no']
 	const curr_Get = getData['ex_curr']
-	const sports_Get = getData['sports_data']
-	const acadl_Get = getData['acad_list']
-	const sportsl_Get = getData['sports_list']
+	const sports_Get = getData['sport_d']
+	const acadl_Get = getData['top_marks']
+	const sportsl_Get = getData['top_sport']
+	const currl_Get = getData['top_extra_curr']
+	console.log('check country data', pp_Get );
 	
-	
-	for(let i=0; i<pp_Get.length; i++)
+	const pp_keys = Object.keys(pp_Get);
+	const ssno_keys = Object.keys(noss_Get);
+	const curr_keys = Object.keys(curr_Get);
+	const sport_keys = Object.keys(sports_Get);
+
+	for(let i=0; i<pp_keys.length; i++)
 	{
-		const k =  Object.keys(pp_Get[i])[0];
-		pp_Pass.push({'State': k, 'uv': pp_Get[i][k] });
+		pp_Pass.push({'name': pp_keys[i], 'value': Math.round(pp_Get[pp_keys[i]])} );
+	}
+	
+	for(let i=0; i<ssno_keys.length; i++)
+	{
+		noss_Pass.push({'name': ssno_keys[i], 'value': noss_Get[ssno_keys[i]]} );
 	}
 
 	
-	for(let i=0; i<noss_Get.length; i++)
+	for(let i=0; i<curr_keys.length; i++)
 	{
-		const k =  Object.keys(noss_Get[i])[0];
-		noss_Pass.push({'State': k, 'uv': noss_Get[i][k] });
+		curr_Pass.push({'name': curr_keys[i], 'value':curr_Get[curr_keys[i]]} );	
 	}
 
 	
-	for(let i=0; i<curr_Get.length; i++)
+	for(let i=0; i<sport_keys.length; i++)
 	{
-		const k =  Object.keys(curr_Get[i])[0];
-		curr_Pass.push({'State': k, 'uv': curr_Get[i][k] });
-	}
-
-	
-	for(let i=0; i<sports_Get.length; i++)
-	{
-		const k =  Object.keys(sports_Get[i])[0];
-		sports_Pass.push({'State': k, 'uv': sports_Get[i][k] });
-	}
-
-	
-	for(let i=0; i<acadl_Get.length; i++)
-	{
-		const k =  Object.keys(acadl_Get[i])[0];
-		acadl_Pass.push({'State': k, 'uv': acadl_Get[i][k] });
-	}
-	for(let i=0; i<sportsl_Get.length; i++)
-	{
-		const k =  Object.keys(sportsl_Get[i])[0];
-		sportsl_Pass.push({'State': k, 'uv': sportsl_Get[i][k] });
+		sports_Pass.push({'name': sport_keys[i], 'value':sports_Get[sport_keys[i]]} );
 	}
 
 	const allDataPass = {
 		'pp_data': pp_Pass,
-		'no_ss' : noss_Pass,
+		'ss_no' : noss_Pass,
 		'ex_curr' : curr_Pass,
-		'sports_data' : sports_Pass,
-		'acad_list' : acadl_Pass,
-		'sports_list' : sportsl_Pass,
+		'sport_d' : sports_Pass,
+		'top_marks' : acadl_Get,
+		'top_sport' : sportsl_Get,
+		'top_extra_curr' : currl_Get,
 	}
-	console.log('Country Data',allDataPass);
+	console.log('Country Data Passed',allDataPass);
 	return allDataPass; 
 }
 
@@ -87,8 +79,8 @@ const countryData = (state = initialState, action) => {
 			})
 
 		case RECEIVE_COUNTRY_DATA: {
-			console.log('country data recieved',action.data)
-			let ret = Object.assign({}, state, action.data )
+			console.log('country data recieved', action.data)
+			let ret = Object.assign({}, state, ind(action.data) )
 			ret['fetchingData'] = false
 			return ret
 		}

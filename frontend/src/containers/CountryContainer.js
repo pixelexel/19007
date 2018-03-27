@@ -7,11 +7,12 @@ function mapStateToProps(state){
   return {
     country: state.country,
     pp_data: state.country.pp_data,
-    no_ss: state.country.no_ss,
+    ss_no: state.country.ss_no,
     ex_curr: state.country.ex_curr,  
-    sports_data: state.country.sports_data,
-    acad_list: state.country.acad_list,
-    sports_list: state.country.sports_list, 
+    sport_d: state.country.sport_d,
+    top_marks: state.country.top_marks,
+    top_sport: state.country.top_sport,
+    top_extra_curr : state.country.top_extra_curr, 
   }
 }
 

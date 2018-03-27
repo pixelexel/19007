@@ -4,14 +4,19 @@ import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Card from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
-import GraphComponent2 from './GraphComponent2'
-import GraphComponent from './GraphComponent'
+import GraphBar from './GraphBar'
+import GraphLine from './GraphLine'
+import GraphComponent from '../GraphComponent'
 import List from './List.js'
 import Chips from './Chips'
+import { Table, TableBody, TableCell, TableHead, TableRow } from 'material-ui'
 import FaceIcon from 'material-ui-icons/Face'
 import MoodIcon from 'material-ui-icons/Mood'
 import AssIcon from 'material-ui-icons/Assessment'
 import WorldIcon from 'material-ui-icons/Language'
+import Typography from 'material-ui/Typography';
+import Progress from '../Progress'
+import { ListItem, ListItemText, ListSubheader } from 'material-ui/List'
 import { addGraph, getAllGraphs, removeGraph } from '../../actions/graph'
 import { addList, getAllLists, removeList } from '../../actions/list'
 import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
@@ -21,108 +26,123 @@ const styles = theme => ({
     width : '99%',
     
   },
+   root1: {
+    height: '265px',
+    backgroundColor: theme.palette.secondary.light,
+    margin: '0 auto',
+    overflow: 'auto',
+    paddingBottom: 15,
+  },
 });
 
 class SchoolGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const { pp_data,no_ss,ex_curr,sports_data,acad_list,sports_list} = this.props.school
+  const {pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr} = this.props.school
 
   return (
     <div className={classes.root}>
-      <br/>
-      <Grid container spacing={24}>
-         <Grid item xs={3} style={{}}>
-        <Paper style={{background:'#E6004C',marginLeft: '10px', height:'90%'}}>
-          <h2 style={{color:'black'}}>Scholars</h2>
-                <FaceIcon style={{fontSize:'100px',marginTop:'0px'}}/>
+      <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
+
+          <Grid item xs={3}>
+            <Progress data={pp_data[0]} style={{marginBottom: 25}}/>
+            </Grid>
+          <Grid item xs={3}>
+            <Progress data={pp_data[1]} style={{marginBottom: 25}}/>
+            </Grid>
+            <Grid item xs={3}>
+              <Progress data={pp_data[2]} style={{marginBottom: 25}}/>
+              </Grid>
+              <Grid item xs={3}>
+                <Progress data={pp_data[3]} style={{marginBottom: 25}}/>
+                </Grid>
+                </Grid>
+        <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
+          <Grid item xs={5}>
+          <Paper  style={{height:'350px'}}>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Academic Performances</Typography>
+
+             <GraphLine value={pp_data}/>
+          </Paper>
+          </Grid>
+          <Grid item xs={7}>
+          <Paper style={{height:'350px'}}>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Extra Curricular Performances</Typography>
+
+          <GraphBar value={ex_curr}/>
+            </Paper>
           
-        </Paper>
-        </Grid>
-        <Grid item xs={3} >
-        <Paper style={{background:'#ff9900',marginLeft: '10px',height:'90%'}}>
-            <h2 style={{color:'black'}}>Students</h2>
-          <MoodIcon style={{fontSize:'100px',marginTop:'0px'}}/>
-        </Paper>
-        </Grid>
+          </Grid>
+            </Grid>
 
-        <Grid item xs={3}>
-          <Paper style={{background:'#B300B3',marginLeft: '10px',height:'90%'}}>
-              <h2 style={{color:'black'}}>Percentage</h2>
-          <AssIcon style={{fontSize:'100px',marginTop:'0px'}}/>
-
-          </Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper style={{background:'#00E6E6',marginLeft: '10px',height:'90%'}}>
-
-              <h2 style={{color:'black'}}>India</h2>
-          <WorldIcon style={{fontSize:'100px',marginTop:'0px'}}/>
-
-          </Paper>
-        </Grid>
-
-      </Grid>
-      <br/>
-        <br/>
-      <Grid container spacing={24}>
-        <Grid item xs={4}>
-        <header style={{marginLeft:'2%',backgroundColor:'#990099', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
-           New Orders
-          </header>
-        <Paper  style={{height:'250px',marginLeft: '10px',}}>
+<Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
+          <Grid item xs={3}>
         
-        </Paper>
-        </Grid>
-        <Grid item xs={4}>
-        <header style={{marginLeft:'2%',backgroundColor:'#00CCCC', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
-           Montly Sales
-          </header>
-          <Paper style={{height:'250px',marginLeft: '10px',}}>
+        <Progress data={pp_data[1]} style={{marginBottom:'20px'}}/>
            
-          </Paper>
-        </Grid>
-        <Grid item xs={4}>
-        <header style={{marginLeft:'2%',backgroundColor:'#990099', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
-           Montly Sales
-          </header>
-          <Paper style={{height:'250px',marginLeft: '10px',}}>
-           
-          </Paper>
-        </Grid>
-      </Grid>
-      <br />
-      <br />
-    
-      <Grid container spacing={24}>
-        <Grid item xs={4}>
-        <header style={{marginLeft:'2%',backgroundColor:'#00CCCC', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
-           Browser Usage
-          </header>
-          <Paper style={{height:'300px',marginLeft: '10px',}}>
-        
-          </Paper>
-        </Grid>
-        <Grid item xs={4}>
-        <header style={{marginLeft:'2%',backgroundColor:'#990099', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
-           CPU Usage
-          </header>
-          <Paper style={{height:'300px',marginLeft: '10px',}}>
-        
-          </Paper>
-        </Grid>
-        <Grid item xs={4}>
-        <header style={{marginLeft:'2%',backgroundColor:'#00CCCC', height:'40px', color:'#FFFFFF', fontSize:'30px', paddingLeft:'3%'}}>
-          Recent Lists
-          </header>
-          <Paper style={{height:'300px',marginLeft: '10px',}}>
+          <br/>
+
+            
+            <Progress data={pp_data[1]} style={{}}/>
+               
+          </Grid>
+          <Grid item xs={5}>
+          <Paper style={{height:'270px'}}>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+
+          <GraphBar value={pp_data}/>
+            </Paper>
           
-           
-          </Paper>
-        </Grid>
-        
-      </Grid>
+          </Grid>
+          <Grid item xs={4}>
+          <Paper style={{height:'270px'}}>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+
+            <GraphLine value={ss_no}/>
+            </Paper>
+          </Grid>
+              </Grid>
+
+              <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
+                        <Grid item xs={4}>
+                      <Paper style={{height:'300px',textAlign:'center'}}>
+                      <Typography style={{fontSize:'25px'}}>Top Academic Performances</Typography>
+                      <div className={classes.root1}>
+                      <Table>
+                      <TableBody>
+                        { top_marks.map((d) => {
+                       return <TableRow>
+                          <TableCell>{d.name}</TableCell>
+                          <TableCell style={{textAlign:'right'}}>{d.marks}</TableCell>
+                      </TableRow>
+             })
+             }</TableBody></Table></div>
+                          </Paper>
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Paper style={{height:'300px'}}>
+                          <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+                            <br/>
+                            <GraphLine value={sport_d}/>
+                          </Paper>
+                        </Grid>
+                        <Grid item xs={4}>
+                        <Paper style={{height:'300px'}}>
+                      <Typography style={{fontSize:'25px',textAlign:'center'}}>Top Sports Performances</Typography>
+                        <div className={classes.root1}>
+                      <Table>
+                      <TableBody>
+                        { ss_no.map((d) => {
+                       return <TableRow>
+                          <TableCell>{d.name}</TableCell>
+                          <TableCell style={{textAlign:'right'}}>{d.value}</TableCell>
+                      </TableRow>
+             })
+             }</TableBody></Table></div>
+                          </Paper>
+                        </Grid>
+                            </Grid>
     </div>
   )
 }

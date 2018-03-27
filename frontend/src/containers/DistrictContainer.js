@@ -5,13 +5,14 @@ import { getDistrictData } from '../actions/district'
 import District from '../components/student/District';
 function mapStateToProps(state){
 	return {
-		district : state.district,
-		pp_data: state.district.pp_data,
-		no_ss: state.district.no_ss,
-		ex_curr: state.district.ex_curr,
-		sports_data: state.country.sports_data,
-    	acad_list: state.country.acad_list,
-    	sports_list: state.country.sports_list, 		
+		district: state.district,
+    pp_data: state.district.pp_data,
+    ss_no: state.district.ss_no,
+    ex_curr: state.district.ex_curr,  
+    sport_d: state.district.sport_d,
+    top_marks: state.district.top_marks,
+    top_sport: state.district.top_sport,
+    top_extra_curr : state.district.top_extra_curr, 		
 	}
 }
 
