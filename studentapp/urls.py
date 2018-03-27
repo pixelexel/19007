@@ -19,6 +19,8 @@ urlpatterns = [
     path('chatbot', views.chatbot, name='chatbot'),
     path('get_state_data/<state_name>', views.getStateData, name='getStateData'),
     path('get_district_data/<district_name>', views.getDistrictData, name='getDistrictData'),
+    path('get_school_data/<school_name>', views.getSchoolData, name='getSchoolData'),
+	path('get_country_data/', views.getCountryData, name='getCountryData'),
     path('get_country_data/', views.getCountryData, name='getCountryData'),
 	path('get_filter_data/', views.filter_data, name='filter_data'),
 ]
