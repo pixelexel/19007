@@ -10,7 +10,7 @@ const styles = (theme) => ({
 	root: {
 		width: '90%',
 		height: 'calc(100% - 100px)',
-		backgroundColor: theme.palette.secondary.light,
+		backgroundColor: theme.palette.secondary.main,
 		margin: '0 auto',
 		overflow: 'auto',
 		paddingBottom: 15,

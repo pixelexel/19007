@@ -49,11 +49,12 @@ class GraphCreator extends React.Component {
 	getSteps = () => [this.props.varname + ' Name', 'Axes', 'Filters']
 
 	getStepContent = step => {
+		console.log('varname', this.props.varname)
 		switch (step) {
 			case 0:
 				return 'Enter the title of the ' + this.props.varname.toLowerCase()
 			case 1:
-				return 'Enter the axes to be plotted'
+				return 'Enter the ' + (this.props.varname.toLowerCase() == 'graph' ? 'axes to be plotted' : 'parameters')
 			case 2:
 				return 'Enter filters'
 			default:
@@ -381,7 +382,7 @@ class GraphCreator extends React.Component {
 								} )}
 								</Paper>
 								<br/>
-								<InputLabel htmlFor='add-listx'>Filter name</InputLabel>
+								<InputLabel htmlFor='add-listx'>Parameters</InputLabel>
 								<Select value={this.state.selectedListXAxis}
 									onChange={this.handleListXAxisChange.bind(this, 'add', 'meh')}
 									inputProps={{

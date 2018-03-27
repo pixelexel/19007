@@ -8,7 +8,6 @@ import { ResponsiveContainer, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, L
 
 const styles = (theme) => ({
   root: {
-    backgroundColor: theme.palette.secondary.light,
     color: theme.palette.secondary.contrastText + ' !important',
   }
 })
