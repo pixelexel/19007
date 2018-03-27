@@ -20,6 +20,8 @@ import { ListItem, ListItemText, ListSubheader } from 'material-ui/List'
 import { addGraph, getAllGraphs, removeGraph } from '../../actions/graph'
 import { addList, getAllLists, removeList } from '../../actions/list'
 import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
+import IndiaState from '../../test_map/indiaState'
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -35,8 +37,10 @@ const styles = theme => ({
  
 });
 
-
 class CountryGrid extends Component {
+constructor(props){
+  super(props)
+}
 
 render() {
   const { classes,theme } = this.props
@@ -56,20 +60,38 @@ render() {
   return (
     <div className={classes.root}>
      <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
-
-          <Grid item xs={3}>
+      <Grid item xs={6}>
+        <IndiaState dispatch={this.props.dispatch}/>
+      </Grid>
+      <Grid item xs={6}>
+        <Grid container>
+          <Grid item xs={6}>
             <Progress data={pp_data[0]} style={{marginBottom: 25}}/>
-            </Grid>
-          <Grid item xs={3}>
+          </Grid>
+          <Grid item xs={6}>
             <Progress data={pp_data[1]} style={{marginBottom: 25}}/>
+          </Grid>
+          <Grid item xs={6}>
+            <Progress data={pp_data[2]} style={{marginBottom: 25}}/>
+          </Grid>
+          <Grid item xs={6}>
+            <Progress data={pp_data[3]} style={{marginBottom: 25}}/>
+          </Grid>
+            <Grid item xs={6}>
+              <Progress data={pp_data[0]} style={{ marginBottom: 25 }} />
             </Grid>
-            <Grid item xs={3}>
-              <Progress data={pp_data[2]} style={{marginBottom: 25}}/>
-              </Grid>
-              <Grid item xs={3}>
-                <Progress data={pp_data[3]} style={{marginBottom: 25}}/>
-                </Grid>
-                </Grid>
+            <Grid item xs={6}>
+              <Progress data={pp_data[1]} style={{ marginBottom: 25 }} />
+            </Grid>
+            <Grid item xs={6}>
+              <Progress data={pp_data[2]} style={{ marginBottom: 25 }} />
+            </Grid>
+            <Grid item xs={6}>
+              <Progress data={pp_data[3]} style={{ marginBottom: 25 }} />
+            </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>

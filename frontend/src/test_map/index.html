@@ -57,11 +57,11 @@
 <script src="indiaState.js"></script> <!-- creates india State. -->
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-	function tooltipHtml(n, d){	/* function to create html content string in tooltip div. */
+	function tooltipHtml(n, d){
 		return "<h4>"+n+"</h4>";
 	}
 	
-	var sampleData ={};	/* Sample random data. */	
+	var sampleData ={};	
 	["AP", "AR", "AS", "BR", "CT", "DL", "GA", "GJ","HR", "HP", "JK", "JH", "KA", "KL", "MP", "MH",
                                     "MN", "ML", "MZ", "NL", "OR", "PB", "RJ", "SK","TN", "TR", "UP", "UT", "WB"]
 		.forEach(function(d){ 
@@ -72,12 +72,7 @@
 					avg:Math.round((low+mid+high)/3), color:"#ffc107"}; 
 		});
 	
-	/* draw states on id #statesvg */	
 	iStates.draw("#statesvg", sampleData, tooltipHtml);
-	
 	d3.select(self.frameElement).style("height", "600px"); 
-
 </script>
 </body>
-
-<!-- color:d3.interpolate("#ffffcc", "#800026")(low/100) -->
