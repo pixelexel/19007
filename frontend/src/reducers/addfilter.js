@@ -1,5 +1,5 @@
 import { RECEIVE_LIST_FROM_FILTERS, ADD_TO_TABLE, UPDATE_TABLE, 
-        DELETE_FROM_TABLE, START_SAVING_FILTER } from '../actions/addfilter'
+    DELETE_FROM_TABLE, START_SAVING_FILTER, FINISH_SAVING_FILTER} from '../actions/addfilter'
 
 const initialState = {
     data: [],
@@ -32,8 +32,13 @@ const addfilter = (state = initialState, action) => {
             })
         
         case START_SAVING_FILTER:
-            return Object.assign({}, initialState, {
+            return Object.assign({}, state, {
                 saving: true,
+            })
+        
+        case FINISH_SAVING_FILTER:
+            return Object.assign({}, initialState, {
+                saving: false,
             })
 
         case DELETE_FROM_TABLE: {

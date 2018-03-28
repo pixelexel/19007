@@ -6,6 +6,7 @@ export const ADD_TO_TABLE = 'ADD_TO_TABLE'
 export const UPDATE_TABLE = 'UPDATE_TABLE'
 export const DELETE_FROM_TABLE = 'DELETE_FROM_TABLE'
 export const START_SAVING_FILTER = 'START_SAVING_FILTER'
+export const FINISH_SAVING_FILTER = 'FINISH_SAVING_FILTER'
 
 const receiveListFromFilters = data => ({
     type: RECEIVE_LIST_FROM_FILTERS,
@@ -27,8 +28,12 @@ export const deleteFromTable = data => ({
     data: data,
 })
 
-export const startSavingFilter = () => ({
+const startSavingFilter = () => ({
     type: START_SAVING_FILTER,
+})
+
+const finishSavingFilter = () => ({
+    type: FINISH_SAVING_FILTER,
 })
 
 export const saveNewFilter = filter => {
@@ -38,7 +43,11 @@ export const saveNewFilter = filter => {
             method: 'post',
             body: JSON.stringify(filter),
         }).then(data => data.json())
-        .then(json => dispatch(changeScreen(screens.DASH)))
+        .then(json => {
+            dispatch(finishSavingFilter())
+            dispatch(changeScreen(screens.DASH))
+        }
+        )
     }
 }
 
