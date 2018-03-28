@@ -11,6 +11,8 @@ import stateData from './state'
 import chatbot from './chatbot'
 import districtData from './district'
 import schoolData from './school'
+import addfilter from './addfilter'
+
 // Combine all reducers
 // If you don't give a key, the name of the reducer is it's
 // state's key
@@ -27,6 +29,7 @@ const studentApp = combineReducers({
 	district : districtData,
 	school : schoolData,
 	chatbot: chatbot,
+	addfilter: addfilter,
 })
 
 export default studentApp
