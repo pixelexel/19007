@@ -428,18 +428,44 @@ def getStudentData(request,aadhar_id):
 
 @csrf_exempt
 def studentform(request):
-    if request.method == "POST":
+	retGraph = {'x':[] , 'y':[] , 'filters':{}}
+	rval = Student._meta.get_fields()
+	types = {'CharField':'string', 
+			'IntegerField':'int',
+			'BooleanField':'bool',
+			'DateField':'date'}
+	ss = Student.objects.all()[0]
 
-        form = StudentForm(request.POST)
-        if form.is_valid():
-            studentdata = form.save(commit = False)
-            studentdata.savedata()
-            return redirect('studentform')
+	for i in rval:
+		if types.__contains__(i.get_internal_type()):
+			tem = {}
+			if i.name in (
+				['filter{}_name'.format(x) for x in range(1, 6)] +\
+				['filter{}_active'.format(x) for x in range(1, 6)]):
+				fnum, ftype = i.name.split('_')
+				fnum = fnum[6]
 
-        return HttpResponse('ERROR')
-    else:
-        form = StudentForm()
-        return render(request, 'studentform.html', {'form' : form})
+				if ftype == 'name' and getattr(ss, 'filter{}_active'.format(fnum)):
+					tem['name'] = ss.filter1_name
+					tem['type'] = ss.filter1_type
+			else:
+				tem['name'] = i.name
+				tem['type'] = types[i.get_internal_type()]
+				retGraph['filters'][i.name] = tem
+				
+			if 'filter' not in i.name:
+				retGraph['x'].append(i.name)
+				retGraph['y'].append(i.name)
+	content = {} 
+	for i in retGraph['x']:
+		content[i] = i
+	if request.method == 'POST':
+		tem = Student()
+		for k,v in content.items():
+			setattr(tem,k,request.POST[k])		
+		tem.save()
+
+	return render(request,'studentform.html',{'content':content})
 
 def convert_filters(filters):
     sendfilters = []
