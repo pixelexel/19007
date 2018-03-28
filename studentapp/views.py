@@ -14,7 +14,7 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.forms.models import model_to_dict
 # Create your views here.
 CSV_STORAGE = os.path.join(os.getcwd(), 'studentapp', 'static', 'csv')
-
+ 
 
 def index(req):
 	return JsonResponse({
@@ -647,6 +647,7 @@ def getStateData(request,state_name):
 			if v >= t_s_a['avg']:
 				t_s_a['avg'] = v
 				t_s_a['district'] = k
+		s_n = state_name
 		p_c = len(Student.objects.filter(state=state_name,marks__gte=35))*100.0/(len(qs))
 		p_b = len(Student.objects.filter(state=state_name,gender="m"))*100.0/(len(qs))
 		p_g = len(Student.objects.filter(state=state_name,gender="f"))*100.0/(len(qs))
@@ -659,7 +660,7 @@ def getStateData(request,state_name):
 		qs = Student.objects.filter(state=state_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
-		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
+		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -704,6 +705,7 @@ def getDistrictData(request,district_name):
 			if v >= t_s_a['avg']:
 				t_s_a['avg'] = v
 				t_s_a['school'] = k
+		s_n = district_name
 		p_c = len(Student.objects.filter(district=district_name,marks__gte=35))*100.0/(len(qs))
 		p_b = len(Student.objects.filter(district=district_name,gender="m"))*100.0/(len(qs))
 		p_g = len(Student.objects.filter(district=district_name,gender="f"))*100.0/(len(qs))
@@ -716,7 +718,7 @@ def getDistrictData(request,district_name):
 		qs = Student.objects.filter(district=district_name,date__gte=datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()).order_by('-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
-		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
+		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -798,6 +800,7 @@ def getSchoolData(request,school_name):
 		qs = Student.objects.filter(school=school_name).order_by('-sport')
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport})
+		s_n = school_name
 		p_c = len(Student.objects.filter(school=school_name,marks__gte=35))*100.0/(len(qs))
 		p_b = len(Student.objects.filter(school=school_name,gender="m"))*100.0/(len(qs))
 		p_g = len(Student.objects.filter(school=school_name,gender="f"))*100.0/(len(qs))
@@ -819,7 +822,7 @@ def getSchoolData(request,school_name):
 		qs = Student.objects.filter(school=school_name,gender='f').order_by('-marks')
 		for i in qs:
 			g_marks.append({'name':i.name,'marks':i.marks})
-		ret = {'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks}
+		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks}
 		print(ret)
 	return JsonResponse(ret)
 
