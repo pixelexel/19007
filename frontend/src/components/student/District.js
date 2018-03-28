@@ -28,7 +28,7 @@ const styles = theme => ({
   },
    root1: {
     height: '265px',
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: theme.palette.secondary.main,
     margin: '0 auto',
     overflow: 'auto',
     paddingBottom: 15,
