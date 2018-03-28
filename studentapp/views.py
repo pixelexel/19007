@@ -30,15 +30,28 @@ def get_formvals():
 			'IntegerField':'int',
 			'BooleanField':'bool',
 			'DateField':'date'}
+	ss = Student.objects.all()[0]
 
 	for i in rval:
 		if types.__contains__(i.get_internal_type()):
 			tem = {}
-			tem['name'] = i.name
-			tem['type'] = types[i.get_internal_type()]
-			retGraph['filters'][i.name] = tem
-			retGraph['x'].append(i.name)
-			retGraph['y'].append(i.name)
+			if i.name in (
+				['filter{}_name'.format(x) for x in range(1, 6)] +\
+				['filter{}_active'.format(x) for x in range(1, 6)]):
+				fnum, ftype = i.name.split('_')
+				fnum = fnum[6]
+
+				if ftype == 'name' and getattr(ss, 'filter{}_active'.format(fnum)):
+					tem['name'] = ss.filter1_name
+					tem['type'] = ss.filter1_type
+			else:
+				tem['name'] = i.name
+				tem['type'] = types[i.get_internal_type()]
+				retGraph['filters'][i.name] = tem
+				
+			if 'filter' not in i.name:
+				retGraph['x'].append(i.name)
+				retGraph['y'].append(i.name)
 
 	retr = {'graph':retGraph,'list':retGraph}
 	return retr
@@ -317,8 +330,9 @@ def suggestions(request):
 			})
 
 		studentList = []
+		studentsMatching = Q() | Q(name__contains=query) | Q(school__contains=query) | Q(aadhar_id__contains=query) | Q(district__contains=query) | Q(state__contains=query)
 
-		allStudentsMatching = Student.objects.filter(name__contains=query)
+		allStudentsMatching = Student.objects.filter(studentsMatching)
 		aadharSet = set()
 
 		for s in allStudentsMatching:
@@ -482,6 +496,23 @@ def fix_param_display(param):
 	else:
 		return param
 
+@csrf_exempt
+def get_student_list(request):
+	if request.method == 'POST':
+		filters = json.loads(request.body)['filters']
+		ret = get_list_data({
+				'x': {},
+				'filters': sendfilters,
+			}, False, False)
+
+		return JsonResponse({
+			data: ret
+		})
+
+	else:
+		return JsonResponse({
+			error: True
+		})
 
 @csrf_exempt
 def chatbot(request):
@@ -793,51 +824,37 @@ def getSchoolData(request,school_name):
 	return JsonResponse(ret)
 
 def filter_data(request):
-	if request.method == 'GET':
-		students_all = Student.objects.all()
-		arr = []
-		for a in students_all:
-			arr.append({'id':a.aadhar_id, 'name': a.name})
-		print(arr)
-		return JsonResponse({'data':arr})
-	else:
-		filter_info = json.loads(request.body.decode('ascii'))
+	if request.method == 'POST':
+		filter_info = json.loads(request.body.decode('utf-8'))
 		fil_name = filter_info['filter_name']
 		fil_type = filter_info['filter_type']
 		stu_sel = filter_info['students_selected']
+		filter_default = filter_info['filter_default']
+		s_All = Student.objects.all()
+
+		for s in s_All:
+			for i in range(1, 6):
+				if not getattr(s, 'filter{}_active'.format(i)):
+					setattr(s, 'filter{}_name'.format(i), fil_name)
+					setattr(s, 'filter{}_type'.format(i), fil_type)
+					setattr(s, 'filter{}_active'.format(i), True)
+					setattr(s, 'filter{}_val'.format(i), filter_default)
+					s.save()
+					break
+
 		for i in stu_sel:
 			t,v = list(i.items())[0]
-			s = Student,objects.filter(aadhar_id=t)
-			if s.filter1_active == False:
-				s.filter1_name = fil_name
-				s.filter1_type = fil_type
-				s.filter1_active = true
-				s.filter1_val = v
-				s.save()
-			elif s.filter2_active == False:
-				s.filter2_name = fil_name
-				s.filter2_type = fil_type
-				s.filter2_active = true
-				s.filter2_val = v
-				s.save()
-			elif s.filter3_active == False:
-				s.filter3_name = fil_name
-				s.filter3_type = fil_type
-				s.filter3_active = true
-				s.filter3_val = v
-				s.save()
-			elif s.filter4_active == False:
-				s.filter4_name = fil_name
-				s.filter4_type = fil_type
-				s.filter4_active = true
-				s.filter4_val = v
-				s.save()
-			else:
-				s.filter5_name = fil_name
-				s.filter5_type = fil_type
-				s.filter5_active = true
-				s.filter5_val = v
-				s.save()
+			ss = Student.objects.filter(aadhar_id=t)
+			for s in ss:
+				for i in range(1, 6):
+					if not getattr(s, 'filter{}_active'.format(i)):
+						setattr(s, 'filter{}_name'.format(i), fil_name)
+						setattr(s, 'filter{}_type'.format(i), fil_type)
+						setattr(s, 'filter{}_active'.format(i), True)
+						setattr(s, 'filter{}_val'.format(i), v)
+						s.save()
+						break
+
 	return JsonResponse({'error':false})
 
 
