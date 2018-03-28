@@ -9,6 +9,7 @@ import datetime
 from pprint import pprint
 from .forms import StudentForm
 import pandas as pd
+import os
 # Create your views here.
 
 def index(req):
@@ -424,22 +425,42 @@ def import_data(request):
         new_students = request.FILES['myfile']
         if new_students.content_type == 'text/csv':
             df = pd.read_csv(new_students)
-            df.drop('id', axis=1, inplace=True)
-            df.set_index("aadhar_id", drop=True, inplace=True)
-            dictionary = df.to_dict(orient="index")
-            print(dictionary)
-            for aadhar, student in dictionary.items():
-                m = Student()
-                for k,v in student.items():
-                    print('sassasasas', k, v)
-                    setattr(m, k, v)
-                setattr(m, 'aadhar_id', aadhar)
-                m.save()
-            
+        else:
+            df = pd.read_excel(new_students) #make sure that there' no header
+        path_name = os.path.join('studentapp', 'static', 'tempcsv', 'temp.csv')
+        df.to_csv(path_name, index=False)
+        return redirect('/api/fieldmatching?df='+ path_name)
+    else:
+        return render(request, 'import_data.html')
 
 
+def fieldmatching(request):
+    if request.method == 'POST':
+        path_name = request.POST['csv_path']
+        df = pd.read_csv(path_name)
+        names = list(df.columns)
 
+        if request.POST.get('checkBox') == None:
+            matched = { key:request.POST.get(key, False) for key in names }
+            print(matched)
+            df.rename(columns = matched, inplace = True)
 
-    return render(request, 'import_data.html')
+        df.drop('id', axis=1, inplace=True)
+        df.set_index("aadhar_id", drop=True, inplace=True)
+        dictionary = df.to_dict(orient="index")
+        for aadhar, student in dictionary.items():
+            m = Student()
+            for k,v in student.items():
+                setattr(m, k, v)
+            setattr(m, 'aadhar_id', aadhar)
+            m.save()
+
+        return redirect('import_data')
+    else:
+        path_name = request.GET.get('df')
+        df = pd.read_csv(path_name)
+        names = list(df.columns)
+        fields = [field.name for field in Student._meta.get_fields()]
+        return render(request, 'fieldmatching.html', {'fields' : fields, 'csv_path': path_name, 'names' : names})
 
 

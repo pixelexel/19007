@@ -17,5 +17,6 @@ urlpatterns = [
     path('get_student_data/<int:aadhar_id>/', views.getStudentData, name='getStudentData'),
     path('studentform/new', views.studentform, name = 'studentform'),
     path('chatbot', views.chatbot, name='chatbot'),
-    path('import_data', views.import_data, name='import_data')
+    path('import_data', views.import_data, name='import_data'),
+    path('fieldmatching',views.fieldmatching, name='fieldmatching'),
 ]
