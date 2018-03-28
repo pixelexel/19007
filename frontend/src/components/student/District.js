@@ -39,23 +39,23 @@ class DistrictGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr} = this.props.district
+  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr,t_s_a,t_s_s,t_s_e,p_c,p_b,p_g} = this.props.district
 
   return (
     <div className={classes.root}>
       <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
 
           <Grid item xs={3}>
-            <Progress data={pp_data[0]} style={{marginBottom: 25}}/>
+            <Progress data={p_b[0]} style={{marginBottom: 25}}/>
             </Grid>
           <Grid item xs={3}>
-            <Progress data={pp_data[1]} style={{marginBottom: 25}}/>
+            <Progress data={p_g[0]} style={{marginBottom: 25}}/>
             </Grid>
             <Grid item xs={3}>
-              <Progress data={pp_data[2]} style={{marginBottom: 25}}/>
+              <Progress data={t_s_a[0]} style={{marginBottom: 25}}/>
               </Grid>
               <Grid item xs={3}>
-                <Progress data={pp_data[3]} style={{marginBottom: 25}}/>
+                <Progress data={p_c[0]} style={{marginBottom: 25}}/>
                 </Grid>
                 </Grid>
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
@@ -79,12 +79,12 @@ render() {
 <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={3}>
         
-        <Progress data={pp_data[1]} style={{marginBottom:'20px'}}/>
+        <Progress data={t_s_e[0]} style={{marginBottom:'20px'}}/>
            
           <br/>
 
             
-            <Progress data={pp_data[1]} style={{}}/>
+            <Progress data={t_s_s[0]} style={{}}/>
                
           </Grid>
           <Grid item xs={5}>

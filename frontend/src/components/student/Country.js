@@ -44,19 +44,7 @@ constructor(props){
 
 render() {
   const { classes,theme } = this.props
-  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr} = this.props.country
-  let ret = {
-        x: 'domain',
-        y: 'strength',
-        data: [
-            {'domain': pp_data.name, 'strength': pp_data.value, 'filter': 0},
-            { 'domain': ss_no.name, 'strength': ss_no.value, 'filter': 0 },
-            { 'domain': ex_curr.name, 'strength': ex_curr.value, 'filter': 0 },
-        ],
-        filters: [],
-        type: 'RADAR',
-      }
-
+  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr,t_s_a,t_s_s,t_s_e,p_c,p_b,p_g} = this.props.country
   return (
     <div className={classes.root}>
      <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
@@ -66,22 +54,22 @@ render() {
       <Grid item xs={6}>
         <Grid container>
           <Grid item xs={6}>
-            <Progress data={pp_data[0]} style={{marginBottom: 25}}/>
+            <Progress data={p_c[0]} style={{marginBottom: 25}}/>
           </Grid>
           <Grid item xs={6}>
-            <Progress data={pp_data[1]} style={{marginBottom: 25}}/>
+            <Progress data={p_b[0]} style={{marginBottom: 25}}/>
           </Grid>
           <Grid item xs={6}>
-            <Progress data={pp_data[2]} style={{marginBottom: 25}}/>
+            <Progress data={p_g[0]} style={{marginBottom: 25}}/>
           </Grid>
           <Grid item xs={6}>
-            <Progress data={pp_data[3]} style={{marginBottom: 25}}/>
+            <Progress data={t_s_a[0]} style={{marginBottom: 25}}/>
           </Grid>
             <Grid item xs={6}>
-              <Progress data={pp_data[0]} style={{ marginBottom: 25 }} />
+              <Progress data={t_s_s[0]} style={{ marginBottom: 25 }} />
             </Grid>
             <Grid item xs={6}>
-              <Progress data={pp_data[1]} style={{ marginBottom: 25 }} />
+              <Progress data={t_s_e[0]} style={{ marginBottom: 25 }} />
             </Grid>
             <Grid item xs={6}>
               <Progress data={pp_data[2]} style={{ marginBottom: 25 }} />
