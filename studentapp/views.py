@@ -280,40 +280,40 @@ def getList(request):
 
 @csrf_exempt
 def allGraphs(request):
-	qs = Graphs.objects.all()
-	data = []
-	for i in qs:
-		data.append( json.loads(i.gD) )
-	return JsonResponse( {
-		'data':data
-	})
+    qs = Graphs.objects.all()
+    data = []
+    for i in qs:
+        data.append( json.loads(i.gD) )
+    return JsonResponse( {
+        'data':data
+    })
 
 @csrf_exempt
 def allLists(request):
-	qs = Lists.objects.all()
-	data = []
-	for i in qs:
-		data.append( json.loads(i.lD) )
-	return JsonResponse( {
-		'data':data
-	})
+    qs = Lists.objects.all()
+    data = []
+    for i in qs:
+        data.append( json.loads(i.lD) )
+    return JsonResponse( {
+        'data':data
+    })
 
 @csrf_exempt
 def delete_graph(request, id):
-	g = get_object_or_404(Graphs, pk=id)
-	g.delete()
-	return JsonResponse({
-			"error": "false"
-		})
+    g = get_object_or_404(Graphs, pk=id)
+    g.delete()
+    return JsonResponse({
+            "error": "false"
+        })
 
 
 @csrf_exempt
 def delete_list(request, id):
-	l = get_object_or_404(Lists, pk=id)
-	l.delete()
-	return JsonResponse({
-		"error": "false"
-	})
+    l = get_object_or_404(Lists, pk=id)
+    l.delete()
+    return JsonResponse({
+        "error": "false"
+    })
 
 @csrf_exempt
 def suggestions(request):
@@ -428,50 +428,50 @@ def getStudentData(request,aadhar_id):
 
 @csrf_exempt
 def studentform(request):
-	if request.method == "POST":
+    if request.method == "POST":
 
-		form = StudentForm(request.POST)
-		if form.is_valid():
-			studentdata = form.save(commit = False)
-			studentdata.savedata()
-			return redirect('studentform')
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            studentdata = form.save(commit = False)
+            studentdata.savedata()
+            return redirect('studentform')
 
-		return HttpResponse('ERROR')
-	else:
-		form = StudentForm()
-		return render(request, 'studentform.html', {'form' : form})
+        return HttpResponse('ERROR')
+    else:
+        form = StudentForm()
+        return render(request, 'studentform.html', {'form' : form})
 
 def convert_filters(filters):
-	sendfilters = []
-	for y in filters:
-		r = {}
-		if not type(y) is dict:
-			continue
+    sendfilters = []
+    for y in filters:
+        r = {}
+        if not type(y) is dict:
+            continue
 
-		for k, v in y.items():
-			if k == 'parameter':
-				r['name'] = v
-				if v == 'number of parents':
-					r['name'] = 'no_of_parents'
-				elif v == 'number of siblings':
-					r['name'] = 'no_of_siblings'
-				elif len(v.split()) > 1:
-					r['name'] = '_'.join(v.split())
+        for k, v in y.items():
+            if k == 'parameter':
+                r['name'] = v
+                if v == 'number of parents':
+                    r['name'] = 'no_of_parents'
+                elif v == 'number of siblings':
+                    r['name'] = 'no_of_siblings'
+                elif len(v.split()) > 1:
+                    r['name'] = '_'.join(v.split())
 
-			elif k == 'operator':
-				r['op'] = v
-			else:
-				if k == 'number':
-					r['type'] = 'number'
-				else:
-					if v == 'True' or v == 'False':
-						r['type'] = 'bool'
-					else:
-						r['type'] = 'string'
+            elif k == 'operator':
+                r['op'] = v
+            else:
+                if k == 'number':
+                    r['type'] = 'number'
+                else:
+                    if v == 'True' or v == 'False':
+                        r['type'] = 'bool'
+                    else:
+                        r['type'] = 'string'
 
-				r['val'] = v
-		sendfilters.append(r)
-	return sendfilters
+                r['val'] = v
+        sendfilters.append(r)
+    return sendfilters
 
 def fix_param(param):
 	if len(param.strip().split()) > 1:
@@ -857,4 +857,46 @@ def filter_data(request):
 
 	return JsonResponse({'error':false})
 
+@csrf_exempt
+def import_data(request):
+    if request.method == 'POST':
+        new_students = request.FILES['myfile']
+        if new_students.content_type == 'text/csv':
+            df = pd.read_csv(new_students)
+        else:
+            df = pd.read_excel(new_students) #make sure that there' no header
+        path_name = os.path.join('studentapp', 'static', 'tempcsv', 'temp.csv')
+        df.to_csv(path_name, index=False)
+        return redirect('/api/fieldmatching?df='+ path_name)
+    else:
+        return render(request, 'import_data.html')
 
+
+def fieldmatching(request):
+    if request.method == 'POST':
+        path_name = request.POST['csv_path']
+        df = pd.read_csv(path_name)
+        names = list(df.columns)
+
+        if request.POST.get('checkBox') == None:
+            matched = { key:request.POST.get(key, False) for key in names }
+            print(matched)
+            df.rename(columns = matched, inplace = True)
+
+        df.drop('id', axis=1, inplace=True)
+        df.set_index("aadhar_id", drop=True, inplace=True)
+        dictionary = df.to_dict(orient="index")
+        for aadhar, student in dictionary.items():
+            m = Student()
+            for k,v in student.items():
+                setattr(m, k, v)
+            setattr(m, 'aadhar_id', aadhar)
+            m.save()
+
+        return redirect('import_data')
+    else:
+        path_name = request.GET.get('df')
+        df = pd.read_csv(path_name)
+        names = list(df.columns)
+        fields = [field.name for field in Student._meta.get_fields()]
+        return render(request, 'fieldmatching.html', {'fields' : fields, 'csv_path': path_name, 'names' : names})

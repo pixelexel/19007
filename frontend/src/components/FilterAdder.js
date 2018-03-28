@@ -183,7 +183,7 @@ class FilterAdder extends Component{
 
     render(){
         const { filters, formVals, classes } = this.props
-        const filterVals = formVals.filters || {}
+        const filterVals = (formVals && formVals.filters) || {}
         const filterValsKeys = Object.keys(filterVals)
 
         const paperStyle = {

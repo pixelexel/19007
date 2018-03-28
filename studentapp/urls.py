@@ -24,4 +24,6 @@ urlpatterns = [
     path('get_country_data/', views.getCountryData, name='getCountryData'),
     path('get_filter_data/', views.filter_data, name='filter_data'),
     path('get_student_list', views.get_student_list, name='get_student_list'),
+    path('import_data', views.import_data, name='import_data'),
+    path('fieldmatching',views.fieldmatching, name='fieldmatching'),
 ]
