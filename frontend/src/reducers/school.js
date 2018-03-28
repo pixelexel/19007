@@ -46,7 +46,7 @@ function ind(getData){
 	const sport_keys=Object.keys(psport_Get)
 	const curr_keys=Object.keys(pcurr_Get)
 	const b_keys=Object.keys(bmarks_Get)
-	const g_keys=Object.keys(gmarks_Get
+	const g_keys=Object.keys(gmarks_Get)
 	for(let i=0;i<marks_keys.length;i++){
 		pmarks_Pass.push({'name':pmarks_Get.name,'value':Math.round(pmarks_Get.marks)})
 	}
