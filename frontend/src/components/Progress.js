@@ -7,7 +7,7 @@ const niceColor = '#898C92'
 const styles = theme => ({
     icon: { fontSize: '2.2rem', color: niceColor },
     text: { fontSize: '0.9rem', color: niceColor },
-    bigNumber: { fontSize: '2.2rem', color: theme.palette.primary.main },
+    bigNumber: { textAlign:'center',  fontSize: '1.2rem', color: theme.palette.primary.main },
 })
 
 class Progress extends Component{
@@ -20,15 +20,15 @@ class Progress extends Component{
             <CardContent>
                 <Grid container>
                     <Grid item xs={6}>
-                        <BookIcon className={classes.icon} />
                         <Typography className={classes.text} >
-                            {data['name'].toUpperCase()}
+                            {Math.floor(parseFloat(data['value']))}
                         </Typography>
                     </Grid>
 
                     <Grid item xs={6} style={{ textAlign: 'right' }}>
                         <Typography className={classes.bigNumber}>
-                            {Math.floor(parseFloat(data['value']))}
+                            {data['name'].toUpperCase()}
+                            
                         </Typography>
                     </Grid>
                 </Grid>

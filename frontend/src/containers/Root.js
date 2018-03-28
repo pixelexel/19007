@@ -13,6 +13,7 @@ import StateContainer from './StateContainer'
 import DistrictContainer from './DistrictContainer'
 import SchoolContainer from './SchoolContainer'
 import Chatbot from '../containers/Chatbot'
+import AddFilterContainer from '../containers/AddFilterContainer'
 import '../styles/App.scss'
 
 const mapStateToProps = (state) => ({
@@ -64,6 +65,11 @@ class Root extends Component{
 			case screens.STUDENT:
 				screenComponent = <StudentContainer id={id}/>
 				break
+			
+			case screens.ADD_FILTER:
+				screenComponent = <AddFilterContainer />
+				break
+
 			default:
 				screenComponent = null
 		}

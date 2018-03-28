@@ -8,3 +8,6 @@ for it in dt["data"]:
 	for k,v in it.items():
 		setattr(tem, k, v)
 	tem.save()
+
+for field in Student._meta.get_fields():
+	print(field)

@@ -1,5 +1,99 @@
-	<h1>New post</h1>
-    <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- Custom Font Icons CSS-->
+    <link rel="stylesheet" href="{% static 'css/font.css' %}">
+    <!-- Google fonts - Muli-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:300,400,700">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="{% static 'css/style.default.css' %}" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+		{% block head %} {% endblock %}
+					{% block title %} {% endblock %}
+  </head>
+  <body style="background:black">
+
+		{%block header%}
+		{% endblock%}
+
+              <!-- Form Elements -->
+              <div class="col-lg-10">
+                <div class="block">
+                  <div class="title"><strong>Student Data Form</strong></div>
+                  <div class="block-body">
+                    <form class="form-horizontal" method="POST">{% csrf_token %}
+
+
+                      <div class="line"></div>
+
+                      <div class="row">
+                        <label class="col-sm-3 form-control-label">Material Inputs</label>
+                        <div class="col-sm-9">
+                           {% for key,value in content.items %}
+                          <div class="form-group-material">
+                           
+                            <input id="register-username" type="text" name="{{ key }}" required class="input-material">
+                            <label for="register-username" class="label-material">{{ key }}</label>
+                          </div>
+                          {% endfor %}
+                           
+                      
+                         </div>
+                      </div>
+
+                      <div class="line"></div>
+
+                      <div class="form-group row">
+                        <label class="col-sm-3 form-control-label">Checkboxes &amp; radios <br><small class="text-primary">Necessary Field</small></label>
+                        <div class="col-sm-9">
+
+
+
+
+                          <div class="i-checks">
+                            <input id="radioCustom1" type="radio" value="option1" name="a" class="radio-template">
+                            <label for="radioCustom1">Handicapped</label>&nbsp;&nbsp;&nbsp;
+                              <input id="radioCustom2" type="radio" checked="" value="option2" name="a" class="radio-template">
+                            <label for="radioCustom2">Not Handicapped</label>
+                          </div>
+
+
+
+                        </div>
+                      </div>
+
+
+
+                      <div class="form-group row">
+                        <div class="col-sm-9 ml-auto">
+                          <button type="submit" class="btn btn-secondary">Cancel</button>
+                          <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                      </div>
+
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+							{% block scripts %}
+							{% endblock %}
+    <!-- JavaScript files-->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+
+    <script src="{% static 'js/front.js' %}"></script>
+		{% block content %}
+			{% endblock %}
+  </body>
+</html>

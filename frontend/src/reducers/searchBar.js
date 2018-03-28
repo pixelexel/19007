@@ -4,7 +4,8 @@ const initialState = {
   state: [],
   district: [],
   school: [],
-  student: []
+  student: [],
+  target: '',
 }
 
 const searchBar = (state = initialState, action) => {

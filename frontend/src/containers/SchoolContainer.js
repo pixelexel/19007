@@ -6,13 +6,18 @@ import School from '../components/student/School';
 function mapStateToProps(state){
 	return {
 	school: state.school,
-    pp_data: state.school.pp_data,
-    ss_no: state.school.ss_no,
-    ex_curr: state.school.ex_curr,  
-    sport_d: state.school.sport_d,
-    top_marks: state.school.top_marks,
-    top_sport: state.school.top_sport,
-    top_extra_curr : state.school.top_extra_curr, 		
+    p_marks: state.school.p_marks,
+    p_sport: state.school.p_sport,
+    top_extra_curr : state.school.top_extra_curr, 
+    s_n: state.school.s_n,
+    avg_marks: state.school.avg_marks,
+    avg_sport:state.school.avg_sport,
+    avg_extra_curr:state.school.avg_extra_curr,
+    b_marks:state.school.b_marks,
+    g_marks:state.school.g_marks,
+    p_c:state.school.p_c,
+    p_b:state.school.p_b,
+    p_g:state.school.p_g,		
 	}
 }
 

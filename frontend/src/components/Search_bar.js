@@ -6,6 +6,7 @@ import { getSuggestion } from '../actions/searchbar'
 import TextField from 'material-ui/TextField'
 import { changeScreen, screens } from '../actions/root'
 import '../styles/list.scss'
+import { levDist } from '../utils'
 
 const mapStateToProps = (state) => {
 	return {
@@ -13,6 +14,7 @@ const mapStateToProps = (state) => {
 		school: state.searchBar.school,
 		student: state.searchBar.student,
 		state: state.searchBar.state,
+		target: state.searchBar.target,
 	}
 }
 
@@ -47,7 +49,7 @@ class Search_bar extends Component{
 
 	onTextChange = (e) => {
 		this.setState({searchText: e.target.value})
-		this.props.dispatch(getSuggestion({query:e.target.value}))
+		this.props.dispatch(getSuggestion({query:e.target.value}, 'search-bar'))
 	}
 
 	handleClick = (e) => {
@@ -73,33 +75,41 @@ class Search_bar extends Component{
 		this.setState({
 			searchText: '',
 		})
-		this.props.dispatch(getSuggestion({query: ''}))
+		this.props.dispatch(getSuggestion({query: ''}, 'search-bar' ))
 	}
 
-	render(){		
-		const { school, student, state, district, classes, theme } = this.props
+	render(){
+		let { school, student, state, district, classes, theme, target } = this.props
 		const keys = Object.keys(this.props)
 		const totalLength = school.length + student.length + state.length + district.length
 		const allValues = []
 		let counter = 0
 
-		for(let k in keys){
-			counter = 0
-			if(keys[k] == 'classes' || keys[k] == 'theme') continue
-			for(let j in this.props[keys[k]]){
-				counter ++
-				if(counter > 5) break
+		if(target == 'search-bar'){
+			for(let k in keys){
+				counter = 0
+				if(keys[k] == 'classes' || keys[k] == 'theme' || keys[k] == 'target') continue
+				for(let j in this.props[keys[k]]){
+					counter ++
+					if(counter > 5) break
 
-				allValues.push({
-					id: this.props[keys[k]][j].id,
-					name: this.props[keys[k]][j].name,
-					type: keys[k],
-				})
+					allValues.push({
+						id: this.props[keys[k]][j].id,
+						name: this.props[keys[k]][j].name,
+						type: keys[k],
+					})
+				}
 			}
-		}
 
-		const ordering = { 'student': 0, 'school': 1, 'state': 2, 'district': 3 }
-		allValues.sort((a, b) => ordering[a.type] - ordering[b.type])
+			const ordering = { 'student': 0, 'school': 1, 'state': 2, 'district': 3 }
+			const distances = {}
+			console.log(allValues, this.state.searchText)
+
+			for(let i in allValues){
+				distances[allValues[i].name] = levDist(allValues[i].name, this.state.searchText)
+			}
+			allValues.sort((a, b) =>  distances[a.name] - distances[b.name])
+		}
 
 		return(
 			<div>
@@ -109,15 +119,15 @@ class Search_bar extends Component{
 					placeholder={"Search"}
 					className={classes.textField}/>
 				<div className={classes.root}>
-				<List >
-					{ allValues.map((d, index) => (
-						<ListItem key={index} className={classes.listItem + ' hoverlistitem'} 
-								onClick={this.handleClick} 
-								id={`${d.type}-${d.name}-${d.id}`}>
-							<ListItemText className={classes.removePointerEvents} primary={d.name} secondary={d.type}/>
-						</ListItem> 
-					))}
-				</List>
+					<List >
+						{ allValues.map((d, index) => (
+							<ListItem key={index} className={classes.listItem + ' hoverlistitem'} 
+									onClick={this.handleClick} 
+									id={`${d.type}-${d.name}-${d.id}`}>
+								<ListItemText className={classes.removePointerEvents} primary={d.name} secondary={d.type}/>
+							</ListItem> 
+						))}
+					</List>
 				</div>
 		    </div>
 		)

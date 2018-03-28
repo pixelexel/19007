@@ -66,7 +66,7 @@ class DrawerComponent extends Component{
         {
           screenArr.map(screen => (
             <ListItem button key={screen} onClick={this.handleScreenChange.bind(this, screens[screen])}>
-              <ListItemText primary={toTitleCase(screen)}/>
+              <ListItemText primary={toTitleCase(screens[screen])}/>
             </ListItem>
           ))        
         }

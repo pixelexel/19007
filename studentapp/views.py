@@ -14,7 +14,7 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.forms.models import model_to_dict
 # Create your views here.
 CSV_STORAGE = os.path.join(os.getcwd(), 'studentapp', 'static', 'csv')
-
+ 
 
 def index(req):
 	return JsonResponse({
@@ -31,15 +31,28 @@ def get_formvals():
 			'IntegerField':'int',
 			'BooleanField':'bool',
 			'DateField':'date'}
+	ss = Student.objects.all()[0]
 
 	for i in rval:
 		if types.__contains__(i.get_internal_type()):
 			tem = {}
-			tem['name'] = i.name
-			tem['type'] = types[i.get_internal_type()]
-			retGraph['filters'][i.name] = tem
-			retGraph['x'].append(i.name)
-			retGraph['y'].append(i.name)
+			if i.name in (
+				['filter{}_name'.format(x) for x in range(1, 6)] +\
+				['filter{}_active'.format(x) for x in range(1, 6)]):
+				fnum, ftype = i.name.split('_')
+				fnum = fnum[6]
+
+				if ftype == 'name' and getattr(ss, 'filter{}_active'.format(fnum)):
+					tem['name'] = ss.filter1_name
+					tem['type'] = ss.filter1_type
+			else:
+				tem['name'] = i.name
+				tem['type'] = types[i.get_internal_type()]
+				retGraph['filters'][i.name] = tem
+				
+			if 'filter' not in i.name:
+				retGraph['x'].append(i.name)
+				retGraph['y'].append(i.name)
 
 	retr = {'graph':retGraph,'list':retGraph}
 	return retr
@@ -268,40 +281,40 @@ def getList(request):
 
 @csrf_exempt
 def allGraphs(request):
-	qs = Graphs.objects.all()
-	data = []
-	for i in qs:
-		data.append( json.loads(i.gD) )
-	return JsonResponse( {
-		'data':data
-	})
+    qs = Graphs.objects.all()
+    data = []
+    for i in qs:
+        data.append( json.loads(i.gD) )
+    return JsonResponse( {
+        'data':data
+    })
 
 @csrf_exempt
 def allLists(request):
-	qs = Lists.objects.all()
-	data = []
-	for i in qs:
-		data.append( json.loads(i.lD) )
-	return JsonResponse( {
-		'data':data
-	})
+    qs = Lists.objects.all()
+    data = []
+    for i in qs:
+        data.append( json.loads(i.lD) )
+    return JsonResponse( {
+        'data':data
+    })
 
 @csrf_exempt
 def delete_graph(request, id):
-	g = get_object_or_404(Graphs, pk=id)
-	g.delete()
-	return JsonResponse({
-			"error": "false"
-		})
+    g = get_object_or_404(Graphs, pk=id)
+    g.delete()
+    return JsonResponse({
+            "error": "false"
+        })
 
 
 @csrf_exempt
 def delete_list(request, id):
-	l = get_object_or_404(Lists, pk=id)
-	l.delete()
-	return JsonResponse({
-		"error": "false"
-	})
+    l = get_object_or_404(Lists, pk=id)
+    l.delete()
+    return JsonResponse({
+        "error": "false"
+    })
 
 @csrf_exempt
 def suggestions(request):
@@ -318,8 +331,9 @@ def suggestions(request):
 			})
 
 		studentList = []
+		studentsMatching = Q() | Q(name__contains=query) | Q(school__contains=query) | Q(aadhar_id__contains=query) | Q(district__contains=query) | Q(state__contains=query)
 
-		allStudentsMatching = Student.objects.filter(name__contains=query)
+		allStudentsMatching = Student.objects.filter(studentsMatching)
 		aadharSet = set()
 
 		for s in allStudentsMatching:
@@ -432,50 +446,76 @@ def getStudentData(request,aadhar_id):
 
 @csrf_exempt
 def studentform(request):
-	if request.method == "POST":
+	retGraph = {'x':[] , 'y':[] , 'filters':{}}
+	rval = Student._meta.get_fields()
+	types = {'CharField':'string', 
+			'IntegerField':'int',
+			'BooleanField':'bool',
+			'DateField':'date'}
+	ss = Student.objects.all()[0]
 
-		form = StudentForm(request.POST)
-		if form.is_valid():
-			studentdata = form.save(commit = False)
-			studentdata.savedata()
-			return redirect('studentform')
+	for i in rval:
+		if types.__contains__(i.get_internal_type()):
+			tem = {}
+			if i.name in (
+				['filter{}_name'.format(x) for x in range(1, 6)] +\
+				['filter{}_active'.format(x) for x in range(1, 6)]):
+				fnum, ftype = i.name.split('_')
+				fnum = fnum[6]
 
-		return HttpResponse('ERROR')
-	else:
-		form = StudentForm()
-		return render(request, 'studentform.html', {'form' : form})
+				if ftype == 'name' and getattr(ss, 'filter{}_active'.format(fnum)):
+					tem['name'] = ss.filter1_name
+					tem['type'] = ss.filter1_type
+			else:
+				tem['name'] = i.name
+				tem['type'] = types[i.get_internal_type()]
+				retGraph['filters'][i.name] = tem
+				
+			if 'filter' not in i.name:
+				retGraph['x'].append(i.name)
+				retGraph['y'].append(i.name)
+	content = {} 
+	for i in retGraph['x']:
+		content[i] = i
+	if request.method == 'POST':
+		tem = Student()
+		for k,v in content.items():
+			setattr(tem,k,request.POST[k])		
+		tem.save()
+
+	return render(request,'studentform.html',{'content':content})
 
 def convert_filters(filters):
-	sendfilters = []
-	for y in filters:
-		r = {}
-		if not type(y) is dict:
-			continue
+    sendfilters = []
+    for y in filters:
+        r = {}
+        if not type(y) is dict:
+            continue
 
-		for k, v in y.items():
-			if k == 'parameter':
-				r['name'] = v
-				if v == 'number of parents':
-					r['name'] = 'no_of_parents'
-				elif v == 'number of siblings':
-					r['name'] = 'no_of_siblings'
-				elif len(v.split()) > 1:
-					r['name'] = '_'.join(v.split())
+        for k, v in y.items():
+            if k == 'parameter':
+                r['name'] = v
+                if v == 'number of parents':
+                    r['name'] = 'no_of_parents'
+                elif v == 'number of siblings':
+                    r['name'] = 'no_of_siblings'
+                elif len(v.split()) > 1:
+                    r['name'] = '_'.join(v.split())
 
-			elif k == 'operator':
-				r['op'] = v
-			else:
-				if k == 'number':
-					r['type'] = 'number'
-				else:
-					if v == 'True' or v == 'False':
-						r['type'] = 'bool'
-					else:
-						r['type'] = 'string'
+            elif k == 'operator':
+                r['op'] = v
+            else:
+                if k == 'number':
+                    r['type'] = 'number'
+                else:
+                    if v == 'True' or v == 'False':
+                        r['type'] = 'bool'
+                    else:
+                        r['type'] = 'string'
 
-				r['val'] = v
-		sendfilters.append(r)
-	return sendfilters
+                r['val'] = v
+        sendfilters.append(r)
+    return sendfilters
 
 def fix_param(param):
 	if len(param.strip().split()) > 1:
@@ -500,6 +540,23 @@ def fix_param_display(param):
 	else:
 		return param
 
+@csrf_exempt
+def get_student_list(request):
+	if request.method == 'POST':
+		filters = json.loads(request.body)['filters']
+		ret = get_list_data({
+				'x': {},
+				'filters': sendfilters,
+			}, False, False)
+
+		return JsonResponse({
+			data: ret
+		})
+
+	else:
+		return JsonResponse({
+			error: True
+		})
 
 @csrf_exempt
 def chatbot(request):
@@ -634,6 +691,7 @@ def getStateData(request,state_name):
 			if v >= t_s_a['avg']:
 				t_s_a['avg'] = v
 				t_s_a['district'] = k
+		s_n = state_name
 		p_c = len(Student.objects.filter(state=state_name,marks__gte=35))*100.0/(len(qs))
 		p_b = len(Student.objects.filter(state=state_name,gender="m"))*100.0/(len(qs))
 		p_g = len(Student.objects.filter(state=state_name,gender="f"))*100.0/(len(qs))
@@ -646,7 +704,7 @@ def getStateData(request,state_name):
 		qs = StudentFilterLatest({'state':state_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
-		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
+		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -691,6 +749,7 @@ def getDistrictData(request,district_name):
 			if v >= t_s_a['avg']:
 				t_s_a['avg'] = v
 				t_s_a['school'] = k
+		s_n = district_name
 		p_c = len(Student.objects.filter(district=district_name,marks__gte=35))*100.0/(len(qs))
 		p_b = len(Student.objects.filter(district=district_name,gender="m"))*100.0/(len(qs))
 		p_g = len(Student.objects.filter(district=district_name,gender="f"))*100.0/(len(qs))
@@ -703,7 +762,7 @@ def getDistrictData(request,district_name):
 		qs = StudentFilterLatest({'district':district_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
-		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
+		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -785,6 +844,7 @@ def getSchoolData(request,school_name):
 		qs = StudentFilterLatest({'school':school_name},'-sport')
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport})
+		s_n = school_name
 		p_c = len(Student.objects.filter(school=school_name,marks__gte=35))*100.0/(len(qs))
 		p_b = len(Student.objects.filter(school=school_name,gender="m"))*100.0/(len(qs))
 		p_g = len(Student.objects.filter(school=school_name,gender="f"))*100.0/(len(qs))
@@ -806,56 +866,84 @@ def getSchoolData(request,school_name):
 		qs = StudentFilterLatest({'school':school_name,'gender':'f'},'-marks')
 		for i in qs:
 			g_marks.append({'name':i.name,'marks':i.marks})
-		ret = {'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks}
+		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks}
 		print(ret)
 	return JsonResponse(ret)
 
 def filter_data(request):
-	if request.method == 'GET':
-		students_all = Student.objects.all()
-		arr = []
-		for a in students_all:
-			arr.append({'id':a.aadhar_id, 'name': a.name})
-		print(arr)
-		return JsonResponse({'data':arr})
-	else:
-		filter_info = json.loads(request.body.decode('ascii'))
+	if request.method == 'POST':
+		filter_info = json.loads(request.body.decode('utf-8'))
 		fil_name = filter_info['filter_name']
 		fil_type = filter_info['filter_type']
 		stu_sel = filter_info['students_selected']
+		filter_default = filter_info['filter_default']
+		s_All = Student.objects.all()
+
+		for s in s_All:
+			for i in range(1, 6):
+				if not getattr(s, 'filter{}_active'.format(i)):
+					setattr(s, 'filter{}_name'.format(i), fil_name)
+					setattr(s, 'filter{}_type'.format(i), fil_type)
+					setattr(s, 'filter{}_active'.format(i), True)
+					setattr(s, 'filter{}_val'.format(i), filter_default)
+					s.save()
+					break
+
 		for i in stu_sel:
 			t,v = list(i.items())[0]
-			s = Student,objects.filter(aadhar_id=t)
-			if s.filter1_active == False:
-				s.filter1_name = fil_name
-				s.filter1_type = fil_type
-				s.filter1_active = true
-				s.filter1_val = v
-				s.save()
-			elif s.filter2_active == False:
-				s.filter2_name = fil_name
-				s.filter2_type = fil_type
-				s.filter2_active = true
-				s.filter2_val = v
-				s.save()
-			elif s.filter3_active == False:
-				s.filter3_name = fil_name
-				s.filter3_type = fil_type
-				s.filter3_active = true
-				s.filter3_val = v
-				s.save()
-			elif s.filter4_active == False:
-				s.filter4_name = fil_name
-				s.filter4_type = fil_type
-				s.filter4_active = true
-				s.filter4_val = v
-				s.save()
-			else:
-				s.filter5_name = fil_name
-				s.filter5_type = fil_type
-				s.filter5_active = true
-				s.filter5_val = v
-				s.save()
+			ss = Student.objects.filter(aadhar_id=t)
+			for s in ss:
+				for i in range(1, 6):
+					if not getattr(s, 'filter{}_active'.format(i)):
+						setattr(s, 'filter{}_name'.format(i), fil_name)
+						setattr(s, 'filter{}_type'.format(i), fil_type)
+						setattr(s, 'filter{}_active'.format(i), True)
+						setattr(s, 'filter{}_val'.format(i), v)
+						s.save()
+						break
+
 	return JsonResponse({'error':false})
 
+@csrf_exempt
+def import_data(request):
+    if request.method == 'POST':
+        new_students = request.FILES['myfile']
+        if new_students.content_type == 'text/csv':
+            df = pd.read_csv(new_students)
+        else:
+            df = pd.read_excel(new_students) #make sure that there' no header
+        path_name = os.path.join('studentapp', 'static', 'tempcsv', 'temp.csv')
+        df.to_csv(path_name, index=False)
+        return redirect('/api/fieldmatching?df='+ path_name)
+    else:
+        return render(request, 'import_data.html')
 
+
+def fieldmatching(request):
+    if request.method == 'POST':
+        path_name = request.POST['csv_path']
+        df = pd.read_csv(path_name)
+        names = list(df.columns)
+
+        if request.POST.get('checkBox') == None:
+            matched = { key:request.POST.get(key, False) for key in names }
+            print(matched)
+            df.rename(columns = matched, inplace = True)
+
+        df.drop('id', axis=1, inplace=True)
+        df.set_index("aadhar_id", drop=True, inplace=True)
+        dictionary = df.to_dict(orient="index")
+        for aadhar, student in dictionary.items():
+            m = Student()
+            for k,v in student.items():
+                setattr(m, k, v)
+            setattr(m, 'aadhar_id', aadhar)
+            m.save()
+
+        return redirect('import_data')
+    else:
+        path_name = request.GET.get('df')
+        df = pd.read_csv(path_name)
+        names = list(df.columns)
+        fields = [field.name for field in Student._meta.get_fields()]
+        return render(request, 'fieldmatching.html', {'fields' : fields, 'csv_path': path_name, 'names' : names})

@@ -13,6 +13,12 @@ function mapStateToProps(state){
     top_marks: state.country.top_marks,
     top_sport: state.country.top_sport,
     top_extra_curr : state.country.top_extra_curr, 
+    t_s_a : state.country.t_s_a,
+    t_s_s : state.country.t_s_s,
+    t_s_e : state.country.t_s_e,
+    p_c : state.country.p_c,
+    p_b :state.country.p_b,
+    p_g :state.country.p_g,
   }
 }
 

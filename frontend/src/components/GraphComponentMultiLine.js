@@ -19,7 +19,7 @@ const style = {
 
 const styles = (theme) => ({
 	root: {
-		backgroundColor: theme.palette.secondary.light,
+		backgroundColor: theme.palette.background.paper,
 		color: theme.palette.secondary.contrastText + ' !important',
 	}
 })
@@ -94,7 +94,7 @@ class GraphComponentMultiLine extends Component{
 				'sport_data': sport_data[i]['uv'],
 			})
 		}
-		console.log('dataaaaaaaaaaaa',data);
+
 		this.colorIndex = 11
 		const { classes, theme } = this.props
 		let min = 0

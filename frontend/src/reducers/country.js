@@ -8,6 +8,12 @@ const initialState = {
 	top_marks : [],
 	top_sport : [],
 	top_extra_curr : [],
+	t_s_a : [],
+	t_s_e : [],
+	t_s_s : [],
+	p_c : [],
+	p_b : [],
+	p_g : [],
 	fetchingData: false
 }
 
@@ -16,9 +22,15 @@ function ind(getData){
 	const noss_Pass = []
 	const curr_Pass = []
 	const sports_Pass = []
-	
 	const sportsl_Pass = []
 	const currl_Pass = []
+	const pc_Pass = []
+	const pb_Pass = []
+	const pg_Pass = []
+	const tsa_Pass = []
+	const tss_Pass = []
+	const tse_Pass = []
+
 		
 	const pp_Get = getData['pp_data']
 	const noss_Get = getData['ss_no']
@@ -27,7 +39,13 @@ function ind(getData){
 	const acadl_Get = getData['top_marks']
 	const sportsl_Get = getData['top_sport']
 	const currl_Get = getData['top_extra_curr']
-	console.log('check country data', pp_Get );
+	const tsa_Get = getData['t_s_a']
+	const tss_Get = getData['t_s_s']
+	const tse_Get = getData['t_s_e']
+	const pc_Get = getData['p_c']
+	const pb_Get = getData['p_b']
+	const pg_Get = getData['p_g']
+	console.log('check country data', acadl_Get );
 	
 	const pp_keys = Object.keys(pp_Get);
 	const ssno_keys = Object.keys(noss_Get);
@@ -55,7 +73,12 @@ function ind(getData){
 	{
 		sports_Pass.push({'name': sport_keys[i], 'value':sports_Get[sport_keys[i]]} );
 	}
-
+	pc_Pass.push({'name':'India','value':pc_Get});
+	pb_Pass.push({'name':'Boys%','value':pb_Get});
+	pg_Pass.push({'name':'Girls%','value':pg_Get});
+	tsa_Pass.push({'name': tsa_Get.state,'value':tsa_Get.avg})
+	tss_Pass.push({'name': tss_Get.state,'value':tss_Get.avg})
+	tse_Pass.push({'name': tse_Get.state,'value':tse_Get.avg})
 	const allDataPass = {
 		'pp_data': pp_Pass,
 		'ss_no' : noss_Pass,
@@ -64,6 +87,12 @@ function ind(getData){
 		'top_marks' : acadl_Get,
 		'top_sport' : sportsl_Get,
 		'top_extra_curr' : currl_Get,
+		't_s_a': tsa_Pass,
+		't_s_s': tss_Pass,
+		't_s_e': tse_Pass,
+		'p_c' : pc_Pass,
+		'p_b' : pb_Pass,
+		'p_g' : pg_Pass,
 	}
 	console.log('Country Data Passed',allDataPass);
 	return allDataPass; 

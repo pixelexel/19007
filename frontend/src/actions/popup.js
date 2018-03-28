@@ -8,6 +8,13 @@ export const UPDATE_LIST_FORM = 'UPDATE_LIST_FORM'
 export const REQUEST_FORM_VALS = 'REQUEST_FORM_VALS'
 export const RECEIVE_FORM_VALS = 'RECEIVE_FORM_VALS'
 
+export const formValTypes = {
+	'int' : 'int',
+	'string': 'string',
+	'bool': 'bool',
+	'date': 'date',	
+}
+
 export const openPopup = context => {
 	return {
 		type: OPEN_POPUP,

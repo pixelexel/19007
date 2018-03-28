@@ -12,7 +12,14 @@ function mapStateToProps(state){
     sport_d: state.district.sport_d,
     top_marks: state.district.top_marks,
     top_sport: state.district.top_sport,
-    top_extra_curr : state.district.top_extra_curr, 		
+    top_extra_curr : state.district.top_extra_curr, 
+    t_s_a : state.district.t_s_a,
+    t_s_s : state.district.t_s_s,
+    t_s_e : state.district.t_s_e,
+    p_c : state.district.p_c,
+    p_b :state.district.p_b,
+    p_g :state.district.p_g,
+    s_n : state.district.s_n,			
 	}
 }
 

@@ -20,7 +20,10 @@ urlpatterns = [
     path('get_state_data/<state_name>', views.getStateData, name='getStateData'),
     path('get_district_data/<district_name>', views.getDistrictData, name='getDistrictData'),
     path('get_school_data/<school_name>', views.getSchoolData, name='getSchoolData'),
-	path('get_country_data/', views.getCountryData, name='getCountryData'),
     path('get_country_data/', views.getCountryData, name='getCountryData'),
-	path('get_filter_data/', views.filter_data, name='filter_data'),
+    path('get_country_data/', views.getCountryData, name='getCountryData'),
+    path('get_filter_data/', views.filter_data, name='filter_data'),
+    path('get_student_list', views.get_student_list, name='get_student_list'),
+    path('import_data', views.import_data, name='import_data'),
+    path('fieldmatching',views.fieldmatching, name='fieldmatching'),
 ]

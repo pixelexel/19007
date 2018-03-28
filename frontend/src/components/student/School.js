@@ -39,23 +39,23 @@ class SchoolGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const {pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr} = this.props.school
+  const {p_marks,p_sport,top_extra_curr,b_marks,g_marks,avg_marks,avg_sport,avg_extra_curr,p_c,p_b,p_g} = this.props.school
 
   return (
     <div className={classes.root}>
       <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
 
           <Grid item xs={3}>
-            <Progress data={pp_data[0]} style={{marginBottom: 25}}/>
+            <Progress data={p_b[0]} style={{marginBottom: 25}}/>
             </Grid>
           <Grid item xs={3}>
-            <Progress data={pp_data[1]} style={{marginBottom: 25}}/>
+            <Progress data={p_g[0]} style={{marginBottom: 25}}/>
             </Grid>
             <Grid item xs={3}>
-              <Progress data={pp_data[2]} style={{marginBottom: 25}}/>
+              <Progress data={avg_marks[0]} style={{marginBottom: 25}}/>
               </Grid>
               <Grid item xs={3}>
-                <Progress data={pp_data[3]} style={{marginBottom: 25}}/>
+                <Progress data={p_c[0]} style={{marginBottom: 25}}/>
                 </Grid>
                 </Grid>
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
@@ -63,14 +63,14 @@ render() {
           <Paper  style={{height:'350px'}}>
             <Typography style={{fontSize:'25px',textAlign:'center'}}>State Academic Performances</Typography>
 
-             <GraphLine value={pp_data}/>
+             <GraphLine value={p_marks}/>
           </Paper>
           </Grid>
           <Grid item xs={7}>
           <Paper style={{height:'350px'}}>
             <Typography style={{fontSize:'25px',textAlign:'center'}}>State Extra Curricular Performances</Typography>
 
-          <GraphBar value={ex_curr}/>
+          <GraphBar value={p_sport}/>
             </Paper>
           
           </Grid>
@@ -79,19 +79,19 @@ render() {
 <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={3}>
         
-        <Progress data={pp_data[1]} style={{marginBottom:'20px'}}/>
+        <Progress data={avg_sport[0]} style={{marginBottom:'20px'}}/>
            
           <br/>
 
             
-            <Progress data={pp_data[1]} style={{}}/>
+            <Progress data={avg_extra_curr[0]} style={{}}/>
                
           </Grid>
           <Grid item xs={5}>
           <Paper style={{height:'270px'}}>
             <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
 
-          <GraphBar value={pp_data}/>
+          <GraphBar value={top_extra_curr}/>
             </Paper>
           
           </Grid>
@@ -99,7 +99,7 @@ render() {
           <Paper style={{height:'270px'}}>
             <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
 
-            <GraphLine value={ss_no}/>
+            <GraphLine value={b_marks} value1={g_marks}/>
             </Paper>
           </Grid>
               </Grid>
@@ -111,7 +111,7 @@ render() {
                       <div className={classes.root1}>
                       <Table>
                       <TableBody>
-                        { top_marks.map((d) => {
+                        { p_marks.map((d) => {
                        return <TableRow>
                           <TableCell>{d.name}</TableCell>
                           <TableCell style={{textAlign:'right'}}>{d.marks}</TableCell>
@@ -124,7 +124,7 @@ render() {
                         <Paper style={{height:'300px'}}>
                           <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
                             <br/>
-                            <GraphLine value={sport_d}/>
+                            <GraphLine value={p_marks}/>
                           </Paper>
                         </Grid>
                         <Grid item xs={4}>
@@ -133,10 +133,10 @@ render() {
                         <div className={classes.root1}>
                       <Table>
                       <TableBody>
-                        { ss_no.map((d) => {
+                        { p_sport.map((d) => {
                        return <TableRow>
                           <TableCell>{d.name}</TableCell>
-                          <TableCell style={{textAlign:'right'}}>{d.value}</TableCell>
+                          <TableCell style={{textAlign:'right'}}>{d.sport}</TableCell>
                       </TableRow>
              })
              }</TableBody></Table></div>
