@@ -853,13 +853,13 @@ def getSchoolData(request,school_name):
 		p_g = len(Student.objects.filter(school=school_name,gender="f"))*100.0/(len(qs))
 		qs = Student.objects.filter(school=school_name).order_by('-marks')
 		for i in qs:
-			top_marks.append({'name':i.name,'marks':i.marks})
+			top_marks.append({'name':i.name,'value':i.marks})
 		qs = Student.objects.filter(school=school_name).order_by('-extra_curr')
 		for i in qs:
-			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr})
+			top_extra_curr.append({'name':i.name,'value':i.extra_curr})
 		qs = Student.objects.filter(school=school_name).order_by('-sport')
 		for i in qs:
-			top_sport.append({'name':i.name,'sport':i.sport})
+			top_sport.append({'name':i.name,'value':i.sport})
 		s_n = school_name
 		p_c = len(Student.objects.filter(school=school_name,marks__gte=35))*100.0/(len(qs))
 		p_b = len(Student.objects.filter(school=school_name,gender="m"))*100.0/(len(qs))
@@ -877,11 +877,11 @@ def getSchoolData(request,school_name):
 		b_marks = []	
 		qs = Student.objects.filter(school=school_name,gender='m').order_by('-marks')
 		for i in qs:
-			b_marks.append({'name':i.name,'marks':i.marks})
+			b_marks.append({'name':i.name,'value':i.marks})
 		g_marks = []	
 		qs = Student.objects.filter(school=school_name,gender='f').order_by('-marks')
 		for i in qs:
-			g_marks.append({'name':i.name,'marks':i.marks})
+			g_marks.append({'name':i.name,'value':i.marks})
 		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks}
 		print(ret)
 	return JsonResponse(ret)
