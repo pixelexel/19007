@@ -414,6 +414,8 @@ def StudentFilterLatest(filters,ordering):
 	arr = []
 	for k,v in sm.items():
 		arr.append(v)
+	arr = sorted(arr,key = lambda x: getattr(x,ordering[1:]),reverse=True)
+	print(arr)
 	return arr
 
 @csrf_exempt
