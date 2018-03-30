@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from .models import Student, School, extra_curricular, Acads, Graphs, Lists
+from .models import Student, School, extra_curricular, Acads, Graphs, Lists,UserAcces
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -47,8 +47,7 @@ def get_formvals():
 					tem['type'] = getattr(ss, 'filter{}_type'.format(fnum))
 					retGraph['filters'][ss.filter1_name] = tem
 					retGraph['x'].append(fname)
-					retGraph['y'].append(fname)				
-					print('hsdhsdhsd', ss.filter1_name)
+					retGraph['y'].append(fname)			
 				
 			else:
 				tem['name'] = i.name
@@ -68,8 +67,8 @@ def formVal(request):
 @csrf_exempt
 def getGraph(request):
 	ret = {}
-	if request.method == 'POST':
-		print(request.body)
+	if request.method == 'POST' and request.user.is_authenticated:
+		acc = json.loads(UserAcces.objects.get(user=request.user).acc)
 		dt = json.loads(request.body.decode('ascii'))
 		ss = Student.objects.all()[0]
 		custom_filter_names = {
@@ -91,8 +90,6 @@ def getGraph(request):
 		new_filter = {}
 		x_filter_present = False
 		x_filter = {}
-		
-		print('custom filter names', custom_filter_names)
 
 		for i in filters_all:
 			parm = ''
@@ -100,7 +97,6 @@ def getGraph(request):
 			
 			for v,k in i.items():
 				if v == 'name':
-					print('v is ', v, v in custom_filter_names)
 					if k in custom_filter_names:
 						fid = custom_filter_names[k]
 						parm = 'filter{}_val'.format(fid)
@@ -132,6 +128,23 @@ def getGraph(request):
 				x_filter[parm] = val
 		
 		qs = Student.objects.filter(**new_filter)
+	
+		if acc['Country'] is False:
+			
+			starr = acc['State']
+			ts = Student.objects.none()
+			for i in starr:
+				acc_filter ={}
+				acc_filter['state'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			starr = acc['District']
+			for i in starr:
+				acc_filter ={}
+				acc_filter['district'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+		
+			qs = qs.intersection(ts)
+		
 		if not x_filter_present:
 			qss = Student.objects.all()
 		else:
@@ -171,25 +184,57 @@ def getGraph(request):
 
 		dt['data'] = data
 		dt['data_nf'] = data_nf
+		is_new_dash = False
+
+		try:
+			s = int(dt['dash_id'])
+			dash_id = s
+			gs = Graphs.objects.filter(dash_id=dash_id)
+			ls = Lists.objects.filter(dash_id=dash_id)
+			if len(gs) == 0 and les(ls) == 0:
+				dash_name = 'Untitled Dashboard {}'.format(dash_id)
+			else:
+				if len(gs) > 0:
+					dash_name = gs[0].dash_name
+				else:
+					dash_name = ls[0].dash_name
+
+		except:
+			g = Graphs.objects.all()
+			try:
+				last = max(map(lambda x: x.id, g))
+			except:
+				last = 0
+				
+			dash_id = last + 1
+			dash_name = 'Untitled Dashboard {}'.format(dash_id)
+			is_new_dash = True
 
 		if dt['id'] is not None:
 			gd = Graphs.objects.get(id=dt['id'])
 			gd.gD = json.dumps(dt)
-			gd.save()	
+			gd.dash_id = dash_id
+			gd.dash_name = dash_name
+			gd.save()
 		
 		else :
 			gd = Graphs()
 			gd.save()
 			dt['id'] = gd.id
 			gd.gD = json.dumps(dt)
+			gd.dash_id = dash_id
+			gd.dash_name = gd.dash_name
 			gd.save()
+
 		ret = dt
+		ret['is_new_dash'] = is_new_dash
+		ret['dash_id'] = dash_id
+		ret['dash_name'] = dash_name
 
 	return JsonResponse(ret)
 
-def get_list_data(dt, save=True, limit=True):
+def get_list_data(dt, request, id=None, save=True, limit=True):
 	x_axis = dt['x']
-	print('x_axis', x_axis)
 	filters_all = dt['filters']
 	new_filter = {}
 
@@ -220,6 +265,22 @@ def get_list_data(dt, save=True, limit=True):
 		new_filter[parm] = val
 
 	qs = Student.objects.filter(**new_filter)
+	if request.user.is_authenticated:
+		acc = json.loads(UserAcces.objects.get(user=request.user).acc)
+		if acc['Country'] is False:
+			starr = acc['State']
+			ts = Student.objects.none()
+			for i in starr:
+				acc_filter ={}
+				acc_filter['state'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			starr = acc['District']
+			for i in starr:
+				acc_filter ={}
+				acc_filter['district'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			qs = qs.intersection(ts)
+
 	data = []
 	ret = {}
 
@@ -276,12 +337,23 @@ def get_list_data(dt, save=True, limit=True):
 		return dt
 	
 	df = pd.DataFrame(pddata)
+	is_new_dash = False
+	try:
+		s = int(id)
+		dash_id = s
+
+	except:
+		g = Lists.objects.all()
+		last = max(map(lambda x: x.id, g))
+		dash_id = last + 1
+		is_new_dash = True
 
 	if dt['id'] is not None:
 		gd = Lists.objects.get(id=dt['id'])
 		df.to_csv(os.path.join(CSV_STORAGE, str(dt['id']) + '.csv'), index=False)
 		dt['csv_path'] = 'static/csv/' + str(dt['id']) + '.csv'
 		gd.lD = json.dumps(dt)	
+		gd.dash_id = dash_id
 		gd.save()
 
 	else:
@@ -291,8 +363,11 @@ def get_list_data(dt, save=True, limit=True):
 		df.to_csv(os.path.join(CSV_STORAGE, str(dt['id']) + '.csv'), index=False)
 		dt['csv_path'] = 'static/csv/' + str(dt['id']) + '.csv'
 		gd.lD = json.dumps(dt)
+		gd.dash_id = dash_id
 		gd.save()
 
+	dt['is_new_dash'] = is_new_dash
+	dt['dash_id'] = dash_id
 	return dt
 	
 @csrf_exempt
@@ -300,29 +375,51 @@ def getList(request):
 	ret = {} 
 	if request.method == 'POST':
 		dt = json.loads(request.body.decode('ascii'))
-		ret = get_list_data(dt)
-
-	print(ret) 
+		ret = get_list_data(dt, request, dt['dash_id'])
 	return JsonResponse(ret)
 
 @csrf_exempt
-def allGraphs(request):
-    qs = Graphs.objects.all()
-    data = []
-    for i in qs:
-        data.append( json.loads(i.gD) )
-    return JsonResponse( {
-        'data':data
+def allGraphs(request, id):
+	try:
+		ids = int(id)
+		qs = Graphs.objects.filter(dash_id=ids)
+		if len(qs) > 0:
+			dash_name = qs[0].dash_name
+		else:
+			dash_name = 'Untitled Dashboard {}'.format(ids)
+
+		data = []
+		for i in qs:
+			data.append( json.loads(i.gD) )
+	except:
+		data = []
+		dash_name = 'Untitled Dashboard'
+		
+	return JsonResponse( {
+        'data':data,
+		'dash_name': dash_name,
     })
 
 @csrf_exempt
-def allLists(request):
-    qs = Lists.objects.all()
-    data = []
-    for i in qs:
-        data.append( json.loads(i.lD) )
-    return JsonResponse( {
-        'data':data
+def allLists(request, id):
+	try:
+		ids = int(id)
+		qs = Lists.objects.filter(dash_id=ids)
+		if len(qs) > 0:
+			dash_name = qs[0].dash_name
+		else:
+			dash_name = 'Untitled Dashboard {}'.format(ids)
+		data = []
+		for i in qs:
+			data.append( json.loads(i.lD) )
+
+	except:
+		data = []
+		dash_name = 'Untitled Dashboard'
+
+	return JsonResponse( {
+        'data':data,
+        'dash_name': dash_name,
     })
 
 @csrf_exempt
@@ -357,9 +454,42 @@ def suggestions(request):
 			})
 
 		studentList = []
-		studentsMatching = Q() | Q(name__contains=query) | Q(school__contains=query) | Q(aadhar_id__contains=query) | Q(district__contains=query) | Q(state__contains=query)
+		studentsMatching = Q() | Q(name__contains=query) 
 
 		allStudentsMatching = Student.objects.filter(studentsMatching)
+
+		schoolsMatching = Q()
+		schoolsMatching = schoolsMatching | Q(school__contains=query)
+		allschoolsMatching = Student.objects.filter(schoolsMatching)
+
+		districtsMatching = Q()
+		districtsMatching = districtsMatching | Q(district__contains=query)
+		alldistrictsMatching = Student.objects.filter(districtsMatching)
+
+		statesMatching = Q()
+		statesMatching = statesMatching | Q(state__contains=query)
+		allstatesMatching = Student.objects.filter(statesMatching)
+
+		if request.user.is_authenticated:
+			acc = json.loads(UserAcces.objects.get(user=request.user).acc)
+			
+			if acc['Country'] is False:
+				starr = acc['State']
+				ts = Student.objects.none()
+				for i in starr:
+					acc_filter ={}
+					acc_filter['state'] = i
+					ts = ts.union(Student.objects.filter(**acc_filter))
+				starr = acc['District']
+				for i in starr:
+					acc_filter ={}
+					acc_filter['district'] = i
+					ts = ts.union(Student.objects.filter(**acc_filter))
+				allStudentsMatching = allStudentsMatching.intersection(ts)
+				allschoolsMatching = allschoolsMatching.intersection(ts)
+				alldistrictsMatching = alldistrictsMatching.intersection(ts)
+				allstatesMatching = allstatesMatching.intersection(ts)
+
 		aadharSet = set()
 
 		for s in allStudentsMatching:
@@ -374,21 +504,13 @@ def suggestions(request):
 
 				aadharSet.add(s.aadhar_id)
 
-		schoolsMatching = Q()
-		schoolsMatching = schoolsMatching | Q(school__contains=query)
-		allschoolsMatching = Student.objects.filter(schoolsMatching)
 		schoolList = list(map(lambda s: {'name': s}, set([s.school for s in allschoolsMatching])))
 
-		districtsMatching = Q()
-		districtsMatching = districtsMatching | Q(district__contains=query)
-		alldistrictsMatching = Student.objects.filter(districtsMatching)
 		districtList = list(map(lambda s: {'name': s}, set([s.district for s in alldistrictsMatching])))
 
-		statesMatching = Q()
-		statesMatching = statesMatching | Q(state__contains=query)
-		allstatesMatching = Student.objects.filter(statesMatching)
 		stateList = list(map(lambda s: {'name': s}, set([s.state for s in allstatesMatching])))
 
+		
 		result= {
 			'student': studentList,
 			'state': stateList,
@@ -438,7 +560,6 @@ def getStudentData(request,aadhar_id):
 		sci /= len(qs)
 		hindi /= len(qs)
 		data = [{'english':eng},{'maths':maths},{'science':sci},{'hindi':hindi}]
-		print('ddd', d)
 		ret = { 
 			'data':data, 
 			'acad_data':acad_data, 
@@ -453,7 +574,6 @@ def getStudentData(request,aadhar_id):
 			},
 			'params': d
 		}
-		print(ret)
 	return JsonResponse(ret) 
 
 @csrf_exempt
@@ -556,15 +676,12 @@ def fix_param_display(param):
 def get_student_list(request):
 	if request.method == 'POST':
 		filters = json.loads(request.body)['filters']
-		print('filters', filters)
 		# sendfilters = convert_filters(filters)
-		# print('send', sendfilters)
 		ret = get_list_data({
 				'x': {'state': True, 'school': True, 'district': True},
 				'filters': filters,
-			}, False, False)
+                }, request, None, False, False)
 
-		pprint(ret)
 		return JsonResponse({
 			'data': ret['data'],
 		})
@@ -578,7 +695,6 @@ def get_student_list(request):
 def chatbot(request):
 	if request.method == 'POST':
 		data = json.loads(request.body)
-		pprint(data)
 		if not data['status']['code'] == 200:
 			return JsonResponse({
 				error: 'true',
@@ -588,7 +704,6 @@ def chatbot(request):
 
 		if result['action'] == 'get_param_list':
 			ret = get_formvals()
-			print(ret)
 			s = ', '.join(ret['graph']['x'])
 			ans = 'The possible list of parameters are {}'.format(s)
 			return JsonResponse({
@@ -600,7 +715,6 @@ def chatbot(request):
 			df = pd.read_csv(os.path.join(os.getcwd(), 'studentapp', 'static', 'misc', 'corr.csv'))
 			df = df.set_index(df.columns[0])
 
-			print(df)
 			p1 = result['parameters']['Parameter']
 			p2 = result['parameters']['Parameter1']
 			p1f = fix_param(p1)
@@ -640,11 +754,10 @@ def chatbot(request):
 			payload = get_list_data({
 				'x': x_ans,
 				'filters': sendfilters,
-			}, False, False)
+			}, request, None, False, False)
 
 			datalen = len(payload['data'])
 			payload['data'] = payload['data'][::-1][:30]
-			pprint(payload)
 
 			if result['action'] == 'get_filters':
 				
@@ -681,7 +794,6 @@ def StudentFilterLatest(filters,ordering):
 	for k,v in sm.items():
 		arr.append(v)
 	arr = sorted(arr,key = lambda x: getattr(x,ordering[1:]),reverse=True)
-	print(arr)
 	return arr
 
 
@@ -740,9 +852,8 @@ def getStateData(request,state_name):
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
 		qs = Student.objects.filter(state=state_name)
-		dist_names = [i.district for i in qs] 
+		dist_names = list({i.district for i in qs}) 
 		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'districts':dist_names}
-		print(ret)
 	return JsonResponse(ret)
 
 @csrf_exempt
@@ -800,9 +911,8 @@ def getDistrictData(request,district_name):
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
 		qs = Student.objects.filter(district=district_name)
-		school_names = [i.school for i in qs] 
+		school_names = list({i.school for i in qs}) 
 		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'schools':school_names}
-		print(ret)
 	return JsonResponse(ret)
 
 @csrf_exempt
@@ -859,9 +969,8 @@ def getCountryData(request):
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'state':i.state})
 		qs = Student.objects.all()
-		state_names = [i.state for i in qs] 
+		state_names = list({i.state for i in qs}) 
 		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'states':state_names}
-		print(ret)
 	return JsonResponse(ret)
 
 @csrf_exempt
@@ -886,9 +995,10 @@ def getSchoolData(request,school_name):
 		for i in qs:
 			top_sport.append({'name':i.name,'value':i.sport})
 		s_n = school_name
-		p_c = len(Student.objects.filter(school=school_name,marks__gte=35))*100.0/(len(qs))
-		p_b = len(Student.objects.filter(school=school_name,gender="m"))*100.0/(len(qs))
-		p_g = len(Student.objects.filter(school=school_name,gender="f"))*100.0/(len(qs))
+		qs = Student.objects.filter(school=school_name)
+		p_c = (len(Student.objects.filter(school=school_name,marks__gte=35))*100.0)/(len(qs))
+		p_b = (len(Student.objects.filter(school=school_name,gender="m"))*100.0)/(len(qs))
+		p_g = (len(Student.objects.filter(school=school_name,gender="f"))*100.0)/(len(qs))
 		avg_marks = 0.0
 		avg_sport = 0.0
 		avg_extra_curr =0.0
@@ -908,10 +1018,43 @@ def getSchoolData(request,school_name):
 		for i in qs:
 			g_marks.append({'name':i.name,'value':i.marks})
 		qs = Student.objects.filter(school=school_name)
-		student_names = [{'name':i.name,'value':i.aadhar_id} for i in qs] 
+		st_st = set()
+		student_names = [] 
+		for i in qs:
+			if st_st.__contains__(i.aadhar_id) is False:
+				student_names.append({'name':i.name,'value':i.aadhar_id})
+				st_st.add(i.aadhar_id)
 		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks,'students':student_names}
-		print(ret)
 	return JsonResponse(ret)
+
+def get_drawer_data(request):
+	graphs = Graphs.objects.all()
+	lists = Lists.objects.all()
+	dashboard_ids = set(map(lambda x: x.dash_id,  graphs )) | set(map(lambda x : x.dash_id, lists))
+	dashboard_names = set(map(lambda x: x.dash_name, graphs))
+
+	all_dashboards = {}
+	for g in graphs:
+		all_dashboards[g.dash_id] = {'id': g.dash_id, 'name': g.dash_name}
+	for l in lists:
+		all_dashboards[l.dash_id] = {'id': l.dash_id, 'name': l.dash_name}
+
+	dashboards = [v for k, v in all_dashboards.items()]
+	s = Student.objects.all()[0]
+	custom_filters = list()
+
+	for x in range(1, 6):
+		if getattr(s, 'filter{}_active'.format(x)):
+			custom_filters.append({
+				'name': getattr(s, 'filter{}_name'.format(x)),
+				'id': x,
+			})
+	
+	return JsonResponse({
+		'dashboards': dashboards,
+		'custom_filters': custom_filters,
+	})
+
 @csrf_exempt
 def filter_data(request):
 	if request.method == 'POST':
@@ -920,7 +1063,6 @@ def filter_data(request):
 		fil_type = filter_info['filter_type']
 		stu_sel = filter_info['students_selected']
 		filter_default = filter_info['filter_default']
-		pprint(filter_info)
 		
 		s_All = Student.objects.all()
 		set_filter_id = -1
@@ -974,7 +1116,6 @@ def fieldmatching(request):
 
         if request.POST.get('checkBox') == None:
             matched = { key:request.POST.get(key, False) for key in names }
-            print(matched)
             df.rename(columns = matched, inplace = True)
 
         df.drop('id', axis=1, inplace=True)

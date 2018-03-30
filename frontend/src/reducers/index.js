@@ -11,6 +11,7 @@ import stateData from './state'
 import chatbot from './chatbot'
 import districtData from './district'
 import schoolData from './school'
+import drawer from './drawer'
 import addfilter from './addfilter'
 
 // Combine all reducers
@@ -29,6 +30,7 @@ const studentApp = combineReducers({
 	district : districtData,
 	school : schoolData,
 	chatbot: chatbot,
+	drawer: drawer,
 	addfilter: addfilter,
 })
 

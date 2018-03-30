@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCountryData } from '../actions/country'
 import Country from '../components/student/Country';
+
 function mapStateToProps(state){
   return {
     country: state.country,
@@ -19,6 +20,8 @@ function mapStateToProps(state){
     p_c : state.country.p_c,
     p_b :state.country.p_b,
     p_g :state.country.p_g,
+    states: state.country.states,
+
   }
 }
 

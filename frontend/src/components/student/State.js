@@ -21,6 +21,7 @@ import { addGraph, getAllGraphs, removeGraph } from '../../actions/graph'
 import { addList, getAllLists, removeList } from '../../actions/list'
 import MahaState from '../../test_map/MahaState'
 import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
+import { changeScreen, screens } from '../../actions/root'
 
 const styles = theme => ({
   root: {
@@ -35,13 +36,23 @@ const styles = theme => ({
     overflow: 'auto',
     paddingBottom: 15,
   },
+   root2: {
+    height: '305px',
+    backgroundColor: theme.palette.secondary.main,
+    margin: '0 auto',
+    overflow: 'auto',
+    paddingBottom: 15,
+  },
 });
- 
+ const mapStateToProps = (state) => ({
+  screen: state.root.screen,
+  id: state.root.id,
+})
 class StateGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr,t_s_a,t_s_s,t_s_e,p_c,p_b,p_g} = this.props.state
+  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr,t_s_a,t_s_s,t_s_e,p_c,p_b,p_g,districts} = this.props.state
  
   return (
     <div className={classes.root}>
@@ -69,9 +80,16 @@ render() {
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>All Districts Academic Performances</Typography>
-
-             <GraphLine value={pp_data}/>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>Districts List</Typography>
+ <div className={classes.root2}>
+                      <Table>
+                      <TableBody>
+                        { districts.map((d) => {
+                       return <TableRow>
+                          <TableCell onClick={() => {this.props.dispatch(changeScreen(screens.DISTRICT, d))}}>{d}</TableCell>
+                      </TableRow>
+             })
+             }</TableBody></Table></div>
           </Paper>
           </Grid>
           <Grid item xs={7}>
