@@ -13,10 +13,12 @@ const receiveDistrictData = (error, data) => ({
 	error: error,
 })
  
-export const getDistrictData = (id) => {
+export const getDistrictData = (id, data) => {
 	return (dispatch) => {
 		dispatch(requestDistrictData())
-		return fetch(BASE_API_URL + 'get_district_data/' + id,{
+		const url = data.filters.start_date && data.filters.end_date ? `get_district_data/${data.filters.start_date}/${data.filters.end_date}` : `get_district_data`
+
+		return fetch(BASE_API_URL + url,{
 			credentials:"same-origin"
 		})
 				.then(data => data.json())

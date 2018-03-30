@@ -25,7 +25,9 @@ class SchoolContainer extends Component{
 	componentWillMount(){
 		console.log('school', this.props)
 
-		this.props.dispatch(getSchoolData(this.props.id))
+		this.props.dispatch(getSchoolData(this.props.id, {
+			filters: this.props.filters,
+		}))
 	}
 
 	render(){

@@ -1,4 +1,4 @@
-import { CHANGE_SCREEN, screens, TOGGLE_DRAWER, UPDATE_DASH_NAME } from '../actions/root'
+import { CHANGE_SCREEN, screens, TOGGLE_DRAWER, UPDATE_DASH_NAME, SET_ROOT_FILTER } from '../actions/root'
 
 const initialState = {
 	screen: screens.COUNTRY,
@@ -7,6 +7,7 @@ const initialState = {
 	},
 	id: null,
 	name: '',
+	filters: {},
 }
 
 const rootComp = (state = initialState, action) => {
@@ -31,6 +32,14 @@ const rootComp = (state = initialState, action) => {
 		case UPDATE_DASH_NAME:
 			return Object.assign({}, state, {
 				name: action.dash_name,
+			})
+
+		case SET_ROOT_FILTER:
+			return Object.assign({}, state, {
+				filters: {
+					start_date: action.start_date,
+					end_date: action.end_date,
+				}
 			})
 
 		default:

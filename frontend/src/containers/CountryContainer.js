@@ -27,9 +27,9 @@ function mapStateToProps(state){
 
 class CountryContainer extends Component{
   componentWillMount(){
-    console.log('country', this.props)
-
-    this.props.dispatch(getCountryData())
+    this.props.dispatch(getCountryData({
+      filters: this.props.filters,
+    }))
   }
 
   render(){

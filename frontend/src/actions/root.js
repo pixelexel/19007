@@ -1,3 +1,8 @@
+import {getCountryData} from './country'
+import {getStateData} from './state'
+import {getDistrictData} from './district'
+import {getSchoolData} from './school'
+
 export const screens = {
 	DASH: 'DASH',
 	STUDENT: 'STUDENT',
@@ -34,5 +39,58 @@ export const updateDashName = (dash_id, dash_name) => {
 		return fetch('update_dash_name/' + dash_id + '/' + dash_name)
 			.then(data => dispatch(receiveDashName(dash_id, dash_name)))
 			.catch(error => dispatch(receiveDashName(dash_id, dash_name)))
+	}
+}
+
+export const SET_ROOT_FILTER = 'SET_ROOT_FILTER'
+const rootFilter = (start_date, end_date) => ({
+	type: SET_ROOT_FILTER,
+	start_date: start_date,
+	end_date: end_date,
+})
+
+export const setRootFilter = (start_date, end_date) => {
+	return (dispatch, getState) => {
+		
+		if(isNaN(start_date) || isNaN(end_date) || (parseFloat(start_date) >= parseFloat(end_date)))
+			return 
+
+		dispatch(rootFilter(start_date, end_date))
+		const state = getState()
+		console.log('hey hey hye', state, state.root.screen)
+		switch(state.root.screen){
+			case screens.COUNTRY:
+				dispatch(getCountryData({
+					'filters': {
+						'start_date': start_date,
+						'end_date': end_date
+					}
+				}))
+				break
+			case screens.STATE:
+				dispatch(getStateData({
+					'filters': {
+						'start_date': start_date,
+						'end_date': end_date
+					}
+				}))
+				break
+			case screens.DISTRICT:
+				dispatch(getDistrictData({
+					'filters': {
+						'start_date': start_date,
+						'end_date': end_date
+					}
+				}))
+				break
+			case screens.SCHOOL:
+				dispatch(getSchoolData({
+					'filters': {
+						'start_date': start_date,
+						'end_date': end_date
+					}
+				}))
+				break
+		}
 	}
 }

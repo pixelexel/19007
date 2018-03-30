@@ -13,10 +13,12 @@ const receiveSchoolData = (error, data) => ({
 	error: error,
 })
  
-export const getSchoolData = (id) => {
+export const getSchoolData = (id, data) => {
 	return (dispatch) => {
 		dispatch(requestSchoolData())
-		return fetch(BASE_API_URL + 'get_school_data/' + id,{
+		const url = data.filters.start_date && data.filters.end_date ? `get_school_data/${data.filters.start_date}/${data.filters.end_date}` : `get_school_data`
+
+		return fetch(BASE_API_URL + 'get_school_data/' + url,{
 			credentials:"same-origin"
 		})
 				.then(data => data.json())

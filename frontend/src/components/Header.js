@@ -6,6 +6,8 @@ import TrendingUpIcon from 'material-ui-icons/TrendingUp'
 import ChatBubbleIcon from 'material-ui-icons/ChatBubble'
 import MenuIcon from 'material-ui-icons/Menu'
 import Avatar from 'material-ui/Avatar'
+import FilterListIcon from 'material-ui-icons/FilterList'
+import DateFilter from './DateFilter'
 import { IconButton } from 'material-ui'
 import { withStyles } from 'material-ui/styles'
 import Search_bar from '../components/Search_bar'
@@ -35,6 +37,13 @@ const styles = theme => ({
 })
 
 class Header extends Component{
+	constructor(props){
+		super(props)
+		this.state = {
+			filterOpen: false,
+		}
+	}
+
 	render(){
 		const { classes, theme } = this.props
 		
@@ -58,6 +67,10 @@ class Header extends Component{
 	          <div >
 	          	<Search_bar />
 	          </div>
+				<IconButton>
+					<FilterListIcon onClick={e => this.setState({filterOpen: !this.state.filterOpen})}/>
+				</IconButton>
+				<DateFilter open={this.state.filterOpen} onChange={this.props.changeRootFilter}/>
 			  <IconButton
 				  aria-label="open-chatbot"
 				  onClick={this.props.handleChatbot}

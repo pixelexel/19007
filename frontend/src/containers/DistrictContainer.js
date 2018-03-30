@@ -28,7 +28,9 @@ class DistrictContainer extends Component{
 	componentWillMount(){
 		console.log('district', this.props)
 
-		this.props.dispatch(getDistrictData(this.props.id))
+		this.props.dispatch(getDistrictData(this.props.id, {
+      filters: this.props.filters,
+    }))
 	}
 
 	render(){
