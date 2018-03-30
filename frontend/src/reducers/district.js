@@ -15,6 +15,7 @@ const initialState = {
 	p_b : [],
 	p_g : [],
 	s_n : [],
+	schools:[],
 	fetchingData: false
 }
 
@@ -31,6 +32,7 @@ function ind(getData){
 	const tsa_Pass = []
 	const tss_Pass = []
 	const tse_Pass = []
+
 		
 	const pp_Get = getData['pp_data']
 	const noss_Get = getData['ss_no']
@@ -46,6 +48,8 @@ function ind(getData){
 	const pb_Get = getData['p_b']
 	const pg_Get = getData['p_g']
 	const sn_Get = getData['s_n']
+	const districts_Get = getData['schools']
+
 	console.log('check state data', pp_Get );
 	
 	const pp_keys = Object.keys(pp_Get);
@@ -94,6 +98,7 @@ function ind(getData){
 		'p_c' : pc_Pass,
 		'p_b' : pb_Pass,
 		'p_g' : pg_Pass,
+		'schools': districts_Get,
 	}
 	console.log('State Data Passed',allDataPass);
 	return allDataPass; 
