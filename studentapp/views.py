@@ -739,8 +739,9 @@ def getStateData(request,state_name):
 		qs = StudentFilterLatest({'state':state_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
-		
-		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
+		qs = Student.objects.filter(state=state_name)
+		dist_names = [i.district for i in qs] 
+		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'districts':dist_names}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -798,7 +799,9 @@ def getDistrictData(request,district_name):
 		qs = StudentFilterLatest({'district':district_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
-		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
+		qs = Student.objects.filter(district=district_name)
+		school_names = [i.school for i in qs] 
+		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'schools':school_names}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -855,7 +858,9 @@ def getCountryData(request):
 		qs = StudentFilterLatest({'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'state':i.state})
-		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
+		qs = Student.objects.all()
+		state_names = [i.state for i in qs] 
+		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'states':state_names}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -902,7 +907,9 @@ def getSchoolData(request,school_name):
 		qs = StudentFilterLatest({'school':school_name,'gender':'f'},'-marks')
 		for i in qs:
 			g_marks.append({'name':i.name,'value':i.marks})
-		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks}
+		qs = Student.objects.filter(school=school_name)
+		student_names = [{'name':i.name,'value':i.aadhar_id} for i in qs] 
+		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks,'students':student_names}
 		print(ret)
 	return JsonResponse(ret)
 @csrf_exempt
