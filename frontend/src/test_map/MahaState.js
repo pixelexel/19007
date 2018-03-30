@@ -37,51 +37,44 @@ const indiaStatePaths = [
 class MahaState extends Component{
     constructor(props){
         super(props)
-        console.log('check',props)
         this.iStates = this.create(this.onClick)
         this.stateMap = {}
         for (var i = indiaStatePaths.length - 1; i >= 0; i--) {
-           this.stateMap[indiaStatePaths[i].n] = indiaStatePaths[i].id; 
+           this.stateMap[indiaStatePaths[i].id] = indiaStatePaths[i].n; 
         }
         console.log('statemap', this.stateMap)
 
     }
 
     onClick = (v) => {
-        console.log('onclick!!', v, typeof v)
         this.props.dispatch(changeScreen(screens.STATE, toTitleCase(v.replace('(undefined)', ''))))
     }
 
     render(){
+        
         function tooltipHtml(n, d) {
             return "<h4>" + n + "</h4>";
         }
         var sampleData = {};
-        ["AP", "AR", "AS", "BR", "CT", "DL", "GA", "GJ", "HR", "HP", "JK", "JH", "KA", "KL", "MP", "MH",
-            "MN", "ML", "MZ", "NL", "OR", "PB", "RJ", "SK", "TN", "TR", "UP", "UT", "WB"]
+        ["AP", "AR", "AS", "BR", "CT", "DL", "GA", "GJ", "HR", "HP", "JK", "JH", "KA", "KL", "MP", "MH","MN", "ML", "MZ", "NL", "OR", "PB", "RJ", "SK", "TN", "TR", "UP", "UT", "WB"]
             .forEach((d) => {
-                var low = Math.round(100 * Math.random()),
-                    mid = Math.round(100 * Math.random()),
-                    high = Math.round(100 * Math.random());
-                    console.log('hiiiiiiiiiiiiiii',d, this.props.id, d==this.stateMap[this.props.id.toLowerCase()], this.stateMap[this.props.id])
-                if(this.props.id==this.stateMap[d])
+                console.log('asdasdasdasda', this.props.id, this.stateMap[d]);
+                if((this.props.id).trim() == this.stateMap[d].trim())
                 {
+                    console.log('accepted')
                     sampleData[d] = {
-                        low: d3.min([low, mid, high]), high: d3.max([low, mid, high]),
-                        avg: Math.round((low + mid + high) / 3), 
                         color: "#c13a19",
                         }
                 }
                 else{
                    sampleData[d] = {
-                        low: d3.min([low, mid, high]), high: d3.max([low, mid, high]),
-                        avg: Math.round((low + mid + high) / 3), 
                         color: "#ffc107",
                         } 
                 }
             })
 
         /* draw states on id #statesvg */
+        console.log('sampleData', sampleData)
         this.iStates.draw("#statesvg", sampleData, tooltipHtml)
         d3.select(window.frameElement).style("height", "600px")
 
@@ -129,6 +122,7 @@ class MahaState extends Component{
     var iStates = {};
 
     iStates.draw = function (id, data, toolTip) {
+        console.log('istates draw', data)
         function mouseClick(){
             onClick(d3.select(this)._groups[0][0].attributes['data-legend'].value)
         }
