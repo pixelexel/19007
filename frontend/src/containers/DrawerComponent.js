@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { toggleDrawer, changeScreen, screens } from '../actions/root'
-import { IconButton, Drawer, List, ListItem, ListItemText, ListSubheader, Divider,  } from 'material-ui'
+import { getDrawerData } from '../actions/drawer'
+import { IconButton, Drawer, List, ListItem, ListItemText, ListSubheader, Divider, Grid } from 'material-ui'
+import EditIcon from 'material-ui-icons/Edit'
+import AddIcon from 'material-ui-icons/Add'
+import DeleteIcon from 'material-ui-icons/Delete'
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft'
 import { withStyles } from 'material-ui/styles'
 import { toTitleCase } from '../utils'
@@ -10,6 +14,7 @@ const mapStateToProps = state => {
   return {
     drawer: state.root.drawer,
     screen: state.root.screen,
+    data: state.drawer,
   }
 }
 
@@ -36,15 +41,22 @@ class DrawerComponent extends Component{
     this.props.dispatch(toggleDrawer())
   }
 
-  handleScreenChange = (screen) => {
-    this.props.dispatch(changeScreen(screen))
+  handleScreenChange = (screen, id, name) => {
+    if(name)
+      this.props.dispatch(changeScreen(screen, id, {'name': name}))
+    else 
+      this.props.dispatch(changeScreen(screen, id))
+  }
+
+  componentWillMount(){
+    this.props.dispatch(getDrawerData())
   }
 
   render(){
     console.log('drawer', this.props)
     const { open } = this.props.drawer
-    const { screen, classes } = this.props
-    let screenArr = Object.keys(screens)
+    const { screen, data, classes } = this.props
+    const { fetching, dashboards, custom_filters } = this.props.data
 
     return (
       <Drawer
@@ -61,16 +73,46 @@ class DrawerComponent extends Component{
         <List className={classes.paper}
           subheader={<ListSubheader 
             className={classes.subheader} 
-            component="div">Screens</ListSubheader>}
+            component="div">Dashboards</ListSubheader>}
         >
-        {
-          screenArr.map(screen => (
-            <ListItem button key={screen} onClick={this.handleScreenChange.bind(this, screens[screen])}>
-              <ListItemText primary={toTitleCase(screens[screen])}/>
-            </ListItem>
-          ))        
-        }
+          <ListItem button key='global'
+            id={`${screens.COUNTRY}-0`}
+            onClick={this.handleScreenChange.bind(this, screens.COUNTRY, 0)}>
+              <ListItemText primary="Global Dashboard"/>
+          </ListItem>
+
+          {
+            dashboards.map ( (d, index) => (
+              <ListItem button key={index}
+                 >
+                <ListItemText onClick={this.handleScreenChange.bind(this, screens.DASH, d.id, d.name)} primary={d.name} id={`${screens.DASH}-${d.id}`} style={{cursor: 'pointer'}}/>
+                <IconButton style={{ height: 26 }}>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItem>
+              ))
+          }
+          <ListItem button key={'add'}
+            onClick={this.handleScreenChange.bind(this, screens.DASH, null)} >
+            <ListItemText primary={'Add a new dashboard'} />
+            <IconButton style={{ height: 26 }}>
+                <AddIcon/>
+            </IconButton>
+          </ListItem>
         </List>
+        <List className={classes.paper}
+          subheader={<ListSubheader
+            className={classes.subheader}
+            component="div">Custom Filters</ListSubheader>}
+            >
+            {
+              custom_filters.map((f, index) => (
+              <ListItem button key={index} id={`${screens.ADD_FILTER}-${f.id}`}
+                onClick={this.handleScreenChange.bind(this, screens.ADD_FILTER, f.id)} >
+                <ListItemText primary={f.name}/>
+              </ListItem>
+            ) )}
+          </List>
       </Drawer>
     )
   }

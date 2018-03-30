@@ -19,7 +19,8 @@ function mapStateToProps(state){
     p_c : state.state.p_c,
     p_b :state.state.p_b,
     p_g :state.state.p_g,
-    s_n : state.state.s_n,	
+    s_n : state.state.s_n,
+    districts:state.state.districts,	
 	}
 }
 

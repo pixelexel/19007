@@ -1,5 +1,6 @@
 import { BASE_API_URL } from '../config'
 import { exampleGraph, sampleGraphs } from '../samples'
+import { changeScreen, screens } from './root'
 
 export const ADD_GRAPH = 'ADD_GRAPH'
 export const REQUEST_ALL_GRAPHS = 'REQUEST_ALL_GRAPHS'
@@ -35,7 +36,13 @@ export const addGraph = graphData => {
 					body: JSON.stringify(graphData),
 				})
 				.then(data => data.json())
-				.then(json => dispatch(addGraphToState(json)))
+				.then(json => {
+					if(json.is_new_dash){
+						return dispatch(changeScreen(screens.DASH, json.dash_id))
+					}
+					else
+						return dispatch(addGraphToState(json))
+				})
 				.catch(err => dispatch(addGraphToState(Object.assign({}, graphData, {
 					id: graphData.id,
 					data: exampleGraph(graphData),
@@ -55,10 +62,10 @@ export const removeGraph = id => {
 	}
 }
 
-export const getAllGraphs = () => {
+export const getAllGraphs = (dash_id) => {
 	return (dispatch) => {
 		dispatch(requestAllGraphs())
-		return fetch(BASE_API_URL + 'get_all_graphs',{
+		return fetch(BASE_API_URL + 'get_all_graphs/' + dash_id,{
 			credentials:"same-origin"
 		})
 				.then(data => data.json())

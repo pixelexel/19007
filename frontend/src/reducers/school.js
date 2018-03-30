@@ -13,6 +13,7 @@ const initialState = {
 	avg_sport:[],
 	avg_extra_curr:[],
 	s_n:[],
+	students:[],
 	fetchingData: false
 }
 
@@ -41,6 +42,7 @@ function ind(getData){
 	const pb_Get = getData['p_b']
 	const pg_Get = getData['p_g'] 
 	const sn_Get = getData['s_n']
+	const students_Get=getData['students']
 
 	const marks_keys=Object.keys(pmarks_Get)
 	const sport_keys=Object.keys(psport_Get)
@@ -83,6 +85,7 @@ function ind(getData){
 		'avg_marks':avgmarks_Pass,
 		'avg_sport':avgsport_Pass,
 		'avg_extra_curr':avgcurr_Pass,
+		'students':students_Get,
 
 	}
 	console.log('School Data Passed',allDataPass);

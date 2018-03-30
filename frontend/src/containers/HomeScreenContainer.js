@@ -46,8 +46,16 @@ class HomeScreenContainer extends Component{
 	}
 
 	componentWillMount(){
-		this.props.dispatch(getAllGraphs(this.props.screen))
-		this.props.dispatch(getAllLists(this.props.screen))
+		this.props.dispatch(getAllGraphs(this.props.id))
+		this.props.dispatch(getAllLists(this.props.id))
+	}
+
+	componentWillReceiveProps(newProps){
+		console.log('proror', this.props, newProps)
+		if(newProps.id != this.props.id){
+			this.props.dispatch(getAllGraphs(newProps.id))
+			this.props.dispatch(getAllLists(newProps.id))
+		}
 	}
 
 	showPopup(defaults){
@@ -63,7 +71,9 @@ class HomeScreenContainer extends Component{
 	}
 
 	addGraph(data){
-		this.props.dispatch(addGraph(data))
+		let newData = Object.assign({}, data)
+		newData['dash_id'] = this.props.id
+		this.props.dispatch(addGraph(newData))
 		this.props.dispatch(closePopup())
 	}
 
@@ -72,7 +82,9 @@ class HomeScreenContainer extends Component{
 	}
 
 	addList(data){
-		this.props.dispatch(addList(data))
+		let newData = Object.assign({}, data)
+		newData['dash_id'] = this.props.id
+		this.props.dispatch(addList(newData))
 		this.props.dispatch(closePopup())
 	}
 
@@ -91,7 +103,7 @@ class HomeScreenContainer extends Component{
 
 		return (
 			<div>
-				<CardContainer/>
+				<CardContainer name={this.props.name} id={this.props.id}/>
 
 				<PopupContainer {...this.props.popup} 
 						onClose={this.hidePopup} 
@@ -100,7 +112,8 @@ class HomeScreenContainer extends Component{
 						updateGraphForm={this.updateGraph}
 						addList={this.addList}
 						updateListForm={this.updateList}
-						getFormVals={this.getFormVals.bind(this)}/>
+						getFormVals={this.getFormVals.bind(this)}
+						/>
 
 				<Button variant="fab" 
 						className={classes.fab} 

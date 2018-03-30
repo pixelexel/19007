@@ -1,28 +1,36 @@
-import { CHANGE_SCREEN, screens, TOGGLE_DRAWER } from '../actions/root'
+import { CHANGE_SCREEN, screens, TOGGLE_DRAWER, UPDATE_DASH_NAME } from '../actions/root'
 
 const initialState = {
-	screen: screens.DASH,
+	screen: screens.COUNTRY,
 	drawer: {
 		open: false,
 	},
 	id: null,
+	name: '',
 }
 
 const rootComp = (state = initialState, action) => {
 	switch(action.type){
 		case CHANGE_SCREEN:
-			// if(state.screen != action.screen)
 				return Object.assign({}, state, {
 					screen: action.screen,
 					id: action.id,
+					drawer: {
+						open: false,
+					},
+					...action.args
 				})
-			// else return state
 
 		case TOGGLE_DRAWER:
 			return Object.assign({}, state, {
 				drawer: Object.assign({}, state.drawer, {
 					open: !state.drawer.open,
 				})
+			})
+
+		case UPDATE_DASH_NAME:
+			return Object.assign({}, state, {
+				name: action.dash_name,
 			})
 
 		default:
