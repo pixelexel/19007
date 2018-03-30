@@ -25,11 +25,11 @@ function mapStateToProps(state){
 }
 
 class StateContainer extends Component{
-	componentWillMount(){
-		console.log('state', this.props)
+	// componentWillMount(){
+	// 	console.log('state', this.props)
 
-		this.props.dispatch(getStateData(this.props.id))
-	}
+	// 	this.props.dispatch(getStateData(this.props.id))
+	// }
 
 	render(){
 		return (

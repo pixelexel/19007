@@ -9,6 +9,7 @@ import { withStyles } from 'material-ui/styles'
 import IDCard from '../components/student/IDCard'
 import Progress from '../components/student/Progress'
 import GraphComponent from '../components/GraphComponent'
+import PieChartGraph from '../components/student/PieChart'
 import GraphComponentMultiLine from '../components/GraphComponentMultiLine'
 import AnalyticsCard from '../components/AnalyticsCard'
 
@@ -109,13 +110,13 @@ class StudentContainer extends Component{
 						<GraphComponentMultiLine {...this.props.student}/>
 					</Grid>
 					<Grid item xs={3}>
-						<Progress data={data[0]} style={{marginBottom: 25}}/>
-						<Progress data={data[1]}/>
+						<Card style={{ height: 'calc(100%)', width:'100%' }}>
+							{acad_data.length > 0 && <GraphComponent legendOff data={ret} height='100%' margin={{ top: 5, right: 5, left: 5, bottom: 5 }} />}	
+						</Card>
 					</Grid> 
 					<Grid item xs={3}>
 						<Card style={{ height: 'calc(100%)', width:'100%' }}>
-
-						{acad_data.length > 0 && <GraphComponent legendOff data={ret} height='100%' margin={{ top: 5, right: 5, left: 5, bottom: 5 }} />}	
+							{acad_data.length > 0 && <GraphComponent legendOff data={ret} height='100%' margin={{ top: 5, right: 5, left: 5, bottom: 5 }} />}	
 						</Card>
 					</Grid>
 				</Grid>
