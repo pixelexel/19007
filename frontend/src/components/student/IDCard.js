@@ -5,9 +5,10 @@ import LocationOnIcon from 'material-ui-icons/LocationOn'
 
 const styles = theme => ({
     avatar: {
-        height: 120,
-        width: 120,
-        margin: 'auto'
+        height: 60,
+        width: 60,
+        marginLeft:0,
+        borderRadius:0,
     },
     name: {
         textAlign: 'center',
@@ -33,7 +34,7 @@ class IDCard extends Component{
             <CardContent>
                 <Avatar
                     className={classes.avatar}
-                    src="http://vfsglobal.herokuapp.com/static/media/doc3.svg"
+                    src=""
                 />
                 <Typography component='h1' className={classes.textCenter + ' ' + classes.name}>
                     {this.props.name}
