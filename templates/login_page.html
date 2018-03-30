@@ -1,6 +1,28 @@
-<h2>Login</h2>
-<form method="post">
-{% csrf_token %}
-{{ form.as_p }}
-<button type="submit">Login</button>
-</form>
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+<html>
+<head><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link href="//cdn.muicss.com/mui-0.9.25/css/mui.min.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.muicss.com/mui-0.9.25/js/mui.min.js"></script>
+
+
+</head>
+{% block toggle_login %}{% endblock %}
+<body style="background-image:url('{% static 'images/background.jpg' %}')">
+<div class="col-sm-12">
+<div class="col-sm-4"></div>	
+<div class="col-sm-4" style="background:#2d3035;color:white;margin-top:12%">
+	<h1>Login</h1>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input class="mui-btn mui-btn--primary mui-btn--raised" type="submit" value="Login">
+ 
+  </form>
+ </div>
+ <div class="col-sm-4"></div>
+</div>
+</body>
+</html>
