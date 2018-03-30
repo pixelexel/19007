@@ -134,23 +134,23 @@ def getGraph(request):
 				x_filter[parm] = val
 		
 		qs = Student.objects.filter(**new_filter)
-		# print(len(qs))
-		# if acc['Country'] is False:
-		# 	print("hey")
-		# 	starr = acc['State']
-		# 	ts = Student.objects.all()
-		# 	for i in starr:
-		# 		acc_filter ={}
-		# 		acc_filter['state'] = i
-		# 		ts = ts.union(Student.objects.filter(**acc_filter))
-		# 	starr = acc['District']
-		# 	for i in starr:
-		# 		acc_filter ={}
-		# 		acc_filter['district'] = i
-		# 		ts = ts.union(Student.objects.filter(**acc_filter))
-		# 	print(ts)
-		# 	qs = qs.intersection(ts)
-		# print(len(qs))
+		print(len(qs))
+		if acc['Country'] is False:
+			print("hey")
+			starr = acc['State']
+			ts = Student.objects.none()
+			for i in starr:
+				acc_filter ={}
+				acc_filter['state'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			starr = acc['District']
+			for i in starr:
+				acc_filter ={}
+				acc_filter['district'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			print(ts)
+			qs = qs.intersection(ts)
+		print(len(qs))
 		if not x_filter_present:
 			qss = Student.objects.all()
 		else:
@@ -206,7 +206,7 @@ def getGraph(request):
 
 	return JsonResponse(ret)
 
-def get_list_data(dt, save=True, limit=True):
+def get_list_data(dt,request, save=True, limit=True):
 	x_axis = dt['x']
 	print('x_axis', x_axis)
 	filters_all = dt['filters']
@@ -239,6 +239,26 @@ def get_list_data(dt, save=True, limit=True):
 		new_filter[parm] = val
 
 	qs = Student.objects.filter(**new_filter)
+	if request.user.is_authenticated:
+		acc = json.loads(UserAcces.objects.get(user=request.user).acc)
+		print(len(qs))
+		if acc['Country'] is False:
+			print("hey")
+			starr = acc['State']
+			ts = Student.objects.none()
+			for i in starr:
+				acc_filter ={}
+				acc_filter['state'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			starr = acc['District']
+			for i in starr:
+				acc_filter ={}
+				acc_filter['district'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			print(ts)
+			qs = qs.intersection(ts)
+		print(len(qs))
+
 	data = []
 	ret = {}
 
@@ -319,7 +339,7 @@ def getList(request):
 	ret = {} 
 	if request.method == 'POST':
 		dt = json.loads(request.body.decode('ascii'))
-		ret = get_list_data(dt)
+		ret = get_list_data(dt,request)
 
 	print(ret) 
 	return JsonResponse(ret)
@@ -377,9 +397,44 @@ def suggestions(request):
 			})
 
 		studentList = []
-		studentsMatching = Q() | Q(name__contains=query) | Q(school__contains=query) | Q(aadhar_id__contains=query) | Q(district__contains=query) | Q(state__contains=query)
+		studentsMatching = Q() | Q(name__contains=query) 
 
 		allStudentsMatching = Student.objects.filter(studentsMatching)
+
+		schoolsMatching = Q()
+		schoolsMatching = schoolsMatching | Q(school__contains=query)
+		allschoolsMatching = Student.objects.filter(schoolsMatching)
+
+		districtsMatching = Q()
+		districtsMatching = districtsMatching | Q(district__contains=query)
+		alldistrictsMatching = Student.objects.filter(districtsMatching)
+
+		statesMatching = Q()
+		statesMatching = statesMatching | Q(state__contains=query)
+		allstatesMatching = Student.objects.filter(statesMatching)
+
+		if request.user.is_authenticated:
+			acc = json.loads(UserAcces.objects.get(user=request.user).acc)
+			
+			if acc['Country'] is False:
+				print("hey")
+				starr = acc['State']
+				ts = Student.objects.none()
+				for i in starr:
+					acc_filter ={}
+					acc_filter['state'] = i
+					ts = ts.union(Student.objects.filter(**acc_filter))
+				starr = acc['District']
+				for i in starr:
+					acc_filter ={}
+					acc_filter['district'] = i
+					ts = ts.union(Student.objects.filter(**acc_filter))
+				print(ts)
+				allStudentsMatching = allStudentsMatching.intersection(ts)
+				allschoolsMatching = allschoolsMatching.intersection(ts)
+				alldistrictsMatching = alldistrictsMatching.intersection(ts)
+				allstatesMatching = allstatesMatching.intersection(ts)
+
 		aadharSet = set()
 
 		for s in allStudentsMatching:
@@ -394,21 +449,13 @@ def suggestions(request):
 
 				aadharSet.add(s.aadhar_id)
 
-		schoolsMatching = Q()
-		schoolsMatching = schoolsMatching | Q(school__contains=query)
-		allschoolsMatching = Student.objects.filter(schoolsMatching)
 		schoolList = list(map(lambda s: {'name': s}, set([s.school for s in allschoolsMatching])))
 
-		districtsMatching = Q()
-		districtsMatching = districtsMatching | Q(district__contains=query)
-		alldistrictsMatching = Student.objects.filter(districtsMatching)
 		districtList = list(map(lambda s: {'name': s}, set([s.district for s in alldistrictsMatching])))
 
-		statesMatching = Q()
-		statesMatching = statesMatching | Q(state__contains=query)
-		allstatesMatching = Student.objects.filter(statesMatching)
 		stateList = list(map(lambda s: {'name': s}, set([s.state for s in allstatesMatching])))
 
+		
 		result= {
 			'student': studentList,
 			'state': stateList,
@@ -582,7 +629,7 @@ def get_student_list(request):
 		ret = get_list_data({
 				'x': {'state': True, 'school': True, 'district': True},
 				'filters': filters,
-			}, False, False)
+			},request, False, False)
 
 		pprint(ret)
 		return JsonResponse({
@@ -660,7 +707,7 @@ def chatbot(request):
 			payload = get_list_data({
 				'x': x_ans,
 				'filters': sendfilters,
-			}, False, False)
+			},request, False, False)
 
 			datalen = len(payload['data'])
 			payload['data'] = payload['data'][::-1][:30]
