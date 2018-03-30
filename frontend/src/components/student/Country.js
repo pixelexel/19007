@@ -63,11 +63,17 @@ render() {
             <Progress data={p_g[0]} style={{marginBottom: 25}}/>
           </Grid>
           <Grid item xs={6}>
+          <Paper style={{height:'inherit'}}>
+            <Typography style={{fontSize:'10px',textAlign:'center',marginBottom:'-10px'}}>Best Academic Performance</Typography>
             <Progress data={t_s_a[0]} style={{marginBottom: 25}}/>
+          </Paper>
           </Grid>
             <Grid item xs={6}>
-              <Progress data={t_s_s[0]} style={{ marginBottom: 25 }} />
-            </Grid>
+            <Paper style={{height:'inherit'}}>
+            <Typography style={{fontSize:'10px',textAlign:'center',marginBottom:'-10px'}}>Best Sports Performance</Typography>
+            <Progress data={t_s_s[0]} style={{marginBottom: 25}}/>
+          </Paper>         
+             </Grid>
             <Grid item xs={6}>
               <Progress data={t_s_e[0]} style={{ marginBottom: 25 }} />
             </Grid>
@@ -83,14 +89,14 @@ render() {
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Academic Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>All States Academic Performances</Typography>
 
              <GraphLine value={pp_data}/>
           </Paper>
           </Grid>
           <Grid item xs={7}>
           <Paper style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Extra Curricular Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>All States Extra Curricular Performances</Typography>
 
           <GraphBar value={ex_curr}/>
             </Paper>
@@ -111,7 +117,7 @@ render() {
           </Grid>
           <Grid item xs={5}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>All States Academic Performances</Typography>
 
           <GraphBar value={pp_data}/>
             </Paper>
@@ -119,7 +125,7 @@ render() {
           </Grid>
           <Grid item xs={4}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>No Of Students Per State</Typography>
 
             <GraphLine value={ss_no}/>
             </Paper>
@@ -144,21 +150,21 @@ render() {
                         </Grid>
                         <Grid item xs={4}>
                         <Paper style={{height:'300px'}}>
-                          <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+                          <Typography style={{fontSize:'25px',textAlign:'center'}}>All States Sports Performances</Typography>
                             <br/>
                             <GraphLine value={sport_d}/>
                           </Paper>
                         </Grid>
                         <Grid item xs={4}>
                         <Paper style={{height:'300px'}}>
-                      <Typography style={{fontSize:'25px',textAlign:'center'}}>Top Sports Performances</Typography>
+                      <Typography style={{fontSize:'25px',textAlign:'center'}}>Top Extra Curricular Performances</Typography>
                         <div className={classes.root1}>
                       <Table>
                       <TableBody>
-                        { ss_no.map((d) => {
+                        { top_extra_curr.map((d) => {
                        return <TableRow>
                           <TableCell>{d.name}</TableCell>
-                          <TableCell style={{textAlign:'right'}}>{d.value}</TableCell>
+                          <TableCell style={{textAlign:'right'}}>{d.extra_curr}</TableCell>
                       </TableRow>
              })
              }</TableBody></Table></div>
