@@ -47,8 +47,7 @@ def get_formvals():
 					tem['type'] = getattr(ss, 'filter{}_type'.format(fnum))
 					retGraph['filters'][ss.filter1_name] = tem
 					retGraph['x'].append(fname)
-					retGraph['y'].append(fname)				
-					print('hsdhsdhsd', ss.filter1_name)
+					retGraph['y'].append(fname)			
 				
 			else:
 				tem['name'] = i.name
@@ -69,9 +68,7 @@ def formVal(request):
 def getGraph(request):
 	ret = {}
 	if request.method == 'POST' and request.user.is_authenticated:
-		print(request.user.is_authenticated)
 		acc = json.loads(UserAcces.objects.get(user=request.user).acc)
-		print(UserAcces.objects.get(user=request.user).acc)
 		dt = json.loads(request.body.decode('ascii'))
 		ss = Student.objects.all()[0]
 		custom_filter_names = {
@@ -93,8 +90,6 @@ def getGraph(request):
 		new_filter = {}
 		x_filter_present = False
 		x_filter = {}
-		
-		print('custom filter names', custom_filter_names)
 
 		for i in filters_all:
 			parm = ''
@@ -102,7 +97,6 @@ def getGraph(request):
 			
 			for v,k in i.items():
 				if v == 'name':
-					print('v is ', v, v in custom_filter_names)
 					if k in custom_filter_names:
 						fid = custom_filter_names[k]
 						parm = 'filter{}_val'.format(fid)
@@ -134,9 +128,9 @@ def getGraph(request):
 				x_filter[parm] = val
 		
 		qs = Student.objects.filter(**new_filter)
-		print(len(qs))
+	
 		if acc['Country'] is False:
-			print("hey")
+			
 			starr = acc['State']
 			ts = Student.objects.none()
 			for i in starr:
@@ -148,9 +142,9 @@ def getGraph(request):
 				acc_filter ={}
 				acc_filter['district'] = i
 				ts = ts.union(Student.objects.filter(**acc_filter))
-			print(ts)
+		
 			qs = qs.intersection(ts)
-		print(len(qs))
+		
 		if not x_filter_present:
 			qss = Student.objects.all()
 		else:
@@ -223,7 +217,6 @@ def getGraph(request):
 
 def get_list_data(dt, request, id=None, save=True, limit=True):
 	x_axis = dt['x']
-	print('x_axis', x_axis)
 	filters_all = dt['filters']
 	new_filter = {}
 
@@ -256,9 +249,7 @@ def get_list_data(dt, request, id=None, save=True, limit=True):
 	qs = Student.objects.filter(**new_filter)
 	if request.user.is_authenticated:
 		acc = json.loads(UserAcces.objects.get(user=request.user).acc)
-		print(len(qs))
 		if acc['Country'] is False:
-			print("hey")
 			starr = acc['State']
 			ts = Student.objects.none()
 			for i in starr:
@@ -270,9 +261,7 @@ def get_list_data(dt, request, id=None, save=True, limit=True):
 				acc_filter ={}
 				acc_filter['district'] = i
 				ts = ts.union(Student.objects.filter(**acc_filter))
-			print(ts)
 			qs = qs.intersection(ts)
-		print(len(qs))
 
 	data = []
 	ret = {}
@@ -369,20 +358,17 @@ def getList(request):
 	if request.method == 'POST':
 		dt = json.loads(request.body.decode('ascii'))
 		ret = get_list_data(dt, request, dt['dash_id'])
-	print(ret) 
 	return JsonResponse(ret)
 
 @csrf_exempt
 def allGraphs(request, id):
 	try:
-		print('wooooo', id)
 		ids = int(id)
 		qs = Graphs.objects.filter(dash_id=ids)
 		data = []
 		for i in qs:
 			data.append( json.loads(i.gD) )
 	except:
-		print('ohh ', id)
 		data = []
 		
 	return JsonResponse( {
@@ -456,7 +442,6 @@ def suggestions(request):
 			acc = json.loads(UserAcces.objects.get(user=request.user).acc)
 			
 			if acc['Country'] is False:
-				print("hey")
 				starr = acc['State']
 				ts = Student.objects.none()
 				for i in starr:
@@ -468,7 +453,6 @@ def suggestions(request):
 					acc_filter ={}
 					acc_filter['district'] = i
 					ts = ts.union(Student.objects.filter(**acc_filter))
-				print(ts)
 				allStudentsMatching = allStudentsMatching.intersection(ts)
 				allschoolsMatching = allschoolsMatching.intersection(ts)
 				alldistrictsMatching = alldistrictsMatching.intersection(ts)
@@ -544,7 +528,6 @@ def getStudentData(request,aadhar_id):
 		sci /= len(qs)
 		hindi /= len(qs)
 		data = [{'english':eng},{'maths':maths},{'science':sci},{'hindi':hindi}]
-		print('ddd', d)
 		ret = { 
 			'data':data, 
 			'acad_data':acad_data, 
@@ -559,7 +542,6 @@ def getStudentData(request,aadhar_id):
 			},
 			'params': d
 		}
-		print(ret)
 	return JsonResponse(ret) 
 
 @csrf_exempt
@@ -662,15 +644,12 @@ def fix_param_display(param):
 def get_student_list(request):
 	if request.method == 'POST':
 		filters = json.loads(request.body)['filters']
-		print('filters', filters)
 		# sendfilters = convert_filters(filters)
-		# print('send', sendfilters)
 		ret = get_list_data({
 				'x': {'state': True, 'school': True, 'district': True},
 				'filters': filters,
                 }, request, None, False, False)
 
-		pprint(ret)
 		return JsonResponse({
 			'data': ret['data'],
 		})
@@ -684,7 +663,6 @@ def get_student_list(request):
 def chatbot(request):
 	if request.method == 'POST':
 		data = json.loads(request.body)
-		pprint(data)
 		if not data['status']['code'] == 200:
 			return JsonResponse({
 				error: 'true',
@@ -694,7 +672,6 @@ def chatbot(request):
 
 		if result['action'] == 'get_param_list':
 			ret = get_formvals()
-			print(ret)
 			s = ', '.join(ret['graph']['x'])
 			ans = 'The possible list of parameters are {}'.format(s)
 			return JsonResponse({
@@ -706,7 +683,6 @@ def chatbot(request):
 			df = pd.read_csv(os.path.join(os.getcwd(), 'studentapp', 'static', 'misc', 'corr.csv'))
 			df = df.set_index(df.columns[0])
 
-			print(df)
 			p1 = result['parameters']['Parameter']
 			p2 = result['parameters']['Parameter1']
 			p1f = fix_param(p1)
@@ -750,7 +726,6 @@ def chatbot(request):
 
 			datalen = len(payload['data'])
 			payload['data'] = payload['data'][::-1][:30]
-			pprint(payload)
 
 			if result['action'] == 'get_filters':
 				
@@ -787,7 +762,6 @@ def StudentFilterLatest(filters,ordering):
 	for k,v in sm.items():
 		arr.append(v)
 	arr = sorted(arr,key = lambda x: getattr(x,ordering[1:]),reverse=True)
-	print(arr)
 	return arr
 
 
@@ -848,7 +822,6 @@ def getStateData(request,state_name):
 		qs = Student.objects.filter(state=state_name)
 		dist_names = [i.district for i in qs] 
 		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'districts':dist_names}
-		print(ret)
 	return JsonResponse(ret)
 
 @csrf_exempt
@@ -908,7 +881,6 @@ def getDistrictData(request,district_name):
 		qs = Student.objects.filter(district=district_name)
 		school_names = [i.school for i in qs] 
 		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'schools':school_names}
-		print(ret)
 	return JsonResponse(ret)
 
 @csrf_exempt
@@ -967,7 +939,6 @@ def getCountryData(request):
 		qs = Student.objects.all()
 		state_names = [i.state for i in qs] 
 		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'states':state_names}
-		print(ret)
 	return JsonResponse(ret)
 
 @csrf_exempt
@@ -1016,7 +987,6 @@ def getSchoolData(request,school_name):
 		qs = Student.objects.filter(school=school_name)
 		student_names = [{'name':i.name,'value':i.aadhar_id} for i in qs] 
 		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks,'students':student_names}
-		print(ret)
 	return JsonResponse(ret)
 
 def get_drawer_data(request):
@@ -1047,7 +1017,6 @@ def filter_data(request):
 		fil_type = filter_info['filter_type']
 		stu_sel = filter_info['students_selected']
 		filter_default = filter_info['filter_default']
-		pprint(filter_info)
 		
 		s_All = Student.objects.all()
 		set_filter_id = -1
@@ -1081,7 +1050,6 @@ def filter_data(request):
 @csrf_exempt
 def import_data(request):
     if request.method == 'POST':
-        print(request.user.is_authenticated)
         new_students = request.FILES['myfile']
         if new_students.content_type == 'text/csv':
             df = pd.read_csv(new_students)
@@ -1091,7 +1059,6 @@ def import_data(request):
         df.to_csv(path_name, index=False)
         return redirect('/api/fieldmatching?df='+ path_name)
     else:
-        print(request.user.is_authenticated)
         return render(request, 'import_data.html')
 
 
@@ -1103,7 +1070,6 @@ def fieldmatching(request):
 
         if request.POST.get('checkBox') == None:
             matched = { key:request.POST.get(key, False) for key in names }
-            print(matched)
             df.rename(columns = matched, inplace = True)
 
         df.drop('id', axis=1, inplace=True)
