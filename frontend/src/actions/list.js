@@ -30,7 +30,8 @@ export const addList = listData => {
 	return (dispatch) => {
 		return fetch(BASE_API_URL + 'send_list', {
 					method: 'post',
-					body: JSON.stringify(listData)
+					body: JSON.stringify(listData),
+					credentials:"same-origin"
 				})
 				.then(data => data.json())
 				.then(json => dispatch(addListToState(json)))
@@ -43,7 +44,9 @@ export const addList = listData => {
 
 export const removeList = id =>{
 	return (dispatch) => {
-		return fetch(BASE_API_URL + 'delete_list/' + id)
+		return fetch(BASE_API_URL + 'delete_list/' + id,{
+			credentials:"same-origin"
+		})
 				.then(data => data.json())
 				.then(json => dispatch(removeListFromState(id)))
 				.catch(error => dispatch(removeListFromState(id)))
@@ -53,7 +56,9 @@ export const removeList = id =>{
 export const getAllLists = () => {
 	return (dispatch) => {
 		dispatch(requestAllLists())
-		return fetch(BASE_API_URL + 'get_all_lists')
+		return fetch(BASE_API_URL + 'get_all_lists',{
+			credentials:"same-origin"
+		})
 				.then(data => data.json())
 				.then(json => {
 					console.log('getalllists', json)

@@ -16,7 +16,9 @@ const receiveSchoolData = (error, data) => ({
 export const getSchoolData = (id) => {
 	return (dispatch) => {
 		dispatch(requestSchoolData())
-		return fetch(BASE_API_URL + 'get_school_data/' + id)
+		return fetch(BASE_API_URL + 'get_school_data/' + id,{
+			credentials:"same-origin"
+		})
 				.then(data => data.json())
 				.then(json => dispatch(receiveSchoolData(json.error, json)))
 				.catch(err => dispatch(receiveSchoolData(false)))

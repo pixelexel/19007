@@ -16,7 +16,8 @@ export const getSuggestion = (typed_data, target) => {
  return (dispatch) => {
       return fetch(BASE_API_URL + 'get_suggestions',{
 					method: 'post',
-					body: JSON.stringify(typed_data)
+					body: JSON.stringify(typed_data),
+          credentials:"same-origin",
 				})
         .then(data => data.json())
         .then(json => dispatch(recieveSuggestions(json.error, json, target)))

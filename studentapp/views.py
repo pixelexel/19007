@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from .models import Student, School, extra_curricular, Acads, Graphs, Lists
+from .models import Student, School, extra_curricular, Acads, Graphs, Lists,UserAcces
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -68,8 +68,10 @@ def formVal(request):
 @csrf_exempt
 def getGraph(request):
 	ret = {}
-	if request.method == 'POST':
-		print(request.body)
+	if request.method == 'POST' and request.user.is_authenticated:
+		print(request.user.is_authenticated)
+		acc = json.loads(UserAcces.objects.get(user=request.user).acc)
+		print(UserAcces.objects.get(user=request.user).acc)
 		dt = json.loads(request.body.decode('ascii'))
 		ss = Student.objects.all()[0]
 		custom_filter_names = {
@@ -132,10 +134,27 @@ def getGraph(request):
 				x_filter[parm] = val
 		
 		qs = Student.objects.filter(**new_filter)
-		if not x_filter_present:
-			qss = Student.objects.all()
-		else:
-			qss = Student.objects.filter(**x_filter)
+		# print(len(qs))
+		# if acc['Country'] is False:
+		# 	print("hey")
+		# 	starr = acc['State']
+		# 	ts = Student.objects.all()
+		# 	for i in starr:
+		# 		acc_filter ={}
+		# 		acc_filter['state'] = i
+		# 		ts = ts.union(Student.objects.filter(**acc_filter))
+		# 	starr = acc['District']
+		# 	for i in starr:
+		# 		acc_filter ={}
+		# 		acc_filter['district'] = i
+		# 		ts = ts.union(Student.objects.filter(**acc_filter))
+		# 	print(ts)
+		# 	qs = qs.intersection(ts)
+		# print(len(qs))
+		# if not x_filter_present:
+		# 	qss = Student.objects.all()
+		# else:
+		# 	qss = Student.objects.filter(**x_filter)
 
 		data = {}
 		tdata = {}  
@@ -307,6 +326,7 @@ def getList(request):
 
 @csrf_exempt
 def allGraphs(request):
+    print(request.user.is_authenticated)
     qs = Graphs.objects.all()
     data = []
     for i in qs:
@@ -954,6 +974,7 @@ def filter_data(request):
 @csrf_exempt
 def import_data(request):
     if request.method == 'POST':
+        print(request.user.is_authenticated)
         new_students = request.FILES['myfile']
         if new_students.content_type == 'text/csv':
             df = pd.read_csv(new_students)
@@ -963,6 +984,7 @@ def import_data(request):
         df.to_csv(path_name, index=False)
         return redirect('/api/fieldmatching?df='+ path_name)
     else:
+        print(request.user.is_authenticated)
         return render(request, 'import_data.html')
 
 

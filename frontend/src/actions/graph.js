@@ -31,7 +31,8 @@ export const addGraph = graphData => {
 		console.log('sending ', graphData)
 		return fetch(BASE_API_URL + 'send_graph', {
 					method: 'post',
-					body: JSON.stringify(graphData)
+					credentials:"same-origin",
+					body: JSON.stringify(graphData),
 				})
 				.then(data => data.json())
 				.then(json => dispatch(addGraphToState(json)))
@@ -45,7 +46,9 @@ export const addGraph = graphData => {
 export const removeGraph = id => {
 	console.log('REMOVE_GRAPH', id)
 	return (dispatch) => {
-		return fetch(BASE_API_URL + 'delete_graph/' + id)
+		return fetch(BASE_API_URL + 'delete_graph/' + id,{
+			credentials:"same-origin"
+		})
 		.then(data => data.json())
 		.then(json => dispatch(removeGraphFromState(id)))
 		.catch(err => dispatch(removeGraphFromState(id)))
@@ -55,7 +58,9 @@ export const removeGraph = id => {
 export const getAllGraphs = () => {
 	return (dispatch) => {
 		dispatch(requestAllGraphs())
-		return fetch(BASE_API_URL + 'get_all_graphs')
+		return fetch(BASE_API_URL + 'get_all_graphs',{
+			credentials:"same-origin"
+		})
 				.then(data => data.json())
 				.then(json => dispatch(receiveAllGraphs(false, json.data)))
 				.catch(err => dispatch(receiveAllGraphs(err, null)))

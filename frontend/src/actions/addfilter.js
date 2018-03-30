@@ -42,6 +42,7 @@ export const saveNewFilter = filter => {
         return fetch(BASE_API_URL + 'get_filter_data', {
             method: 'post',
             body: JSON.stringify(filter),
+            credentials:"same-origin",
         }).then(data => data.json())
         .then(json => {
             dispatch(finishSavingFilter())
@@ -56,7 +57,8 @@ export const getListFromFilters = filters => {
         console.log('getlist', filters)
         return fetch(BASE_API_URL + 'get_student_list', {
             method: 'post',
-            body: JSON.stringify({'filters': filters})
+            body: JSON.stringify({'filters': filters}),
+            credentials:"same-origin",
         }).then(data => data.json())
         .then(json => dispatch(receiveListFromFilters(json)))
     }
