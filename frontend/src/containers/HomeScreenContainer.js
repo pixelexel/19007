@@ -103,7 +103,7 @@ class HomeScreenContainer extends Component{
 
 		return (
 			<div>
-				<CardContainer id={this.props.id}/>
+				<CardContainer name={this.props.name} id={this.props.id}/>
 
 				<PopupContainer {...this.props.popup} 
 						onClose={this.hidePopup} 

@@ -4,6 +4,8 @@ import { toggleDrawer, changeScreen, screens } from '../actions/root'
 import { getDrawerData } from '../actions/drawer'
 import { IconButton, Drawer, List, ListItem, ListItemText, ListSubheader, Divider, Grid } from 'material-ui'
 import EditIcon from 'material-ui-icons/Edit'
+import AddIcon from 'material-ui-icons/Add'
+import DeleteIcon from 'material-ui-icons/Delete'
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft'
 import { withStyles } from 'material-ui/styles'
 import { toTitleCase } from '../utils'
@@ -39,10 +41,11 @@ class DrawerComponent extends Component{
     this.props.dispatch(toggleDrawer())
   }
 
-  handleScreenChange = (screen, id) => {
-    // console.log('yoyoyo', e, e.target.id)
-    // const [screen, id] = e.target.id.split('-')
-    this.props.dispatch(changeScreen(screen, id))
+  handleScreenChange = (screen, id, name) => {
+    if(name)
+      this.props.dispatch(changeScreen(screen, id, {'name': name}))
+    else 
+      this.props.dispatch(changeScreen(screen, id))
   }
 
   componentWillMount(){
@@ -72,7 +75,7 @@ class DrawerComponent extends Component{
             className={classes.subheader} 
             component="div">Dashboards</ListSubheader>}
         >
-          <ListItem button key='global' 
+          <ListItem button key='global'
             id={`${screens.COUNTRY}-0`}
             onClick={this.handleScreenChange.bind(this, screens.COUNTRY, 0)}>
               <ListItemText primary="Global Dashboard"/>
@@ -81,16 +84,19 @@ class DrawerComponent extends Component{
           {
             dashboards.map ( (d, index) => (
               <ListItem button key={index}
-                onClick={this.handleScreenChange.bind(this, screens.DASH, d.id)} >
-                <ListItemText primary={d.name} id={`${screens.DASH}-${d.id}`} />
+                 >
+                <ListItemText onClick={this.handleScreenChange.bind(this, screens.DASH, d.id, d.name)} primary={d.name} id={`${screens.DASH}-${d.id}`} style={{cursor: 'pointer'}}/>
+                <IconButton style={{ height: 26 }}>
+                  <DeleteIcon />
+                </IconButton>
               </ListItem>
               ))
           }
           <ListItem button key={'add'}
             onClick={this.handleScreenChange.bind(this, screens.DASH, null)} >
             <ListItemText primary={'Add a new dashboard'} />
-            <IconButton>
-                <EditIcon/>
+            <IconButton style={{ height: 26 }}>
+                <AddIcon/>
             </IconButton>
           </ListItem>
         </List>

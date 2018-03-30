@@ -189,18 +189,33 @@ def getGraph(request):
 		try:
 			s = int(dt['dash_id'])
 			dash_id = s
-			
+			gs = Graphs.objects.filter(dash_id=dash_id)
+			ls = Lists.objects.filter(dash_id=dash_id)
+			if len(gs) == 0 and les(ls) == 0:
+				dash_name = 'Untitled Dashboard {}'.format(dash_id)
+			else:
+				if len(gs) > 0:
+					dash_name = gs[0].dash_name
+				else:
+					dash_name = ls[0].dash_name
+
 		except:
 			g = Graphs.objects.all()
-			last = max(map(lambda x: x.id, g))
+			try:
+				last = max(map(lambda x: x.id, g))
+			except:
+				last = 0
+				
 			dash_id = last + 1
+			dash_name = 'Untitled Dashboard {}'.format(dash_id)
 			is_new_dash = True
 
 		if dt['id'] is not None:
 			gd = Graphs.objects.get(id=dt['id'])
 			gd.gD = json.dumps(dt)
 			gd.dash_id = dash_id
-			gd.save()	
+			gd.dash_name = dash_name
+			gd.save()
 		
 		else :
 			gd = Graphs()
@@ -208,10 +223,13 @@ def getGraph(request):
 			dt['id'] = gd.id
 			gd.gD = json.dumps(dt)
 			gd.dash_id = dash_id
+			gd.dash_name = gd.dash_name
 			gd.save()
+
 		ret = dt
 		ret['is_new_dash'] = is_new_dash
 		ret['dash_id'] = dash_id
+		ret['dash_name'] = dash_name
 
 	return JsonResponse(ret)
 
@@ -365,14 +383,21 @@ def allGraphs(request, id):
 	try:
 		ids = int(id)
 		qs = Graphs.objects.filter(dash_id=ids)
+		if len(qs) > 0:
+			dash_name = qs[0].dash_name
+		else:
+			dash_name = 'Untitled Dashboard {}'.format(ids)
+
 		data = []
 		for i in qs:
 			data.append( json.loads(i.gD) )
 	except:
 		data = []
+		dash_name = 'Untitled Dashboard'
 		
 	return JsonResponse( {
-        'data':data
+        'data':data,
+		'dash_name': dash_name,
     })
 
 @csrf_exempt
@@ -380,14 +405,21 @@ def allLists(request, id):
 	try:
 		ids = int(id)
 		qs = Lists.objects.filter(dash_id=ids)
+		if len(qs) > 0:
+			dash_name = qs[0].dash_name
+		else:
+			dash_name = 'Untitled Dashboard {}'.format(ids)
 		data = []
 		for i in qs:
 			data.append( json.loads(i.lD) )
+
 	except:
 		data = []
+		dash_name = 'Untitled Dashboard'
 
 	return JsonResponse( {
-        'data':data
+        'data':data,
+        'dash_name': dash_name,
     })
 
 @csrf_exempt
@@ -997,9 +1029,17 @@ def getSchoolData(request,school_name):
 
 def get_drawer_data(request):
 	graphs = Graphs.objects.all()
-	dashboard_ids = set(map(lambda x: x.dash_id,  graphs ))
+	lists = Lists.objects.all()
+	dashboard_ids = set(map(lambda x: x.dash_id,  graphs )) | set(map(lambda x : x.dash_id, lists))
 	dashboard_names = set(map(lambda x: x.dash_name, graphs))
-	dashboards = [{'id': x[0], 'name': x[1]} for x in zip(dashboard_ids, dashboard_names)]
+
+	all_dashboards = {}
+	for g in graphs:
+		all_dashboards[g.dash_id] = {'id': g.dash_id, 'name': g.dash_name}
+	for l in lists:
+		all_dashboards[l.dash_id] = {'id': l.dash_id, 'name': l.dash_name}
+
+	dashboards = [v for k, v in all_dashboards.items()]
 	s = Student.objects.all()[0]
 	custom_filters = list()
 

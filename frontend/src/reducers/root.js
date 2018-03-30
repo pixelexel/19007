@@ -1,4 +1,4 @@
-import { CHANGE_SCREEN, screens, TOGGLE_DRAWER } from '../actions/root'
+import { CHANGE_SCREEN, screens, TOGGLE_DRAWER, UPDATE_DASH_NAME } from '../actions/root'
 
 const initialState = {
 	screen: screens.COUNTRY,
@@ -6,6 +6,7 @@ const initialState = {
 		open: false,
 	},
 	id: null,
+	name: '',
 }
 
 const rootComp = (state = initialState, action) => {
@@ -16,7 +17,8 @@ const rootComp = (state = initialState, action) => {
 					id: action.id,
 					drawer: {
 						open: false,
-					}
+					},
+					...action.args
 				})
 
 		case TOGGLE_DRAWER:
@@ -24,6 +26,11 @@ const rootComp = (state = initialState, action) => {
 				drawer: Object.assign({}, state.drawer, {
 					open: !state.drawer.open,
 				})
+			})
+
+		case UPDATE_DASH_NAME:
+			return Object.assign({}, state, {
+				name: action.dash_name,
 			})
 
 		default:
