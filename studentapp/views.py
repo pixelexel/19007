@@ -919,6 +919,7 @@ def getDistrictData(request,district_name):
 def getCountryData(request):
 	ret = {}
 	if request.method == 'GET':
+		print('COUNTRY', request.GET)
 		pp_data = {}
 		ex_curr = {}
 		state_ct = {}

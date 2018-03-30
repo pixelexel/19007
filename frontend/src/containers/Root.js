@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { screens } from '../actions/root'
+import { screens, setRootFilter } from '../actions/root'
 import { connect } from 'react-redux'
 import HomeScreenContainer from './HomeScreenContainer'
 import StudentContainer from './StudentContainer'
@@ -20,7 +20,8 @@ const mapStateToProps = (state) => ({
 	screen: state.root.screen,
 	drawer: state.root.drawer,
 	id: state.root.id,
-	name: state.root.name
+	name: state.root.name,
+	filters: state.root.filters,
 })
 
 class Root extends Component{
@@ -37,30 +38,35 @@ class Root extends Component{
 		console.log('handling chatbot')
 		this.props.dispatch(toggleChatbot())
 	}
+	
+	changeRootFilter = (data) => {
+		const { start, end} = data
+		this.props.dispatch(setRootFilter(start, end))
+	}
 
 	render(){
-		const { screen, id } = this.props 
+		const { screen, id, filters } = this.props 
 		let screenComponent = null
-		console.log('ROOT', screen, id)
+		
 		switch(screen){
 			case screens.DASH:
 				screenComponent = <HomeScreenContainer screen={screen} id={id} name={this.props.name}/>
 				break
 
 			case screens.SCHOOL:
-				screenComponent = <SchoolContainer id={id}/>
+				screenComponent = <SchoolContainer filters={filters} id={id}/>
 				break
 
 			case screens.DISTRICT:
-				screenComponent = <DistrictContainer id={id}/>
+				screenComponent = <DistrictContainer filters={filters} id={id}/>
 				break
 
 			case screens.STATE:
-				screenComponent = <StateContainer id={id}/>
+				screenComponent = <StateContainer filters={filters} id={id}/>
 				break
 
 			case screens.COUNTRY:
-				screenComponent = <CountryContainer/>
+				screenComponent = <CountryContainer filters={filters}/>
 				break
 
 			case screens.STUDENT:
@@ -80,6 +86,7 @@ class Root extends Component{
 				<Header handleMenuClick={this.toggleDrawer}
 						handleChatbot={this.toggleChatbot}
 						changeScreen={changeScreen} 
+						changeRootFilter={this.changeRootFilter}
 						{...this.props}/>
 				<div className={this.props.drawer.open ? 'root-screen-hide': ''} 
 						onClick={this.closeDrawer}>

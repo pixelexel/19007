@@ -14,10 +14,14 @@ const receiveCountryData = (error, data) => ({
 	error: error,
 })
  
-export const getCountryData = () => {
+export const getCountryData = (data) => {
 	return (dispatch) => {
+		console.log('get country ', data)
 		dispatch(requestCountryData())
-		return fetch(BASE_API_URL + 'get_country_data/',{
+
+		const url = data.filters.start_date && data.filters.end_date ? `get_country_data?start=${data.filters.start_date}&end=${data.filters.end_date}` : `get_country_data`
+
+		return fetch(BASE_API_URL + url ,{
 			credentials:"same-origin"
 		})
 				.then(data => data.json())

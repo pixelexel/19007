@@ -28,7 +28,9 @@ class StateContainer extends Component{
 	componentWillMount(){
 		console.log('state', this.props)
 
-		this.props.dispatch(getStateData(this.props.id))
+		this.props.dispatch(getStateData(this.props.id, {
+      filters: this.props.filters,
+    }))
 	}
 
 	render(){
