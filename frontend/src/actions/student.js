@@ -17,7 +17,9 @@ const receiveStudentData = (error, data) => ({
 export const getStudentData = (id) => {
 	return (dispatch) => {
 		dispatch(requestStudentData())
-		return fetch(BASE_API_URL + 'get_student_data/' + id)
+		return fetch(BASE_API_URL + 'get_student_data/' + id,{
+			credentials:"same-origin"
+		})
 				.then(data => data.json())
 				.then(json => dispatch(receiveStudentData(json.error, json)))
 				.catch(err => dispatch(receiveStudentData(false, studentData())))

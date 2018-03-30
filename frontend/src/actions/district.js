@@ -16,7 +16,9 @@ const receiveDistrictData = (error, data) => ({
 export const getDistrictData = (id) => {
 	return (dispatch) => {
 		dispatch(requestDistrictData())
-		return fetch(BASE_API_URL + 'get_district_data/' + id)
+		return fetch(BASE_API_URL + 'get_district_data/' + id,{
+			credentials:"same-origin"
+		})
 				.then(data => data.json())
 				.then(json => dispatch(receiveDistrictData(json.error, json)))
 				.catch(err => dispatch(receiveDistrictData(false)))

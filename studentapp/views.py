@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from .models import Student, School, extra_curricular, Acads, Graphs, Lists
+from .models import Student, School, extra_curricular, Acads, Graphs, Lists,UserAcces
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -68,8 +68,10 @@ def formVal(request):
 @csrf_exempt
 def getGraph(request):
 	ret = {}
-	if request.method == 'POST':
-		print(request.body)
+	if request.method == 'POST' and request.user.is_authenticated:
+		print(request.user.is_authenticated)
+		acc = json.loads(UserAcces.objects.get(user=request.user).acc)
+		print(UserAcces.objects.get(user=request.user).acc)
 		dt = json.loads(request.body.decode('ascii'))
 		ss = Student.objects.all()[0]
 		custom_filter_names = {
@@ -132,6 +134,23 @@ def getGraph(request):
 				x_filter[parm] = val
 		
 		qs = Student.objects.filter(**new_filter)
+		print(len(qs))
+		if acc['Country'] is False:
+			print("hey")
+			starr = acc['State']
+			ts = Student.objects.none()
+			for i in starr:
+				acc_filter ={}
+				acc_filter['state'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			starr = acc['District']
+			for i in starr:
+				acc_filter ={}
+				acc_filter['district'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			print(ts)
+			qs = qs.intersection(ts)
+		print(len(qs))
 		if not x_filter_present:
 			qss = Student.objects.all()
 		else:
@@ -202,7 +221,7 @@ def getGraph(request):
 
 	return JsonResponse(ret)
 
-def get_list_data(dt, id=None, save=True, limit=True):
+def get_list_data(dt, request, id=None, save=True, limit=True):
 	x_axis = dt['x']
 	print('x_axis', x_axis)
 	filters_all = dt['filters']
@@ -235,6 +254,26 @@ def get_list_data(dt, id=None, save=True, limit=True):
 		new_filter[parm] = val
 
 	qs = Student.objects.filter(**new_filter)
+	if request.user.is_authenticated:
+		acc = json.loads(UserAcces.objects.get(user=request.user).acc)
+		print(len(qs))
+		if acc['Country'] is False:
+			print("hey")
+			starr = acc['State']
+			ts = Student.objects.none()
+			for i in starr:
+				acc_filter ={}
+				acc_filter['state'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			starr = acc['District']
+			for i in starr:
+				acc_filter ={}
+				acc_filter['district'] = i
+				ts = ts.union(Student.objects.filter(**acc_filter))
+			print(ts)
+			qs = qs.intersection(ts)
+		print(len(qs))
+
 	data = []
 	ret = {}
 
@@ -329,8 +368,7 @@ def getList(request):
 	ret = {} 
 	if request.method == 'POST':
 		dt = json.loads(request.body.decode('ascii'))
-		ret = get_list_data(dt, dt['dash_id'])
-
+		ret = get_list_data(dt, request, dt['dash_id'])
 	print(ret) 
 	return JsonResponse(ret)
 
@@ -398,9 +436,44 @@ def suggestions(request):
 			})
 
 		studentList = []
-		studentsMatching = Q() | Q(name__contains=query) | Q(school__contains=query) | Q(aadhar_id__contains=query) | Q(district__contains=query) | Q(state__contains=query)
+		studentsMatching = Q() | Q(name__contains=query) 
 
 		allStudentsMatching = Student.objects.filter(studentsMatching)
+
+		schoolsMatching = Q()
+		schoolsMatching = schoolsMatching | Q(school__contains=query)
+		allschoolsMatching = Student.objects.filter(schoolsMatching)
+
+		districtsMatching = Q()
+		districtsMatching = districtsMatching | Q(district__contains=query)
+		alldistrictsMatching = Student.objects.filter(districtsMatching)
+
+		statesMatching = Q()
+		statesMatching = statesMatching | Q(state__contains=query)
+		allstatesMatching = Student.objects.filter(statesMatching)
+
+		if request.user.is_authenticated:
+			acc = json.loads(UserAcces.objects.get(user=request.user).acc)
+			
+			if acc['Country'] is False:
+				print("hey")
+				starr = acc['State']
+				ts = Student.objects.none()
+				for i in starr:
+					acc_filter ={}
+					acc_filter['state'] = i
+					ts = ts.union(Student.objects.filter(**acc_filter))
+				starr = acc['District']
+				for i in starr:
+					acc_filter ={}
+					acc_filter['district'] = i
+					ts = ts.union(Student.objects.filter(**acc_filter))
+				print(ts)
+				allStudentsMatching = allStudentsMatching.intersection(ts)
+				allschoolsMatching = allschoolsMatching.intersection(ts)
+				alldistrictsMatching = alldistrictsMatching.intersection(ts)
+				allstatesMatching = allstatesMatching.intersection(ts)
+
 		aadharSet = set()
 
 		for s in allStudentsMatching:
@@ -415,21 +488,13 @@ def suggestions(request):
 
 				aadharSet.add(s.aadhar_id)
 
-		schoolsMatching = Q()
-		schoolsMatching = schoolsMatching | Q(school__contains=query)
-		allschoolsMatching = Student.objects.filter(schoolsMatching)
 		schoolList = list(map(lambda s: {'name': s}, set([s.school for s in allschoolsMatching])))
 
-		districtsMatching = Q()
-		districtsMatching = districtsMatching | Q(district__contains=query)
-		alldistrictsMatching = Student.objects.filter(districtsMatching)
 		districtList = list(map(lambda s: {'name': s}, set([s.district for s in alldistrictsMatching])))
 
-		statesMatching = Q()
-		statesMatching = statesMatching | Q(state__contains=query)
-		allstatesMatching = Student.objects.filter(statesMatching)
 		stateList = list(map(lambda s: {'name': s}, set([s.state for s in allstatesMatching])))
 
+		
 		result= {
 			'student': studentList,
 			'state': stateList,
@@ -603,7 +668,7 @@ def get_student_list(request):
 		ret = get_list_data({
 				'x': {'state': True, 'school': True, 'district': True},
 				'filters': filters,
-			}, None, False, False)
+                }, request, None, False, False)
 
 		pprint(ret)
 		return JsonResponse({
@@ -681,7 +746,7 @@ def chatbot(request):
 			payload = get_list_data({
 				'x': x_ans,
 				'filters': sendfilters,
-			}, None, False, False)
+			}, request, None, False, False)
 
 			datalen = len(payload['data'])
 			payload['data'] = payload['data'][::-1][:30]
@@ -780,7 +845,9 @@ def getStateData(request,state_name):
 		qs = StudentFilterLatest({'state':state_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
-		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
+		qs = Student.objects.filter(state=state_name)
+		dist_names = [i.district for i in qs] 
+		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'districts':dist_names}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -838,7 +905,9 @@ def getDistrictData(request,district_name):
 		qs = StudentFilterLatest({'district':district_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
-		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
+		qs = Student.objects.filter(district=district_name)
+		school_names = [i.school for i in qs] 
+		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'schools':school_names}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -895,7 +964,9 @@ def getCountryData(request):
 		qs = StudentFilterLatest({'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'state':i.state})
-		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g}
+		qs = Student.objects.all()
+		state_names = [i.state for i in qs] 
+		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'states':state_names}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -942,7 +1013,9 @@ def getSchoolData(request,school_name):
 		qs = StudentFilterLatest({'school':school_name,'gender':'f'},'-marks')
 		for i in qs:
 			g_marks.append({'name':i.name,'value':i.marks})
-		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks}
+		qs = Student.objects.filter(school=school_name)
+		student_names = [{'name':i.name,'value':i.aadhar_id} for i in qs] 
+		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks,'students':student_names}
 		print(ret)
 	return JsonResponse(ret)
 
@@ -1008,6 +1081,7 @@ def filter_data(request):
 @csrf_exempt
 def import_data(request):
     if request.method == 'POST':
+        print(request.user.is_authenticated)
         new_students = request.FILES['myfile']
         if new_students.content_type == 'text/csv':
             df = pd.read_csv(new_students)
@@ -1017,6 +1091,7 @@ def import_data(request):
         df.to_csv(path_name, index=False)
         return redirect('/api/fieldmatching?df='+ path_name)
     else:
+        print(request.user.is_authenticated)
         return render(request, 'import_data.html')
 
 
