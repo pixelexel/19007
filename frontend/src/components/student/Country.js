@@ -22,6 +22,11 @@ import { addList, getAllLists, removeList } from '../../actions/list'
 import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
 import IndiaState from '../../test_map/indiaState'
 import { changeScreen, screens } from '../../actions/root'
+import FaFemale from 'react-icons/lib/fa/female'
+import FaMale from 'react-icons/lib/fa/male'
+
+
+
 
 
 const styles = theme => ({
@@ -38,6 +43,13 @@ const styles = theme => ({
   },
   root2: {
     height: '305px',
+    backgroundColor: theme.palette.secondary.main,
+    margin: '0 auto',
+    overflow: 'auto',
+    paddingBottom: 15,
+  },
+    root3: {
+    height: '100%',
     backgroundColor: theme.palette.secondary.main,
     margin: '0 auto',
     overflow: 'auto',
@@ -68,43 +80,38 @@ render() {
       </Grid>
       <Grid item xs={6}>
         <Grid container>
-          <Grid item xs={6}>
-            <Progress data={p_c[0]} style={{marginBottom: 25}}/>
+        
+          <Grid item xs={3}>
+            <FaFemale style={{fontSize:'100px',color:'#FF69B4'}}/>
+              { p_g.map((d)=>{
+            return  <Typography style={{ fontSize:'35px',textAlign:'center'}}>{Math.floor(parseFloat(d.value))}</Typography>
+})}
+</Grid><Grid item xs={3}>
+            <FaMale style={{fontSize:'100px',color:'#0000FF'}}/>
+             { p_b.map((d)=>{
+            return  <Typography style={{fontSize:'35px',textAlign:'center'}}>{Math.floor(parseFloat(d.value))}</Typography>
+})}
           </Grid>
           <Grid item xs={6}>
-            <Progress data={p_b[0]} style={{marginBottom: 25}}/>
-          </Grid>
+          <Paper style={{height:'125px'}}>
+           <GraphBar value={pp_data}/>
+            
+         </Paper>
+         </Grid>
+         <Grid cointainer>
           <Grid item xs={6}>
-            <Progress data={p_g[0]} style={{marginBottom: 25}}/>
-          </Grid>
-          <Grid item xs={6}>
-          <Paper style={{height:'inherit'}}>
-            <Typography style={{fontSize:'10px',textAlign:'center',marginBottom:'-10px'}}>Best Academic Performance</Typography>
-            <Progress data={t_s_a[0]} style={{marginBottom: 25}}/>
-          </Paper>
-          </Grid>
-            <Grid item xs={6}>
-            <Paper style={{height:'inherit'}}>
-            <Typography style={{fontSize:'10px',textAlign:'center',marginBottom:'-10px'}}>Best Sports Performance</Typography>
-            <Progress data={t_s_s[0]} style={{marginBottom: 25}}/>
-          </Paper>         
-             </Grid>
-            <Grid item xs={6}>
-              <Progress data={t_s_e[0]} style={{ marginBottom: 25 }} />
-            </Grid>
-            <Grid item xs={6}>
-              <Progress data={pp_data[2]} style={{ marginBottom: 25 }} />
-            </Grid>
-            <Grid item xs={6}>
-              <Progress data={pp_data[3]} style={{ marginBottom: 25 }} />
-            </Grid>
+          <Paper style={{height:'125px'}}>
+           <GraphBar value={pp_data}/>
+            
+         </Paper></Grid>
+         </Grid>
         </Grid>
       </Grid>
     </Grid>
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>States List</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>States List</Typography>
 
              <div className={classes.root2}>
                       <Table>
@@ -120,9 +127,10 @@ render() {
           <Grid item xs={7}>
           <Paper style={{height:'350px'}}>
 
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>All States Extra Curricular Performances</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>All States Extra Curricular Performances</Typography>
 
-          <GraphBar value={ex_curr}/>
+           
+          
             </Paper>
           
           </Grid>
@@ -141,7 +149,7 @@ render() {
           </Grid>
           <Grid item xs={5}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>All States Academic Performances</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>All States Academic Performances</Typography>
 
           <GraphBar value={pp_data}/>
             </Paper>
@@ -149,7 +157,7 @@ render() {
           </Grid>
           <Grid item xs={4}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>No Of Students Per State</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>No Of Students Per State</Typography>
 
             <GraphLine value={ss_no}/>
             </Paper>
@@ -159,7 +167,7 @@ render() {
               <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
                         <Grid item xs={4}>
                       <Paper style={{height:'300px',textAlign:'center'}}>
-                      <Typography style={{fontSize:'25px'}}>Top Academic Performances</Typography>
+                      <Typography style={{paddingTop:'10px',fontSize:'20px'}}>Top Academic Performances</Typography>
                       <div className={classes.root1}>
                       <Table>
                       <TableBody>
@@ -174,14 +182,14 @@ render() {
                         </Grid>
                         <Grid item xs={4}>
                         <Paper style={{height:'300px'}}>
-                          <Typography style={{fontSize:'25px',textAlign:'center'}}>All States Sports Performances</Typography>
+                          <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>All States Sports Performances</Typography>
                             <br/>
                             <GraphLine value={sport_d}/>
                           </Paper>
                         </Grid>
                         <Grid item xs={4}>
                         <Paper style={{height:'300px'}}>
-                      <Typography style={{fontSize:'25px',textAlign:'center'}}>Top Extra Curricular Performances</Typography>
+                      <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Top Extra Curricular Performances</Typography>
                         <div className={classes.root1}>
                       <Table>
                       <TableBody>

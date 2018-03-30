@@ -82,8 +82,8 @@ function ind(getData){
 	pb_Pass.push({'name':'Boys%','value':pb_Get});
 	pg_Pass.push({'name':'Girls%','value':pg_Get});
 	tsa_Pass.push({'name': tsa_Get.school,'value':tsa_Get.avg})
-	tss_Pass.push({'name': tss_Get.school,'value':tss_Get.avg})
-	tse_Pass.push({'name': tse_Get.school,'value':tse_Get.avg})
+	tss_Pass.push({'name': tss_Get.school,'value':tss_Get.avg*10})
+	tse_Pass.push({'name': tse_Get.school,'value':tse_Get.avg*10})
 	const allDataPass = {
 		'pp_data': pp_Pass,
 		'ss_no' : noss_Pass,

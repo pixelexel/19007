@@ -17,7 +17,7 @@ class GraphLine extends Component{
     const { classes, theme } = this.props
     return (
       <div className={classes.root}>
-      <ResponsiveContainer width="100%" aspect={3.0/1.5}>
+      <ResponsiveContainer width="100%" aspect={3.0/1.6}>
         <LineChart data={this.props.value}
             margin={{top: 20, right: 30, left: -10, bottom: 5}}>
        <XAxis dataKey="name"/>

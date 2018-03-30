@@ -11,12 +11,13 @@ import {
 import BookIcon from "material-ui-icons/Book";
 import { withStyles } from "material-ui/styles";
 
+
 const niceColor = "#898C92";
 const styles = theme => ({
   icon: { fontSize: "2.2rem", color: niceColor },
   text: { fontSize: "0.9rem", color: niceColor },
   bigNumber: {
-    textAlign: "center",
+    textAlign: "right",
     fontSize: "1.2rem",
     color: theme.palette.primary.main,
     // textOoverflow: "ellipsis",
@@ -26,6 +27,7 @@ const styles = theme => ({
     // overflow: "hidden"
   }
 });
+
 
 class Progress extends Component {
   render() {
@@ -37,18 +39,18 @@ class Progress extends Component {
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.text}>
-                {Math.floor(parseFloat(data["value"]))}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={6} style={{ textAlign: "right", height: "75px" }}>
-              <Typography title={data["name"].toUpperCase()} className={classes.bigNumber}>
                 {data["name"].toUpperCase().length > 20 ? data["name"]
                       .toUpperCase()
                       .substring(
                         0,
                         20 - 3
                       ) + "..." : data["name"].toUpperCase()}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={6} style={{ textAlign: "right", height: "75px" }}>
+              <Typography title={data["name"].toUpperCase()} className={classes.bigNumber}>
+                {Math.floor(parseFloat(data["value"]))}%
               </Typography>
             </Grid>
           </Grid>

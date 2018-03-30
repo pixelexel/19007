@@ -65,7 +65,7 @@ render() {
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>School Academic Performances</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>School Academic Performances</Typography>
  <div className={classes.root2}>
                       <Table>
                       <TableBody>
@@ -79,7 +79,7 @@ render() {
           </Grid>
           <Grid item xs={7}>
           <Paper style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>School Sports Performances</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>School Sports Performances</Typography>
 
           <GraphBar value={p_sport}/>
             </Paper>
@@ -100,7 +100,7 @@ render() {
           </Grid>
           <Grid item xs={5}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>School Extra Curricular Performances</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>School Extra Curricular Performances</Typography>
 
           <GraphBar value={top_extra_curr}/>
             </Paper>
@@ -108,7 +108,7 @@ render() {
           </Grid>
           <Grid item xs={4}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>Boys Academic Performances</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Boys Academic Performances</Typography>
 
             <GraphLine value={b_marks}/>
             </Paper>
@@ -118,7 +118,7 @@ render() {
               <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
                         <Grid item xs={4}>
                       <Paper style={{height:'300px',textAlign:'center'}}>
-                      <Typography style={{fontSize:'25px'}}>Top Academic Performances</Typography>
+                      <Typography style={{paddingTop:'10px',fontSize:'20px'}}>Top Academic Performances</Typography>
                       <div className={classes.root1}>
                       <Table>
                       <TableBody>
@@ -133,14 +133,14 @@ render() {
                         </Grid>
                         <Grid item xs={4}>
                         <Paper style={{height:'300px'}}>
-                          <Typography style={{fontSize:'25px',textAlign:'center'}}>Girls Academic Performances</Typography>
+                          <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Girls Academic Performances</Typography>
                             <br/>
                             <GraphLine value={g_marks}/>
                           </Paper>
                         </Grid>
                         <Grid item xs={4}>
                         <Paper style={{height:'300px'}}>
-                      <Typography style={{fontSize:'25px',textAlign:'center'}}>Top Sports Performances</Typography>
+                      <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Top Sports Performances</Typography>
                         <div className={classes.root1}>
                       <Table>
                       <TableBody>

@@ -70,8 +70,8 @@ function ind(getData){
 	pb_Pass.push({'name':'Boys%','value':pb_Get});
 	pg_Pass.push({'name':'Girls%','value':pg_Get});
 	avgmarks_Pass.push({'name':'Average Academic Performance','value':avgmarks_Get});
-	avgsport_Pass.push({'name':'Average Sport Performance','value':avgsport_Get});
-	avgcurr_Pass.push({'name':'Average Extra Curricular Performance','value':avgcurr_Get});
+	avgsport_Pass.push({'name':'Average Sport Performance','value':avgsport_Get*10});
+	avgcurr_Pass.push({'name':'Average Extra Curricular Performance','value':avgcurr_Get*10});
 
 	const allDataPass = {
 		'p_marks' : pmarks_Get,
