@@ -24,7 +24,7 @@ class ChatbotMessage extends Component{
     render(){
         const { width, content, type, contentType, classes, theme } = this.props
         let rend = null
-        const backgroundColor = type == 'received' ? theme.palette.secondary.light : theme.palette.primary.main
+        const backgroundColor = type == 'received' ? theme.palette.background.paper : theme.palette.primary.main
         const color = type == 'received' ? '#ffffff' : '#000'
         
         if (content == null || (content.length && content.length == 0)) return null
