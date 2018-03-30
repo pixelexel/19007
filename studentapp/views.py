@@ -820,7 +820,7 @@ def getStateData(request,state_name):
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
 		qs = Student.objects.filter(state=state_name)
-		dist_names = [i.district for i in qs] 
+		dist_names = list({i.district for i in qs}) 
 		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'districts':dist_names}
 	return JsonResponse(ret)
 
@@ -879,7 +879,7 @@ def getDistrictData(request,district_name):
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
 		qs = Student.objects.filter(district=district_name)
-		school_names = [i.school for i in qs] 
+		school_names = list({i.school for i in qs}) 
 		ret = {'s_n':s_n,'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'schools':school_names}
 	return JsonResponse(ret)
 
@@ -937,7 +937,7 @@ def getCountryData(request):
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'state':i.state})
 		qs = Student.objects.all()
-		state_names = [i.state for i in qs] 
+		state_names = list({i.state for i in qs}) 
 		ret = {'pp_data':pp_data,'ex_curr':ex_curr,'ss_no':state_ct,'sport_d':sport_d,'top_marks':top_marks,'top_sport':top_sport,'top_extra_curr':top_extra_curr,'t_s_a':t_s_a,'t_s_s':t_s_s,'t_s_e':t_s_e,'p_c':p_c,'p_b':p_b,'p_g':p_g,'states':state_names}
 	return JsonResponse(ret)
 
@@ -963,9 +963,10 @@ def getSchoolData(request,school_name):
 		for i in qs:
 			top_sport.append({'name':i.name,'value':i.sport})
 		s_n = school_name
-		p_c = len(Student.objects.filter(school=school_name,marks__gte=35))*100.0/(len(qs))
-		p_b = len(Student.objects.filter(school=school_name,gender="m"))*100.0/(len(qs))
-		p_g = len(Student.objects.filter(school=school_name,gender="f"))*100.0/(len(qs))
+		qs = Student.objects.filter(school=school_name)
+		p_c = (len(Student.objects.filter(school=school_name,marks__gte=35))*100.0)/(len(qs))
+		p_b = (len(Student.objects.filter(school=school_name,gender="m"))*100.0)/(len(qs))
+		p_g = (len(Student.objects.filter(school=school_name,gender="f"))*100.0)/(len(qs))
 		avg_marks = 0.0
 		avg_sport = 0.0
 		avg_extra_curr =0.0
@@ -985,7 +986,12 @@ def getSchoolData(request,school_name):
 		for i in qs:
 			g_marks.append({'name':i.name,'value':i.marks})
 		qs = Student.objects.filter(school=school_name)
-		student_names = [{'name':i.name,'value':i.aadhar_id} for i in qs] 
+		st_st = set()
+		student_names = [] 
+		for i in qs:
+			if st_st.__contains__(i.aadhar_id) is False:
+				student_names.append({'name':i.name,'value':i.aadhar_id})
+				st_st.add(i.aadhar_id)
 		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks,'students':student_names}
 	return JsonResponse(ret)
 

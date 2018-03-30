@@ -21,6 +21,8 @@ import { addGraph, getAllGraphs, removeGraph } from '../../actions/graph'
 import { addList, getAllLists, removeList } from '../../actions/list'
 import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
 import IndiaState from '../../test_map/indiaState'
+import { changeScreen, screens } from '../../actions/root'
+
 
 const styles = theme => ({
   root: {
@@ -34,17 +36,30 @@ const styles = theme => ({
     overflow: 'auto',
     paddingBottom: 15,
   },
+  root2: {
+    height: '305px',
+    backgroundColor: theme.palette.secondary.main,
+    margin: '0 auto',
+    overflow: 'auto',
+    paddingBottom: 15,
+  },
+
  
 });
+const mapStateToProps = (state) => ({
+  screen: state.root.screen,
+  id: state.root.id,
+})
 
 class CountryGrid extends Component {
 constructor(props){
   super(props)
 }
 
+
 render() {
   const { classes,theme } = this.props
-  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr,t_s_a,t_s_s,t_s_e,p_c,p_b,p_g} = this.props.country
+  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr,t_s_a,t_s_s,t_s_e,p_c,p_b,p_g,states} = this.props.country
   return (
     <div className={classes.root}>
      <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
@@ -89,13 +104,22 @@ render() {
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>All States Academic Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>States List</Typography>
 
-             <GraphLine value={pp_data}/>
+             <div className={classes.root2}>
+                      <Table>
+                      <TableBody>
+                        { states.map((d) => {
+                       return <TableRow>
+                          <TableCell onClick={() => {this.props.dispatch(changeScreen(screens.STATE, d))}}>{d}</TableCell>
+                      </TableRow>
+             })
+             }</TableBody></Table></div>
           </Paper>
           </Grid>
           <Grid item xs={7}>
           <Paper style={{height:'350px'}}>
+
             <Typography style={{fontSize:'25px',textAlign:'center'}}>All States Extra Curricular Performances</Typography>
 
           <GraphBar value={ex_curr}/>

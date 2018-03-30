@@ -20,6 +20,8 @@ import { ListItem, ListItemText, ListSubheader } from 'material-ui/List'
 import { addGraph, getAllGraphs, removeGraph } from '../../actions/graph'
 import { addList, getAllLists, removeList } from '../../actions/list'
 import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
+import { changeScreen, screens } from '../../actions/root'
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -34,12 +36,15 @@ const styles = theme => ({
     paddingBottom: 15,
   },
 });
-
+const mapStateToProps = (state) => ({
+  screen: state.root.screen,
+  id: state.root.id,
+})  
 class SchoolGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const {p_marks,p_sport,top_extra_curr,b_marks,g_marks,avg_marks,avg_sport,avg_extra_curr,p_c,p_b,p_g} = this.props.school
+  const {p_marks,p_sport,top_extra_curr,b_marks,g_marks,avg_marks,avg_sport,avg_extra_curr,p_c,p_b,p_g,students} = this.props.school
   return (
     <div className={classes.root}>
       <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
@@ -61,8 +66,15 @@ render() {
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>
             <Typography style={{fontSize:'25px',textAlign:'center'}}>School Academic Performances</Typography>
-
-             <GraphLine value={p_marks}/>
+ <div className={classes.root2}>
+                      <Table>
+                      <TableBody>
+                        { students.map((d) => {
+                       return <TableRow>
+                          <TableCell onClick={() => {this.props.dispatch(changeScreen(screens.STUDENT, d.value))}}>{d.name}</TableCell>
+                      </TableRow>
+             })
+             }</TableBody></Table></div>
           </Paper>
           </Grid>
           <Grid item xs={7}>
