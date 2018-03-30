@@ -68,7 +68,7 @@ export const setRootFilter = (start_date, end_date) => {
 				}))
 				break
 			case screens.STATE:
-				dispatch(getStateData({
+				dispatch(getStateData(state.root.id, {
 					'filters': {
 						'start_date': start_date,
 						'end_date': end_date
@@ -76,7 +76,7 @@ export const setRootFilter = (start_date, end_date) => {
 				}))
 				break
 			case screens.DISTRICT:
-				dispatch(getDistrictData({
+				dispatch(getDistrictData(state.root.id, {
 					'filters': {
 						'start_date': start_date,
 						'end_date': end_date
@@ -84,7 +84,7 @@ export const setRootFilter = (start_date, end_date) => {
 				}))
 				break
 			case screens.SCHOOL:
-				dispatch(getSchoolData({
+				dispatch(getSchoolData(state.root.id, {
 					'filters': {
 						'start_date': start_date,
 						'end_date': end_date

@@ -16,7 +16,7 @@ const receiveStateData = (error, data) => ({
 export const getStateData = (id, data) => {
 	return (dispatch) => {
 		dispatch(requestStateData())
-		const url = data.filters.start_date && data.filters.end_date ? `get_state_data/${data.filters.start_date}/${data.filters.end_date}` : `get_state_data`
+		const url = data.filters.start_date && data.filters.end_date ? `get_state_data/${id.trim()}?start=${data.filters.start_date}&end=${data.filters.end_date}` : `get_state_data/${id.trim()}`
 
 		return fetch(BASE_API_URL + url,{
 			credentials:"same-origin"

@@ -16,7 +16,7 @@ const receiveDistrictData = (error, data) => ({
 export const getDistrictData = (id, data) => {
 	return (dispatch) => {
 		dispatch(requestDistrictData())
-		const url = data.filters.start_date && data.filters.end_date ? `get_district_data/${data.filters.start_date}/${data.filters.end_date}` : `get_district_data`
+		const url = data.filters.start_date && data.filters.end_date ? `get_district_data/${id.trim()}?start=${data.filters.start_date}&end=${data.filters.end_date}` : `get_district_data/${id.trim()}`
 
 		return fetch(BASE_API_URL + url,{
 			credentials:"same-origin"

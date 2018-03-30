@@ -31,6 +31,12 @@ class DateFilter extends Component{
         this.props.onChange(this.state)
     }
 
+    handleKeyPress = (e) => {
+        if(e.key == 'Enter'){
+            this.onBlur(e)
+        }
+    }
+
     render(){
         if(!this.props.open) return null
         // const width = this.props.open ? 'auto' : 0
@@ -43,6 +49,7 @@ class DateFilter extends Component{
                         type="number" 
                         onBlur={this.onBlur} 
                         onChange={this.onChange} 
+                        onKeyPress={this.handleKeyPress}
                         name="start" 
                         value={parseFloat(this.state.start)}/>
                 </Grid>
@@ -50,6 +57,7 @@ class DateFilter extends Component{
                     <TextField 
                         onBlur={this.onBlur} 
                         onChange={this.onChange}
+                        onKeyPress={this.handleKeyPress}
                         type="number" 
                         name="end" 
                         value={parseFloat(this.state.end)} />
