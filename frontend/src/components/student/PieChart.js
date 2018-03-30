@@ -20,10 +20,10 @@ class PieChartGraph extends Component{
 	render () {
     const { classes, theme } = this.props
   	return (
-      <div>
-      <ResponsiveContainer width="100%" aspect={3.0/1.1}>
-    	<PieChart >
-			<Pie isAnimationActive={false} data={data01} cx={0} cy={0} outerRadius={60} fill={theme.palette.primary.main} label/>
+      <div height="100%">
+      <ResponsiveContainer width="100%" height="1000%">
+		<PieChart margin={{ top: 25, right: 25, left: 20, bottom: 25 }}>
+			<Pie isAnimationActive={false} data={data01} outerRadius={60} fill={theme.palette.primary.main} label/>
         <Tooltip/>
        </PieChart>
       </ResponsiveContainer>

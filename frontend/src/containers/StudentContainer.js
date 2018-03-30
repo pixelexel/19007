@@ -115,7 +115,7 @@ class StudentContainer extends Component{
 					</Grid> 
 					<Grid item xs={3}>
 						<Card style={{ height: 'calc(100%)', width:'100%' }}>
-							<PieChartGraph style={{ height: 'calc(100%)', width:'100%' }}/>
+							<PieChartGraph />
 						</Card>
 					</Grid>
 				</Grid>
