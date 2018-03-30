@@ -40,7 +40,7 @@ class Root extends Component{
 	render(){
 		const { screen, id } = this.props 
 		let screenComponent = null
-
+		console.log('ROOT', screen, id)
 		switch(screen){
 			case screens.DASH:
 				screenComponent = <HomeScreenContainer screen={screen} id={id}/>

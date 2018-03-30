@@ -171,10 +171,22 @@ def getGraph(request):
 
 		dt['data'] = data
 		dt['data_nf'] = data_nf
+		is_new_dash = False
+
+		try:
+			s = int(dt['dash_id'])
+			dash_id = s
+			
+		except:
+			g = Graphs.objects.all()
+			last = max(map(lambda x: x.id, g))
+			dash_id = last + 1
+			is_new_dash = True
 
 		if dt['id'] is not None:
 			gd = Graphs.objects.get(id=dt['id'])
 			gd.gD = json.dumps(dt)
+			gd.dash_id = dash_id
 			gd.save()	
 		
 		else :
@@ -182,12 +194,15 @@ def getGraph(request):
 			gd.save()
 			dt['id'] = gd.id
 			gd.gD = json.dumps(dt)
+			gd.dash_id = dash_id
 			gd.save()
 		ret = dt
+		ret['is_new_dash'] = is_new_dash
+		ret['dash_id'] = dash_id
 
 	return JsonResponse(ret)
 
-def get_list_data(dt, save=True, limit=True):
+def get_list_data(dt, id=None, save=True, limit=True):
 	x_axis = dt['x']
 	print('x_axis', x_axis)
 	filters_all = dt['filters']
@@ -276,12 +291,23 @@ def get_list_data(dt, save=True, limit=True):
 		return dt
 	
 	df = pd.DataFrame(pddata)
+	is_new_dash = False
+	try:
+		s = int(id)
+		dash_id = s
+
+	except:
+		g = Lists.objects.all()
+		last = max(map(lambda x: x.id, g))
+		dash_id = last + 1
+		is_new_dash = True
 
 	if dt['id'] is not None:
 		gd = Lists.objects.get(id=dt['id'])
 		df.to_csv(os.path.join(CSV_STORAGE, str(dt['id']) + '.csv'), index=False)
 		dt['csv_path'] = 'static/csv/' + str(dt['id']) + '.csv'
 		gd.lD = json.dumps(dt)	
+		gd.dash_id = dash_id
 		gd.save()
 
 	else:
@@ -291,8 +317,11 @@ def get_list_data(dt, save=True, limit=True):
 		df.to_csv(os.path.join(CSV_STORAGE, str(dt['id']) + '.csv'), index=False)
 		dt['csv_path'] = 'static/csv/' + str(dt['id']) + '.csv'
 		gd.lD = json.dumps(dt)
+		gd.dash_id = dash_id
 		gd.save()
 
+	dt['is_new_dash'] = is_new_dash
+	dt['dash_id'] = dash_id
 	return dt
 	
 @csrf_exempt
@@ -300,28 +329,40 @@ def getList(request):
 	ret = {} 
 	if request.method == 'POST':
 		dt = json.loads(request.body.decode('ascii'))
-		ret = get_list_data(dt)
+		ret = get_list_data(dt, dt['dash_id'])
 
 	print(ret) 
 	return JsonResponse(ret)
 
 @csrf_exempt
-def allGraphs(request):
-    qs = Graphs.objects.all()
-    data = []
-    for i in qs:
-        data.append( json.loads(i.gD) )
-    return JsonResponse( {
+def allGraphs(request, id):
+	try:
+		print('wooooo', id)
+		ids = int(id)
+		qs = Graphs.objects.filter(dash_id=ids)
+		data = []
+		for i in qs:
+			data.append( json.loads(i.gD) )
+	except:
+		print('ohh ', id)
+		data = []
+		
+	return JsonResponse( {
         'data':data
     })
 
 @csrf_exempt
-def allLists(request):
-    qs = Lists.objects.all()
-    data = []
-    for i in qs:
-        data.append( json.loads(i.lD) )
-    return JsonResponse( {
+def allLists(request, id):
+	try:
+		ids = int(id)
+		qs = Lists.objects.filter(dash_id=ids)
+		data = []
+		for i in qs:
+			data.append( json.loads(i.lD) )
+	except:
+		data = []
+
+	return JsonResponse( {
         'data':data
     })
 
@@ -562,7 +603,7 @@ def get_student_list(request):
 		ret = get_list_data({
 				'x': {'state': True, 'school': True, 'district': True},
 				'filters': filters,
-			}, False, False)
+			}, None, False, False)
 
 		pprint(ret)
 		return JsonResponse({
@@ -640,7 +681,7 @@ def chatbot(request):
 			payload = get_list_data({
 				'x': x_ans,
 				'filters': sendfilters,
-			}, False, False)
+			}, None, False, False)
 
 			datalen = len(payload['data'])
 			payload['data'] = payload['data'][::-1][:30]
@@ -904,6 +945,27 @@ def getSchoolData(request,school_name):
 		ret = {'s_n':s_n,'p_marks':top_marks,'p_sport':top_sport,'top_extra_curr':top_extra_curr,'p_c':p_c,'p_b':p_b,'p_g':p_g,'avg_marks':avg_marks,'avg_sport':avg_sport,'avg_extra_curr':avg_extra_curr,'b_marks':b_marks,'g_marks':g_marks}
 		print(ret)
 	return JsonResponse(ret)
+
+def get_drawer_data(request):
+	graphs = Graphs.objects.all()
+	dashboard_ids = set(map(lambda x: x.dash_id,  graphs ))
+	dashboard_names = set(map(lambda x: x.dash_name, graphs))
+	dashboards = [{'id': x[0], 'name': x[1]} for x in zip(dashboard_ids, dashboard_names)]
+	s = Student.objects.all()[0]
+	custom_filters = list()
+
+	for x in range(1, 6):
+		if getattr(s, 'filter{}_active'.format(x)):
+			custom_filters.append({
+				'name': getattr(s, 'filter{}_name'.format(x)),
+				'id': x,
+			})
+	
+	return JsonResponse({
+		'dashboards': dashboards,
+		'custom_filters': custom_filters,
+	})
+
 @csrf_exempt
 def filter_data(request):
 	if request.method == 'POST':
