@@ -19,7 +19,9 @@ import Progress from '../Progress'
 import { ListItem, ListItemText, ListSubheader } from 'material-ui/List'
 import { addGraph, getAllGraphs, removeGraph } from '../../actions/graph'
 import { addList, getAllLists, removeList } from '../../actions/list'
+import MahaState from '../../test_map/MahaState'
 import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -44,20 +46,26 @@ render() {
   return (
     <div className={classes.root}>
      <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
-
-          <Grid item xs={3}>
-            <Progress data={p_b[0]} style={{marginBottom: 25}}/>
-            </Grid>
-          <Grid item xs={3}>
-            <Progress data={p_g[0]} style={{marginBottom: 25}}/>
-            </Grid>
-            <Grid item xs={3}>
-              <Progress data={t_s_a[0]} style={{marginBottom: 25}}/>
+      <Grid item xs={6}>
+        <MahaState id={this.props.id} dispatch={this.props.dispatch}/>
+      </Grid>
+      <Grid item xs={6}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Progress data={p_b[0]} style={{marginBottom: 25}}/>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={6}>
+                <Progress data={p_g[0]} style={{marginBottom: 25}}/>
+              </Grid>
+             <Grid item xs={6}>
+                <Progress data={t_s_a[0]} style={{marginBottom: 25}}/>
+              </Grid>
+              <Grid item xs={6}>
                 <Progress data={p_c[0]} style={{marginBottom: 25}}/>
-                </Grid>
-                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>

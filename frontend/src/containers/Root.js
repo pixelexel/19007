@@ -15,6 +15,8 @@ import SchoolContainer from './SchoolContainer'
 import Chatbot from '../containers/Chatbot'
 import AddFilterContainer from '../containers/AddFilterContainer'
 import '../styles/App.scss'
+import { getStateData } from '../actions/state'
+
 
 const mapStateToProps = (state) => ({
 	screen: state.root.screen,
@@ -55,6 +57,7 @@ class Root extends Component{
 				break
 
 			case screens.STATE:
+				this.props.dispatch(getStateData(id))
 				screenComponent = <StateContainer id={id}/>
 				break
 
