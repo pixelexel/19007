@@ -5,6 +5,7 @@ import { withStyles } from 'material-ui/styles'
 
 const niceColor = '#898C92'
 const styles = theme => ({
+    root:{maxHeight:'50px'},
     icon: { fontSize: '2.2rem', color: niceColor },
     text: { fontSize: '0.9rem', color: niceColor },
     bigNumber: { textAlign:'center',  fontSize: '1.2rem', color: theme.palette.primary.main },
@@ -18,7 +19,7 @@ class Progress extends Component{
         return (
         <Card style={this.props.style}>
             <CardContent>
-                <Grid container>
+                <Grid container className={classes.root}>
                     <Grid item xs={6}>
                         <Typography className={classes.text} >
                             {Math.floor(parseFloat(data['value']))}
