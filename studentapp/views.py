@@ -151,10 +151,10 @@ def getGraph(request):
 		# 	print(ts)
 		# 	qs = qs.intersection(ts)
 		# print(len(qs))
-		# if not x_filter_present:
-		# 	qss = Student.objects.all()
-		# else:
-		# 	qss = Student.objects.filter(**x_filter)
+		if not x_filter_present:
+			qss = Student.objects.all()
+		else:
+			qss = Student.objects.filter(**x_filter)
 
 		data = {}
 		tdata = {}  
