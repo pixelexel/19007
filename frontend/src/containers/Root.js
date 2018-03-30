@@ -20,6 +20,7 @@ const mapStateToProps = (state) => ({
 	screen: state.root.screen,
 	drawer: state.root.drawer,
 	id: state.root.id,
+	name: state.root.name
 })
 
 class Root extends Component{
@@ -40,10 +41,10 @@ class Root extends Component{
 	render(){
 		const { screen, id } = this.props 
 		let screenComponent = null
-
+		console.log('ROOT', screen, id)
 		switch(screen){
 			case screens.DASH:
-				screenComponent = <HomeScreenContainer screen={screen} id={id}/>
+				screenComponent = <HomeScreenContainer screen={screen} id={id} name={this.props.name}/>
 				break
 
 			case screens.SCHOOL:

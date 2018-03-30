@@ -21,13 +21,8 @@ import { addGraph, getAllGraphs, removeGraph } from '../../actions/graph'
 import { addList, getAllLists, removeList } from '../../actions/list'
 import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
 import IndiaState from '../../test_map/indiaState'
-import { changeScreen, screens } from '../../actions/root'
-import FaFemale from 'react-icons/lib/fa/female'
-import FaMale from 'react-icons/lib/fa/male'
-
-
-
-
+import * as FontAwesome from "react-icons/lib/fa";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const styles = theme => ({
   root: {
@@ -41,170 +36,166 @@ const styles = theme => ({
     overflow: 'auto',
     paddingBottom: 15,
   },
-  root2: {
-    height: '305px',
-    backgroundColor: theme.palette.secondary.main,
-    margin: '0 auto',
-    overflow: 'auto',
-    paddingBottom: 15,
-  },
-    root3: {
-    height: '100%',
-    backgroundColor: theme.palette.secondary.main,
-    margin: '0 auto',
-    overflow: 'auto',
-    paddingBottom: 15,
-  },
-
  
 });
-const mapStateToProps = (state) => ({
-  screen: state.root.screen,
-  id: state.root.id,
-})
 
 class CountryGrid extends Component {
+
 constructor(props){
   super(props)
 }
 
-
 render() {
   const { classes,theme } = this.props
-  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr,t_s_a,t_s_s,t_s_e,p_c,p_b,p_g,states} = this.props.country
-  return (
-    <div className={classes.root}>
-     <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
-      <Grid item xs={6}>
-        <IndiaState dispatch={this.props.dispatch}/>
-      </Grid>
-      <Grid item xs={6}>
-        <Grid container>
-        
-          <Grid item xs={3}>
-            <FaFemale style={{fontSize:'100px',color:'#FF69B4'}}/>
-              { p_g.map((d)=>{
-            return  <Typography style={{ fontSize:'35px',textAlign:'center'}}>{Math.floor(parseFloat(d.value))}</Typography>
-})}
-</Grid><Grid item xs={3}>
-            <FaMale style={{fontSize:'100px',color:'#0000FF'}}/>
-             { p_b.map((d)=>{
-            return  <Typography style={{fontSize:'35px',textAlign:'center'}}>{Math.floor(parseFloat(d.value))}</Typography>
-})}
-          </Grid>
-          <Grid item xs={6}>
-          <Paper style={{height:'125px'}}>
-           <GraphBar value={pp_data}/>
-            
-         </Paper>
-         </Grid>
-         <Grid cointainer>
-          <Grid item xs={6}>
-          <Paper style={{height:'125px'}}>
-           <GraphBar value={pp_data}/>
-            
-         </Paper></Grid>
-         </Grid>
+  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr,t_s_a,t_s_s,t_s_e,p_c,p_b,p_g} = this.props.country
+  return <div className={classes.root}>
+      <Grid container style={{ margin: 25, maxWidth: "calc(100% - 50px)" }}>
+        <Grid item xs={6}>
+          <IndiaState dispatch={this.props.dispatch} />
+        </Grid>
+        <Grid item xs={6}>
+          <div className="row" style={{ width: "100%", height: "100px" }}>
+            <div className="col-md-6" style={{ height: "250px" }}>
+              <div className="row" style={{ height: "100%", zIndex: 9999 }}>
+                <div className="col-md-6" style={{ textAlign: "center", lineHeight: "200px" }}>
+                  <FontAwesome.FaFemale size={50} color="#e54587" style={{ verticalAlign: "middle" }} />
+                  {/* <FontAwesome.FaFemale size={50} color="white" style={{ verticalAlign: "middle" }} /> */}
+                  <span style={{ display: "inline-block", verticalAlign: "middle", margin: "0 auto", color: "white" }}>
+                    {p_g.map(d => {
+                      return <Typography
+                          style={{ fontSize: "20px", textAlign: "center" }}
+                        >
+                          {Math.floor(parseFloat(d.value)) + "%"}
+                        </Typography>;
+                    })}
+                  </span>
+                </div>
+                <div className="col-md-6" style={{ border: "1 solid black", lineHeight: "200px" }}>
+                  <FontAwesome.FaMale size={50} color="#558fd5" style={{ verticalAlign: "middle" }} />
+                  <span style={{ display: "inline-block", verticalAlign: "middle", margin: "0 auto", color: "white" }}>
+                    {p_b.map(d => {
+                      return <Typography
+                          style={{ fontSize: "20px", textAlign: "center" }}
+                        >
+                          {Math.floor(parseFloat(d.value)) + "%"}
+                        </Typography>;
+                    })}
+                  </span>
+                </div>
+              </div>
+              {/* <div style={{ width: p_g.map(d => {
+                    return Math.floor(parseFloat(d.value)) + "%";
+                  }), backgroundColor: "#e54587", top: 0, position: "absolute", height: "200px", zIndex: -1 }} /> */}
+            </div>
+            <div className="col-md-6" style={{}}>
+              {/* <FontAwesome.FaFemale size={50} color="white" /> */}
+            </div>
+          </div>
         </Grid>
       </Grid>
-    </Grid>
-        <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
-          <Grid item xs={5}>
-          <Paper  style={{height:'350px'}}>
-            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>States List</Typography>
+      <Grid container style={{ margin: 25, maxWidth: "calc(100% - 50px)" }}>
+        <Grid item xs={5}>
+          <Paper style={{ height: "350px" }}>
+            <Typography style={{ fontSize: "25px", textAlign: "center" }}>
+              State Academic Performances
+            </Typography>
 
-             <div className={classes.root2}>
-                      <Table>
-                      <TableBody>
-                        { states.map((d) => {
-                       return <TableRow>
-                          <TableCell onClick={() => {this.props.dispatch(changeScreen(screens.STATE, d))}}>{d}</TableCell>
-                      </TableRow>
-             })
-             }</TableBody></Table></div>
+            <GraphLine value={pp_data} />
           </Paper>
-          </Grid>
-          <Grid item xs={7}>
-          <Paper style={{height:'350px'}}>
+        </Grid>
+        <Grid item xs={7}>
+          <Paper style={{ height: "350px" }}>
+            <Typography style={{ fontSize: "25px", textAlign: "center" }}>
+              State Extra Curricular Performances
+            </Typography>
 
-            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>All States Extra Curricular Performances</Typography>
+            <GraphBar value={ex_curr} />
+          </Paper>
+        </Grid>
+      </Grid>
 
-           
-          
-            </Paper>
-          
-          </Grid>
-            </Grid>
+      <Grid container style={{ margin: 25, maxWidth: "calc(100% - 50px)" }}>
+        <Grid item xs={3}>
+          <Progress data={pp_data[1]} style={{ marginBottom: "20px" }} />
 
-<Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
-          <Grid item xs={3}>
-        
-        <Progress data={pp_data[1]} style={{marginBottom:'20px'}}/>
-           
-          <br/>
+          <br />
 
-            
-            <Progress data={pp_data[1]} style={{}}/>
-               
-          </Grid>
-          <Grid item xs={5}>
-          <Paper style={{height:'270px'}}>
-            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>All States Academic Performances</Typography>
+          <Progress data={pp_data[1]} style={{}} />
+        </Grid>
+        <Grid item xs={5}>
+          <Paper style={{ height: "270px" }}>
+            <Typography style={{ fontSize: "25px", textAlign: "center" }}>
+              State Sports Performances
+            </Typography>
 
-          <GraphBar value={pp_data}/>
-            </Paper>
-          
-          </Grid>
-          <Grid item xs={4}>
-          <Paper style={{height:'270px'}}>
-            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>No Of Students Per State</Typography>
+            <GraphBar value={pp_data} />
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper style={{ height: "270px" }}>
+            <Typography style={{ fontSize: "25px", textAlign: "center" }}>
+              State Sports Performances
+            </Typography>
 
-            <GraphLine value={ss_no}/>
-            </Paper>
-          </Grid>
-              </Grid>
+            <GraphLine value={ss_no} />
+          </Paper>
+        </Grid>
+      </Grid>
 
-              <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
-                        <Grid item xs={4}>
-                      <Paper style={{height:'300px',textAlign:'center'}}>
-                      <Typography style={{paddingTop:'10px',fontSize:'20px'}}>Top Academic Performances</Typography>
-                      <div className={classes.root1}>
-                      <Table>
-                      <TableBody>
-                        { top_marks.map((d) => {
-                       return <TableRow>
-                          <TableCell>{d.name}</TableCell>
-                          <TableCell style={{textAlign:'right'}}>{d.marks}</TableCell>
-                      </TableRow>
-             })
-             }</TableBody></Table></div>
-                          </Paper>
-                        </Grid>
-                        <Grid item xs={4}>
-                        <Paper style={{height:'300px'}}>
-                          <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>All States Sports Performances</Typography>
-                            <br/>
-                            <GraphLine value={sport_d}/>
-                          </Paper>
-                        </Grid>
-                        <Grid item xs={4}>
-                        <Paper style={{height:'300px'}}>
-                      <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Top Extra Curricular Performances</Typography>
-                        <div className={classes.root1}>
-                      <Table>
-                      <TableBody>
-                        { top_extra_curr.map((d) => {
-                       return <TableRow>
-                          <TableCell>{d.name}</TableCell>
-                          <TableCell style={{textAlign:'right'}}>{d.extra_curr}</TableCell>
-                      </TableRow>
-             })
-             }</TableBody></Table></div>
-                          </Paper>
-                        </Grid>
-                            </Grid>
-    </div>
-  )
+      <Grid container style={{ margin: 25, maxWidth: "calc(100% - 50px)" }}>
+        <Grid item xs={4}>
+          <Paper style={{ height: "300px", textAlign: "center" }}>
+            <Typography style={{ fontSize: "25px" }}>
+              Top Academic Performances
+            </Typography>
+            <div className={classes.root1}>
+              <Table>
+                <TableBody>
+                  {top_marks.map(d => {
+                    return <TableRow>
+                        <TableCell>{d.name}</TableCell>
+                        <TableCell style={{ textAlign: "right" }}>
+                          {d.marks}
+                        </TableCell>
+                      </TableRow>;
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper style={{ height: "300px" }}>
+            <Typography style={{ fontSize: "25px", textAlign: "center" }}>
+              State Sports Performances
+            </Typography>
+            <br />
+            <GraphLine value={sport_d} />
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper style={{ height: "300px" }}>
+            <Typography style={{ fontSize: "25px", textAlign: "center" }}>
+              Top Sports Performances
+            </Typography>
+            <div className={classes.root1}>
+              <Table>
+                <TableBody>
+                  {ss_no.map(d => {
+                    return <TableRow>
+                        <TableCell>{d.name}</TableCell>
+                        <TableCell style={{ textAlign: "right" }}>
+                          {d.value}
+                        </TableCell>
+                      </TableRow>;
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </Paper>
+        </Grid>
+      </Grid>
+    </div>;
 }
 }
 

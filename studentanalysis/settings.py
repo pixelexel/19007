@@ -27,9 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Application definition
-
+LOGIN_REDIRECT_URL = 'home'
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webpack_loader',
     'studentapp',
-    'django_extensions'
+    'django_extensions',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [

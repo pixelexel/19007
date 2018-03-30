@@ -16,7 +16,9 @@ const receiveStateData = (error, data) => ({
 export const getStateData = (id) => {
 	return (dispatch) => {
 		dispatch(requestStateData())
-		return fetch(BASE_API_URL + 'get_state_data/' + id)
+		return fetch(BASE_API_URL + 'get_state_data/' + id,{
+			credentials:"same-origin"
+		})
 				.then(data => data.json())
 				.then(json => dispatch(receiveStateData(json.error, json)))
 				.catch(err => dispatch(receiveStateData(false)))

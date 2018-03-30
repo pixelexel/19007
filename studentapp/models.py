@@ -1,6 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
+
+#{ Country:Boolean , State:[] , District: [], School: [] }
+class UserAcces(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	acc = models.CharField(max_length=300)
+
+
 class School(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
 	name = models.CharField(max_length=30)
@@ -93,7 +100,11 @@ class Acads(models.Model):
 class Graphs(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
 	gD = models.CharField(max_length=550)
+	dash_id = models.IntegerField(default=1)
+	dash_name = models.CharField(default='Unnamed Dashboard', max_length=1000)
 
 class Lists(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
 	lD = models.CharField(max_length=550)
+	dash_id = models.IntegerField(default=1)
+	dash_name = models.CharField(default='Unnamed Dashboard', max_length=1000)

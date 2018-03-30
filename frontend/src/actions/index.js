@@ -35,7 +35,9 @@ function receiveSearch(error, data){
 export function fetchSearchResults(query){
 	return (dispatch) => {
 		dispatch(requestSearch(query))
-		return fetch(BASE_URL)
+		return fetch(BASE_URL,{
+			credentials:"same-origin"
+		})
 				.then(data => data.json())
 				.then(json => dispatch(receiveSearch(json.error, json.data)))
 	}
