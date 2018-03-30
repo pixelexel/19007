@@ -28,7 +28,7 @@ const styles = theme => ({
   },
    root1: {
     height: '265px',
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: theme.palette.secondary.main,
     margin: '0 auto',
     overflow: 'auto',
     paddingBottom: 15,
@@ -61,14 +61,14 @@ render() {
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Academic Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>All Schools Academic Performances</Typography>
 
              <GraphLine value={pp_data}/>
           </Paper>
           </Grid>
           <Grid item xs={7}>
           <Paper style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Extra Curricular Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>All Schools Extra Curricular Performances</Typography>
 
           <GraphBar value={ex_curr}/>
             </Paper>
@@ -89,7 +89,7 @@ render() {
           </Grid>
           <Grid item xs={5}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>All Schools Academic Performances</Typography>
 
           <GraphBar value={pp_data}/>
             </Paper>
@@ -97,7 +97,7 @@ render() {
           </Grid>
           <Grid item xs={4}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>No Of Students Per School</Typography>
 
             <GraphLine value={ss_no}/>
             </Paper>
@@ -122,21 +122,21 @@ render() {
                         </Grid>
                         <Grid item xs={4}>
                         <Paper style={{height:'300px'}}>
-                          <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+                          <Typography style={{fontSize:'25px',textAlign:'center'}}>All Schools Sports Performances</Typography>
                             <br/>
                             <GraphLine value={sport_d}/>
                           </Paper>
                         </Grid>
                         <Grid item xs={4}>
                         <Paper style={{height:'300px'}}>
-                      <Typography style={{fontSize:'25px',textAlign:'center'}}>Top Sports Performances</Typography>
+                      <Typography style={{fontSize:'25px',textAlign:'center'}}>Top Extra Curricular Performances</Typography>
                         <div className={classes.root1}>
                       <Table>
                       <TableBody>
-                        { ss_no.map((d) => {
+                        { top_extra_curr.map((d) => {
                        return <TableRow>
                           <TableCell>{d.name}</TableCell>
-                          <TableCell style={{textAlign:'right'}}>{d.value}</TableCell>
+                          <TableCell style={{textAlign:'right'}}>{d.extra_curr}</TableCell>
                       </TableRow>
              })
              }</TableBody></Table></div>

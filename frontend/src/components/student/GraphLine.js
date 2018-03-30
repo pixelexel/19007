@@ -26,7 +26,6 @@ class GraphLine extends Component{
        <Tooltip/>
        <Legend />
        <Line type="monotone" dataKey="value" stroke={theme.palette.primary.main} activeDot={{r: 8}}/>
-       <Line type="monotone" dataKey="value1" stroke={theme.palette.primary.light} activeDot={{r: 8}}/>
       </LineChart>
     </ResponsiveContainer>
       </div>

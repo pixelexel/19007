@@ -28,7 +28,7 @@ const styles = theme => ({
   },
    root1: {
     height: '265px',
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: theme.palette.secondary.main,
     margin: '0 auto',
     overflow: 'auto',
     paddingBottom: 15,
@@ -40,7 +40,6 @@ class SchoolGrid extends Component {
 render() {
   const { classes } = this.props
   const {p_marks,p_sport,top_extra_curr,b_marks,g_marks,avg_marks,avg_sport,avg_extra_curr,p_c,p_b,p_g} = this.props.school
-
   return (
     <div className={classes.root}>
       <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
@@ -61,14 +60,14 @@ render() {
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Academic Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>School Academic Performances</Typography>
 
              <GraphLine value={p_marks}/>
           </Paper>
           </Grid>
           <Grid item xs={7}>
           <Paper style={{height:'350px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Extra Curricular Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>School Sports Performances</Typography>
 
           <GraphBar value={p_sport}/>
             </Paper>
@@ -89,7 +88,7 @@ render() {
           </Grid>
           <Grid item xs={5}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>School Extra Curricular Performances</Typography>
 
           <GraphBar value={top_extra_curr}/>
             </Paper>
@@ -97,9 +96,9 @@ render() {
           </Grid>
           <Grid item xs={4}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+            <Typography style={{fontSize:'25px',textAlign:'center'}}>Boys Academic Performances</Typography>
 
-            <GraphLine value={b_marks} value1={g_marks}/>
+            <GraphLine value={b_marks}/>
             </Paper>
           </Grid>
               </Grid>
@@ -114,7 +113,7 @@ render() {
                         { p_marks.map((d) => {
                        return <TableRow>
                           <TableCell>{d.name}</TableCell>
-                          <TableCell style={{textAlign:'right'}}>{d.marks}</TableCell>
+                          <TableCell style={{textAlign:'right'}}>{d.value}</TableCell>
                       </TableRow>
              })
              }</TableBody></Table></div>
@@ -122,9 +121,9 @@ render() {
                         </Grid>
                         <Grid item xs={4}>
                         <Paper style={{height:'300px'}}>
-                          <Typography style={{fontSize:'25px',textAlign:'center'}}>State Sports Performances</Typography>
+                          <Typography style={{fontSize:'25px',textAlign:'center'}}>Girls Academic Performances</Typography>
                             <br/>
-                            <GraphLine value={p_marks}/>
+                            <GraphLine value={g_marks}/>
                           </Paper>
                         </Grid>
                         <Grid item xs={4}>
@@ -136,7 +135,7 @@ render() {
                         { p_sport.map((d) => {
                        return <TableRow>
                           <TableCell>{d.name}</TableCell>
-                          <TableCell style={{textAlign:'right'}}>{d.sport}</TableCell>
+                          <TableCell style={{textAlign:'right'}}>{d.value}</TableCell>
                       </TableRow>
              })
              }</TableBody></Table></div>
