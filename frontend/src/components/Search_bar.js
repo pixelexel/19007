@@ -21,7 +21,7 @@ const mapStateToProps = (state) => {
 const styles = theme => ({
 	root: {
 		position: 'absolute',
-		top: 48,
+		top: 65,
 		right: 50,
 		maxHeight: 250,
 		minWidth: 330,
@@ -117,7 +117,9 @@ class Search_bar extends Component{
 					value={this.state.searchText} 
 					onChange={this.onTextChange}
 					placeholder={"Search"}
+					label="Search"
 					className={classes.textField}/>
+				{ allValues.length > 0 &&
 				<div className={classes.root}>
 					<List >
 						{ allValues.map((d, index) => (
@@ -128,7 +130,7 @@ class Search_bar extends Component{
 							</ListItem> 
 						))}
 					</List>
-				</div>
+					</div> }
 		    </div>
 		)
 	}

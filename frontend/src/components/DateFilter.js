@@ -52,6 +52,7 @@ class DateFilter extends Component{
                         onChange={this.onChange} 
                         onKeyPress={this.handleKeyPress}
                         name="start" 
+                        label="Start Date"
                         value={parseFloat(this.state.start)}/>
                 </Grid>
                 <Grid item xs={6}>
@@ -61,6 +62,7 @@ class DateFilter extends Component{
                         onKeyPress={this.handleKeyPress}
                         type="number" 
                         name="end" 
+                        label="End Date"
                         value={parseFloat(this.state.end)} />
                 </Grid>
             </Grid>
