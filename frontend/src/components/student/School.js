@@ -58,7 +58,7 @@ render() {
 
           <Grid item xs={3}>
             <Paper style={{height:'inherit'}}>
-            <Typography style={{paddingBottom:'10px',fontSize:'15px',textAlign:'center'}}>Percentage of Girls And Boys in the School</Typography>
+            <Typography style={{paddingBottom:'10px',fontSize:'15px',textAlign:'center'}}>% of Girls And Boys</Typography>
                   
                    <FontAwesome.FaFemale size={90} color="#e54587" style={{ verticalAlign: "middle" }} />
                   {/* <FontAwesome.FaFemale size={50} color="#e54587" style={{ verticalAlign: "middle" }} /> */}
@@ -89,21 +89,21 @@ render() {
             </Grid>
           <Grid item xs={3}>
             <Paper style={{height:"inherit"}}>
-            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Academic Performing Student</Typography>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Student-Academics</Typography>
 
               <Progress data={p_marks[0]} style={{marginBottom: 10}}/>
            </Paper>
             </Grid>
             <Grid item xs={3}>
              <Paper style={{height:"inherit"}}>
-            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Sports Performing Student</Typography>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Student-Sports</Typography>
 
               <Progress data={p_sport[0]} style={{marginBottom: 10}}/>
            </Paper>
               </Grid>
               <Grid item xs={3}>
                 <Paper style={{height:"inherit"}}>
-            <Typography style={{fontSize:'15px',textAlign:'center'}}>Pass Percentage of School</Typography>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>School-Pass Percentage</Typography>
 
               <Progress data={p_c[0]} style={{marginBottom: 10}}/>
            </Paper>
@@ -112,7 +112,7 @@ render() {
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>
-            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Students List</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Student List</Typography>
  <div className={classes.root2}>
                       <Table>
                       <TableBody>
@@ -133,7 +133,7 @@ render() {
           </Grid>
           <Grid item xs={7}>
           <Paper style={{height:'350px'}}>
-            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>School Sports Performances</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>School Sports Performance</Typography>
 
           <GraphBar value={p_sport}/>
             </Paper>
@@ -145,7 +145,7 @@ render() {
           <Grid item xs={3}>
         
        <Paper style={{height:"inherit"}}>
-            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Extra Curricular Performing Student</Typography>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Student-Extra Curricular</Typography>
 
               <Progress data={top_extra_curr[0]} style={{marginBottom: 10}}/>
            </Paper>
@@ -154,7 +154,7 @@ render() {
 
             
           <Paper style={{height:"inherit"}}>
-            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Academic Performing School</Typography>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Student-Academics</Typography>
 
               <Progress data={p_marks[0]} style={{marginBottom: 10}}/>
            </Paper>
@@ -162,7 +162,7 @@ render() {
           </Grid>
           <Grid item xs={5}>
           <Paper style={{height:'270px'}}>
-            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>School Extra Curricular Performances</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>School Extra Curricular Performance</Typography>
 
           <GraphBar value={top_extra_curr}/>
             </Paper>
@@ -180,7 +180,7 @@ render() {
               <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
                         <Grid item xs={4}>
                       <Paper style={{height:'300px',textAlign:'center'}}>
-                      <Typography style={{paddingTop:'10px',fontSize:'20px'}}>Top Academic Performances</Typography>
+                      <Typography style={{paddingTop:'10px',fontSize:'20px'}}>Academic-Top Performers</Typography>
                       <div className={classes.root1}>
                       <Table>
                       <TableBody>
@@ -202,7 +202,7 @@ render() {
                         </Grid>
                         <Grid item xs={4}>
                         <Paper style={{height:'300px'}}>
-                      <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Top Sports Performances</Typography>
+                      <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}> Sports-Top Performers</Typography>
                         <div className={classes.root1}>
                       <Table>
                       <TableBody>
