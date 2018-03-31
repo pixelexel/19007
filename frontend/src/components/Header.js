@@ -11,6 +11,7 @@ import DateFilter from './DateFilter'
 import { IconButton, Tooltip } from 'material-ui'
 import { withStyles } from 'material-ui/styles'
 import Search_bar from '../components/Search_bar'
+import PowerSettingsNewIcon from 'material-ui-icons/PowerSettingsNew'
 
 const styles = theme => ({
 	root: {
@@ -68,7 +69,7 @@ class Header extends Component{
 					<FilterListIcon onClick={e => this.setState({ filterOpen: !this.state.filterOpen })} />
 				</IconButton>
 				
-					<DateFilter style={{marginRight: 15}} open={this.state.filterOpen} onChange={this.props.changeRootFilter} />
+					<DateFilter style={{marginRight: 15}} open={this.state.filterOpen} onChange={this.props.changeRootFilter} filters={this.props.filters}/>
 			
 			  <div >
 	          	<Search_bar />
@@ -80,6 +81,11 @@ class Header extends Component{
 			  >
 						<ChatBubbleIcon style={{color: theme.palette.secondary.light}}/>
 				  </IconButton>
+				  <a href="/api/logout" target="_self">
+				 <IconButton>
+				 	<PowerSettingsNewIcon/>
+				 </IconButton>
+				 </a>
 	        </Toolbar>
 	      </AppBar>
 		)

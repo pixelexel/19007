@@ -43,8 +43,12 @@ class Root extends Component{
 	}
 	
 	changeRootFilter = (data) => {
+		const { match } = this.props
 		const { start, end} = data
-		this.props.dispatch(setRootFilter(start, end))
+		let screen = match.params.screen || screens.COUNTRY
+		let id = match.params.id
+
+		this.props.dispatch(setRootFilter(start, end, screen, id))
 	}
 
 	render(){
@@ -101,6 +105,7 @@ class Root extends Component{
 						handleChatbot={this.toggleChatbot}
 						changeScreen={changeScreen} 
 						changeRootFilter={this.changeRootFilter}
+						filters={this.props.filters}
 						{...this.props}/>
 				<div className={this.props.drawer.open ? 'root-screen-hide': ''} 
 						onClick={this.closeDrawer}>

@@ -11,6 +11,13 @@ class DateFilter extends Component{
         }
     }
 
+    componentWillMount(){
+        this.setState({
+            start: this.props.filters.start_date,
+            end: this.props.filters.end_date,
+        })
+    }
+
     onChange = (e) => {
         switch(e.target.name){
             case 'start':
@@ -39,7 +46,7 @@ class DateFilter extends Component{
     }
 
     render(){
-        if(!this.props.open) return null
+        // if(!this.props.open) return null
         // const width = this.props.open ? 'auto' : 0
         
         return (

@@ -5,8 +5,8 @@ from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
-    path('login', auth_views.login,{'template_name': 'login_page.html'}, name='login'),
-    path('logout', auth_views.logout, name='logout'),
+    path('login', views.custom_login,{'template_name': 'login_page.html'}, name='login'),
+    path('logout', views.custom_logout, name='logout'),
     path('', views.index, name='index'),
     path('get_form_vals', views.formVal, name='formVal'),
     path('send_graph', views.getGraph, name='getGraph'),

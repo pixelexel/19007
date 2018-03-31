@@ -12,6 +12,7 @@ import pandas as pd
 from .forms import StudentForm
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.forms.models import model_to_dict
+from django.contrib.auth.views import login,logout
 # Create your views here.
 CSV_STORAGE = os.path.join(os.getcwd(), 'studentapp', 'static', 'csv')
  
@@ -22,7 +23,18 @@ def index(req):
 		'data': ['Api root', 'nice']
 	})
 
+def custom_login(request,template_name):
+    if request.user.is_authenticated:
+        return redirect('/?redirect=0')
+    else:
+        return login(request,template_name=template_name)
 
+def custom_logout(request,):
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('/api/login')
+
+    
 def get_formvals():
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}
 	rval = Student._meta.get_fields()
@@ -986,6 +998,7 @@ def getDistrictData(request,district_name):
 @csrf_exempt
 def getCountryData(request):
 	ret = {}
+	print('sdfs')
 	if request.method == 'GET':
 		pp_data = {}
 		ex_curr = {}
@@ -996,6 +1009,7 @@ def getCountryData(request):
 		top_extra_curr = [] 
 		fl = False
 		try:
+			print(request.GET)
 			start = request.GET['start']
 			end = request.GET['end']
 			fl = True
@@ -1072,6 +1086,7 @@ def getSchoolData(request,school_name):
 		top_extra_curr = [] 
 		fl = False
 		try:
+			print(request.GET)
 			start = request.GET['start']
 			end = request.GET['end']
 			fl = True
