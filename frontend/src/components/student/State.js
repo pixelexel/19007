@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+ import React,{Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
@@ -22,6 +22,9 @@ import { addList, getAllLists, removeList } from '../../actions/list'
 import MahaState from '../../test_map/MahaState'
 import {BarChart,XAxis,YAxis,CartesianGrid,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
 import { changeScreen, screens } from '../../actions/root'
+import * as FontAwesome from "react-icons/lib/fa";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {LinearProgress} from "material-ui"
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -42,6 +45,13 @@ const styles = theme => ({
     overflow: 'auto',
     paddingBottom: 15,
   },
+   root3: {
+    height: '250px',
+    backgroundColor: theme.palette.secondary.main,
+    margin: '0 auto',
+    overflow: 'auto',
+    paddingBottom: 15,
+  },
   text:{
     color:theme.palette.primary.main,
   },
@@ -54,14 +64,11 @@ class StateGrid extends Component {
 
 render() {
   const { classes } = this.props
-  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr,t_s_a,t_s_s,t_s_e,p_c,p_b,p_g,districts} = this.props.state
+  const { pp_data,ss_no,ex_curr,sport_d,top_marks,top_sport,top_extra_curr,t_s_a,t_s_s,t_s_e,p_c,p_b,p_g,districts,s_n} = this.props.state
  
   return (
     <div className={classes.root}>
-          { p_c.map((d)=>{
-           return <Typography style={{fontSize:'35px',textAlign:'center'}} >{d.name}</Typography>
-})
-}
+     
      <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
       <Grid item xs={6}>
         <MahaState id={this.props.id} dispatch={this.props.dispatch}/>
@@ -69,17 +76,101 @@ render() {
       <Grid item xs={6}>
             <Grid container>
               <Grid item xs={6}>
-                <Progress data={p_b[0]} style={{marginBottom: 25}}/>
+        <Paper style={{height:'100px'}}>
+                 <Typography style={{paddingTop:'10px',fontSize:'325%',textAlign:'center',color:"#FFC200 "}}>{s_n}</Typography>
+                    
+          </Paper>
+          </Grid>
+           <Grid item xs={6}>
+                <Paper style={{height:'100px'}}>
+                  
+                   <FontAwesome.FaFemale size={90} color="#FFC200 " style={{ verticalAlign: "middle" }} />
+                  {/* <FontAwesome.FaFemale size={50} color="#e54587" style={{ verticalAlign: "middle" }} /> */}
+                  <span style={{ display: "inline-block", verticalAlign: "middle", margin: "0 auto", color: "white" }}>
+                    {p_g.map(d => {
+                      return <Typography
+                          style={{ fontSize: "20px", textAlign: "center" }}
+                        >
+                          {Math.floor(parseFloat(d.value)) + "%"}
+                        </Typography>;
+                    })}
+                  </span>
+                  <FontAwesome.FaMale size={90} color="#558fd5" style={{ verticalAlign: "middle" }} />
+                  <span style={{ display: "inline-block", verticalAlign: "right", margin: "0 auto", color: "white" }}>
+                    {p_b.map(d => {
+                      return <Typography
+                          style={{ fontSize: "20px", textAlign: "right" ,right:'0px'}}
+                        >
+                          {Math.floor(parseFloat(d.value)) + "%"}
+                        </Typography>;
+                    })}
+                  </span>
+                  <br/>
+                    {p_g.map((d)=>{
+                      return <LinearProgress className={classes.barColorPrimary} variant="determinate" value={d.value} style={{backgroundColor:'#558fd5',barColorPrimary:"#FFFFFF",marginTop:'10px'}}/>
+                    })}
+                  </Paper>
+                
+          </Grid>
+          <Grid item xs={6}>
+          <Paper style={{height:"inherit"}}>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Academic Performing District</Typography>
+
+              <Progress data={t_s_a[0]} style={{marginBottom: 10}}/>
+           </Paper>
+            </Grid>
+          <Grid item xs={6}>
+             <Paper style={{height:"inherit"}}>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Sports Performing District</Typography>
+
+              <Progress data={t_s_s[0]} style={{marginBottom: 10}}/>
+           </Paper>
+            
+            </Grid>
+            <Grid item xs={6}>
+             <Paper style={{height:"inherit"}}>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Extra Curricular Performing District</Typography>
+
+              <Progress data={t_s_e[0]} style={{marginBottom: 10}}/>
+           </Paper>
               </Grid>
               <Grid item xs={6}>
-                <Progress data={p_g[0]} style={{marginBottom: 25}}/>
-              </Grid>
-             <Grid item xs={6}>
-                <Progress data={t_s_a[0]} style={{marginBottom: 25}}/>
-              </Grid>
-              <Grid item xs={6}>
-                <Progress data={p_c[0]} style={{marginBottom: 25}}/>
-              </Grid>
+               <Paper style={{height:"inherit"}}>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Pass Percentage Of State</Typography>
+
+              <Progress data={p_c[0]} style={{marginBottom: 10}}/>
+           </Paper>
+                </Grid>
+                <Grid item xs={6}>
+                 <Paper  style={{height:'270px'}}>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Top Extra Curricular Performance</Typography>
+<div className={classes.root3}>
+                      <Table>
+                      <TableBody>
+                        { top_extra_curr.map((d) => {
+                       return <TableRow>
+                          <TableCell>{d.name}</TableCell>
+                          <TableCell style={{textAlign:'right'}}>{d.extra_curr}</TableCell>
+
+                      </TableRow>
+             })
+             }</TableBody></Table></div>
+          </Paper>
+            </Grid>
+            <Grid item xs={6}>
+                 <Paper  style={{height:'270px'}}>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Districts List</Typography>
+<div className={classes.root3}>
+                      <Table>
+                      <TableBody>
+                        { districts.map((d) => {
+                       return <TableRow>
+                          <TableCell onClick={() => {this.props.dispatch(changeScreen(screens.DISTRICT, d))}}>{d}</TableCell>
+                      </TableRow>
+             })
+             }</TableBody></Table></div>
+          </Paper>
+            </Grid>
             </Grid>
           </Grid>
         </Grid>
@@ -110,17 +201,20 @@ render() {
 
 <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={3}>
-        
-        <Progress data={t_s_s[0]} style={{marginBottom:'20px'}}/>
-           
-          <br/>
+        <Paper style={{height:"inherit"}}>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Academic Student</Typography>
 
-            
-            <Progress data={t_s_e[0]} style={{}}/>
+              <Progress data={top_marks[0]} style={{ marginBottom: "20px" }} />
+           </Paper>
+            <Paper style={{height:"inherit"}}>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Sports Student</Typography>
+
+             <Progress data={top_extra_curr[0]} style={{}} />
+           </Paper>
                
           </Grid>
           <Grid item xs={5}>
-          <Paper style={{height:'270px'}}>
+          <Paper style={{height:'290px'}}>
             <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>All Districts Academic Performances</Typography>
 
           <GraphBar value={pp_data}/>
@@ -128,7 +222,7 @@ render() {
           
           </Grid>
           <Grid item xs={4}>
-          <Paper style={{height:'270px'}}>
+          <Paper style={{height:'290px'}}>
             <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>No Of Students Per District</Typography>
 
             <GraphLine value={ss_no}/>

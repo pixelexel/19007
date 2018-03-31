@@ -54,9 +54,12 @@ const styles = theme => ({
     paddingBottom: 15,
   },
   barColorPrimary:{
-      color:'#e54587',
-      backgroundColor:'#e54587',
-  },
+      barColorPrimary:'#e54587',
+      colorPrimary:'#e54587',
+      bar1Indeterminate:'#e54587',
+      bar1Determinate:'#e54587',
+      bar1Buffer:'#e54587'
+  }
  
 });
 const mapStateToProps = (state) => ({
@@ -112,8 +115,8 @@ render() {
                     })}
                   </span>
                   <br/>
-                    {p_b.map((d)=>{
-                      return <LinearProgress className={classes.barColorPrimary} variant="determinate" value={d.value} style={{backgroundColor:'#558fd5',barColorPrimary:"#FFFFFF",marginTop:'10px'}}/>
+                    {p_g.map((d)=>{
+                      return <LinearProgress className={classes.barColorPrimary} variant="determinate" value={d.value} style={{backgroundColor:'#558fd5',marginTop:'10px'}}/>
                     })}
                   </Paper>
                 
@@ -122,14 +125,14 @@ render() {
           <Paper style={{height:"inherit"}}>
             <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Academic Performing State</Typography>
 
-              <Progress data={t_s_a[0]} style={{marginBottom: 25}}/>
+              <Progress data={t_s_a[0]} style={{marginBottom: 10}}/>
            </Paper>
             </Grid>
           <Grid item xs={6}>
              <Paper style={{height:"inherit"}}>
             <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Sports Performing State</Typography>
 
-              <Progress data={t_s_s[0]} style={{marginBottom: 25}}/>
+              <Progress data={t_s_s[0]} style={{marginBottom: 10}}/>
            </Paper>
             
             </Grid>
@@ -137,14 +140,14 @@ render() {
              <Paper style={{height:"inherit"}}>
             <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Extra Curricular Performing State</Typography>
 
-              <Progress data={t_s_e[0]} style={{marginBottom: 25}}/>
+              <Progress data={t_s_e[0]} style={{marginBottom: 10}}/>
            </Paper>
               </Grid>
               <Grid item xs={6}>
                <Paper style={{height:"inherit"}}>
             <Typography style={{fontSize:'15px',textAlign:'center'}}>Pass Percentage Of Country</Typography>
 
-              <Progress data={p_c[0]} style={{marginBottom: 25}}/>
+              <Progress data={p_c[0]} style={{marginBottom: 10}}/>
            </Paper>
                 </Grid>
                 <Grid item xs={6}>
@@ -206,14 +209,21 @@ render() {
 
       <Grid container style={{ margin: 25, maxWidth: "calc(100% - 50px)" }}>
         <Grid item xs={3}>
-          <Progress data={pp_data[1]} style={{ marginBottom: "20px" }} />
+        <Paper style={{height:"inherit"}}>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Academic Student</Typography>
 
-          <br />
+              <Progress data={top_marks[0]} style={{ marginBottom: "20px" }} />
+           </Paper>
+            <Paper style={{height:"inherit"}}>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Sports Student</Typography>
 
-          <Progress data={pp_data[1]} style={{}} />
+             <Progress data={top_extra_curr[0]} style={{}} />
+           </Paper>
+
+          
         </Grid>
         <Grid item xs={5}>
-          <Paper style={{ height: "270px" }}>
+          <Paper style={{ height: "290px" }}>
             <Typography style={{paddingTop:'10px', fontSize: "20px", textAlign: "center" }}>
               State Sports Performances
             </Typography>
@@ -222,9 +232,9 @@ render() {
           </Paper>
         </Grid>
         <Grid item xs={4}>
-          <Paper style={{ height: "270px" }}>
+          <Paper style={{ height: "290px" }}>
             <Typography style={{ paddingTop:'10px',fontSize: "20px", textAlign: "center" }}>
-              State Sports Performances
+              No Of Students Per State
             </Typography>
 
             <GraphLine value={ss_no} />

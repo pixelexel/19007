@@ -78,7 +78,7 @@ function ind(getData){
 	{
 		sports_Pass.push({'name': sport_keys[i], 'value':sports_Get[sport_keys[i]]} );
 	}
-	pc_Pass.push({'name':sn_Get,'value':pc_Get});
+	pc_Pass.push({'name':"Pass Percentage",'value':pc_Get});
 	pb_Pass.push({'name':'Boys%','value':pb_Get});
 	pg_Pass.push({'name':'Girls%','value':pg_Get});
 	tsa_Pass.push({'name': tsa_Get.school,'value':tsa_Get.avg})
@@ -98,6 +98,7 @@ function ind(getData){
 		'p_c' : pc_Pass,
 		'p_b' : pb_Pass,
 		'p_g' : pg_Pass,
+		's_n': sn_Get,
 		'schools': districts_Get,
 	}
 	console.log('State Data Passed',allDataPass);
