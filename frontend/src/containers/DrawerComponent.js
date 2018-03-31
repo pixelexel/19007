@@ -135,7 +135,7 @@ class DrawerComponent extends Component{
             </ListItem>
           </a>
 
-        </List>
+        </List> 
 
         <List className={classes.paper}
           subheader={<ListSubheader

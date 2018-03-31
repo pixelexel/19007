@@ -50,6 +50,8 @@ class SchoolGrid extends Component {
 render() {
   const { classes } = this.props
   const {p_marks,p_sport,top_extra_curr,b_marks,g_marks,avg_marks,avg_sport,avg_extra_curr,p_c,p_b,p_g,students,s_n} = this.props.school
+
+  console.log('pepepepe', p_sport)
   return (
     <div className={classes.root}>
        <Typography style={{fontSize:'45px',textAlign:'center',color:"#FFC200 ",marginBottom:'-20px'}} >{s_n}</Typography>
@@ -98,7 +100,7 @@ render() {
              <Paper style={{height:"inherit"}}>
             <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Sports Performing Student</Typography>
 
-              <Progress data={p_sport[0]} style={{marginBottom: 10}}/>
+              <Progress data={Object.assign({}, p_sport[0], {'value': p_sport[0].value * 10}) } style={{marginBottom: 10}}/>
            </Paper>
               </Grid>
               <Grid item xs={3}>
