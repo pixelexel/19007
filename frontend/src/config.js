@@ -1,5 +1,5 @@
 import { createMuiTheme } from 'material-ui/styles'
-import { pink, amber, grey } from 'material-ui/colors'
+import { pink, amber, grey, teal } from 'material-ui/colors'
 
 export const BASE_URL = '/'
 // export const BASE_URL = 'http://localhost:8000/'

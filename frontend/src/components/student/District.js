@@ -68,7 +68,7 @@ render() {
              <Paper style={{height:'inherit'}}>
             <Typography style={{paddingBottom:'10px',fontSize:'15px',textAlign:'center'}}>Percentage of Girls And Boys in the District</Typography>
                   
-                   <FontAwesome.FaFemale size={90} color="#FFC200 " style={{ verticalAlign: "middle" }} />
+                   <FontAwesome.FaFemale size={90} color="#e54587" style={{ verticalAlign: "middle" }} />
                   {/* <FontAwesome.FaFemale size={50} color="#e54587" style={{ verticalAlign: "middle" }} /> */}
                   <span style={{ display: "inline-block", verticalAlign: "middle", margin: "0 auto", color: "white" }}>
                     {p_g.map(d => {
@@ -91,7 +91,7 @@ render() {
                   </span>
                   <br/>
                     {p_g.map((d)=>{
-                      return <LinearProgress className={classes.barColorPrimary} variant="determinate" value={d.value} style={{backgroundColor:'#558fd5',marginTop:'10px'}}/>
+                      return <LinearProgress id={'bar'} className={classes.barColorPrimary} variant="determinate" value={d.value} style={{backgroundColor:'#558fd5',marginTop:'10px'}}/>
                     })}
                   </Paper>
                 
