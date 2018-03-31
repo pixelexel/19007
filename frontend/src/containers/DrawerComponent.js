@@ -86,9 +86,9 @@ class DrawerComponent extends Component{
               <ListItem button key={index}
                  >
                 <ListItemText onClick={this.handleScreenChange.bind(this, screens.DASH, d.id, d.name)} primary={d.name} id={`${screens.DASH}-${d.id}`} style={{cursor: 'pointer'}}/>
-                <IconButton style={{ height: 26 }}>
+                {/* <IconButton style={{ height: 26 }}>
                   <DeleteIcon />
-                </IconButton>
+                </IconButton> */}
               </ListItem>
               ))
           }

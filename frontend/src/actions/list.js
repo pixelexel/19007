@@ -1,6 +1,7 @@
 import { BASE_API_URL } from '../config'
 import { sampleLists } from '../samples'
 import { changeScreen, screens } from './root'
+import { addDashboardToDrawer } from './drawer'
 
 export const ADD_LIST = 'ADD_LIST'
 export const REMOVE_LIST = 'REMOVE_LIST'
@@ -37,7 +38,8 @@ export const addList = listData => {
 				.then(data => data.json())
 				.then(json => {
 					if(json.is_new_dash){
-						return dispatch(changeScreen(screens.DASH, json.dash_id))
+						dispatch(changeScreen(screens.DASH, json.dash_id))
+						dispatch(addDashboardToDrawer(`Dashboard ${json.dash_id}`, json.dash_id))
 					}
 					else
 						return dispatch(addListToState(json))

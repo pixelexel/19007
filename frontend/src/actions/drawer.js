@@ -20,3 +20,10 @@ export const getDrawerData = () => {
             .then(json => dispatch(receiveDrawerData(json)))
     }
 }
+
+export const ADD_DASHBOARD_TO_DRAWER = 'ADD_DASHBOARD_TO_DRAWER'
+export const addDashboardToDrawer = (name, id) => ({
+    type: ADD_DASHBOARD_TO_DRAWER,
+    name: name, 
+    id: id,
+}) 

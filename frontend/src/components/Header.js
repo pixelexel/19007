@@ -8,7 +8,7 @@ import MenuIcon from 'material-ui-icons/Menu'
 import Avatar from 'material-ui/Avatar'
 import FilterListIcon from 'material-ui-icons/FilterList'
 import DateFilter from './DateFilter'
-import { IconButton } from 'material-ui'
+import { IconButton, Tooltip } from 'material-ui'
 import { withStyles } from 'material-ui/styles'
 import Search_bar from '../components/Search_bar'
 
@@ -64,13 +64,16 @@ class Header extends Component{
 	          <Typography className={classes.flex} variant="title" color="inherit">
 	            Student Analytics
 	          </Typography>
-	          <div >
+				<IconButton>
+					<FilterListIcon onClick={e => this.setState({ filterOpen: !this.state.filterOpen })} />
+				</IconButton>
+				
+					<DateFilter style={{marginRight: 15}} open={this.state.filterOpen} onChange={this.props.changeRootFilter} />
+			
+			  <div >
 	          	<Search_bar />
 	          </div>
-				<IconButton>
-					<FilterListIcon onClick={e => this.setState({filterOpen: !this.state.filterOpen})}/>
-				</IconButton>
-				<DateFilter open={this.state.filterOpen} onChange={this.props.changeRootFilter}/>
+				
 			  <IconButton
 				  aria-label="open-chatbot"
 				  onClick={this.props.handleChatbot}

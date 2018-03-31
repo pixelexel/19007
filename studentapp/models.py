@@ -101,10 +101,18 @@ class Graphs(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
 	gD = models.CharField(max_length=550)
 	dash_id = models.IntegerField(default=1)
-	dash_name = models.CharField(default='Unnamed Dashboard', max_length=1000)
+	dash_name = models.CharField(default='Untitled Dashboard', max_length=1000)
+
+	def save(self, *args, **kwargs):
+		self.dash_name = "Dashboard {}".format(self.dash_id)
+		super(Graphs, self).save(*args, **kwargs)
 
 class Lists(models.Model):
 	id = models.AutoField(primary_key=True,unique=True)
 	lD = models.CharField(max_length=550)
 	dash_id = models.IntegerField(default=1)
-	dash_name = models.CharField(default='Unnamed Dashboard', max_length=1000)
+	dash_name = models.CharField(default='Untitled Dashboard', max_length=1000)
+
+	def save(self, *args, **kwargs):
+		self.dash_name = "Dashboard {}".format(self.dash_id)
+		super(Lists, self).save(*args, **kwargs)

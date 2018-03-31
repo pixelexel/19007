@@ -34,6 +34,7 @@ class DateFilter extends Component{
     handleKeyPress = (e) => {
         if(e.key == 'Enter'){
             this.onBlur(e)
+            e.target.blur()
         }
     }
 

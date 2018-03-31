@@ -1,7 +1,7 @@
 import { BASE_API_URL } from '../config'
 import { exampleGraph, sampleGraphs } from '../samples'
 import { changeScreen, screens } from './root'
-
+import { addDashboardToDrawer } from './drawer'
 export const ADD_GRAPH = 'ADD_GRAPH'
 export const REQUEST_ALL_GRAPHS = 'REQUEST_ALL_GRAPHS'
 export const RECEIVE_ALL_GRAPHS = 'RECEIVE_ALL_GRAPHS'
@@ -28,7 +28,7 @@ const receiveAllGraphs = (error, data) => ({
 })
 
 export const addGraph = graphData => {
-	return (dispatch) => {
+	return (dispatch, getState) => {
 		console.log('sending ', graphData)
 		return fetch(BASE_API_URL + 'send_graph', {
 					method: 'post',
@@ -38,7 +38,10 @@ export const addGraph = graphData => {
 				.then(data => data.json())
 				.then(json => {
 					if(json.is_new_dash){
-						return dispatch(changeScreen(screens.DASH, json.dash_id))
+						console.log('new111')
+						dispatch(changeScreen(screens.DASH, json.dash_id))
+						console.log('adsadad')
+						dispatch(addDashboardToDrawer(`Dashboard ${json.dash_id}`, json.dash_id))
 					}
 					else
 						return dispatch(addGraphToState(json))

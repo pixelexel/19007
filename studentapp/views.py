@@ -199,7 +199,7 @@ def getGraph(request):
 				else:
 					dash_name = ls[0].dash_name
 
-		except:
+		except TypeError:
 			g = Graphs.objects.all()
 			try:
 				last = max(map(lambda x: x.id, g))
@@ -342,9 +342,18 @@ def get_list_data(dt, request, id=None, save=True, limit=True):
 		s = int(id)
 		dash_id = s
 
-	except:
+	except TypeError:
 		g = Lists.objects.all()
-		last = max(map(lambda x: x.id, g))
+		gg = Graphs.objects.all()
+
+		if len(g) == 0 and len(gg) == 0:
+			last = 0
+		else:
+			comb_g = [x.id for x in g]
+			comb_gg = [x.id for x in gg]
+
+			last = max(comb_g + comb_gg)
+
 		dash_id = last + 1
 		is_new_dash = True
 
@@ -412,8 +421,7 @@ def allLists(request, id):
 		data = []
 		for i in qs:
 			data.append( json.loads(i.lD) )
-
-	except:
+	except ValueError:
 		data = []
 		dash_name = 'Untitled Dashboard'
 
@@ -778,6 +786,8 @@ def chatbot(request):
 				'error': 'false',
 			})
 
+def StrToDate(strg):
+	return datetime.datetime.strptime(strg, '%Y-%m-%d').date()
 def StudentFilterLatest(filters,ordering):
 	qs = Student.objects.filter(**filters).order_by(ordering)
 	sm = {}
@@ -808,7 +818,28 @@ def getStateData(request,state_name):
 		top_marks = []
 		top_sport = []
 		top_extra_curr = [] 
-		qs = Student.objects.filter(state=state_name)
+		fl = False
+		try:
+			start = request.GET['start']
+			end = request.GET['end']
+			fl = True
+			qs = Student.objects.filter(**{'state': state_name, 'date__gte': StrToDate(
+				start+'-01-01'), 'date__lte': StrToDate(end+'-12-31')})
+			print(len(qs))
+			p_c = len(Student.objects.filter(state=state_name, marks__gte=35, date__gte=StrToDate(
+				start+'-01-01'), date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+			p_b = len(Student.objects.filter(state=state_name, gender="m", date__gte=StrToDate(
+				start+'-01-01'), date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+			p_g = len(Student.objects.filter(state=state_name, gender="f", date__gte=StrToDate(
+				start+'-01-01'), date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+		except KeyError:
+			qs = Student.objects.filter(state=state_name)
+			p_c = len(Student.objects.filter(
+				state=state_name, marks__gte=35))*100.0/(len(qs))
+			p_b = len(Student.objects.filter(
+				state=state_name, gender="m"))*100.0/(len(qs))
+			p_g = len(Student.objects.filter(
+				state=state_name, gender="f"))*100.0/(len(qs))
 		for i in qs:
 			c_state = i.district
 			if state_ct.__contains__(c_state):
@@ -839,16 +870,28 @@ def getStateData(request,state_name):
 				t_s_a['avg'] = v
 				t_s_a['district'] = k
 		s_n = state_name
-		p_c = len(Student.objects.filter(state=state_name,marks__gte=35))*100.0/(len(qs))
-		p_b = len(Student.objects.filter(state=state_name,gender="m"))*100.0/(len(qs))
-		p_g = len(Student.objects.filter(state=state_name,gender="f"))*100.0/(len(qs))
-		qs =  StudentFilterLatest({'state':state_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-marks')[:10]
+		if fl:
+			qs = StudentFilterLatest({'state':state_name, 'date__gte': StrToDate(
+				start+'-01-01'), 'date__lte': StrToDate(end+'-12-31')}, '-marks')[:10]
+		else:
+			qs = StudentFilterLatest({'state': state_name, 'date__gte': datetime.datetime.strptime(
+				'2010-01-01', '%Y-%m-%d').date()}, '-marks')[:10]
 		for i in qs:
 			top_marks.append({'name':i.name,'marks':i.marks,'district':i.district})
-		qs = StudentFilterLatest({'state':state_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-extra_curr')[:10]
+		if fl:
+			qs = StudentFilterLatest({'state': state_name, 'date__gte': StrToDate(
+				start+'-01-01'), 'date__lte': StrToDate(end+'-12-31')}, '-extra_curr')[:10]
+		else:
+			qs = StudentFilterLatest({'state': state_name, 'date__gte': datetime.datetime.strptime(
+				'2010-01-01', '%Y-%m-%d').date()}, '-extra_curr')[:10]
 		for i in qs:
 			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'district':i.district})
-		qs = StudentFilterLatest({'state':state_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
+		if fl:
+			qs = StudentFilterLatest({'state': state_name, 'date__gte': StrToDate(
+				start+'-01-01'), 'date__lte': StrToDate(end+'-12-31')}, '-sport')[:10]
+		else:
+			qs = StudentFilterLatest({'state': state_name, 'date__gte': datetime.datetime.strptime(
+				'2010-01-01', '%Y-%m-%d').date()}, '-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
 		qs = Student.objects.filter(state=state_name)
@@ -867,7 +910,25 @@ def getDistrictData(request,district_name):
 		top_marks = []
 		top_sport = []
 		top_extra_curr = [] 
-		qs = Student.objects.filter(district=district_name)
+		fl = False
+		try:
+			start = request.GET['start']
+			end = request.GET['end']
+			fl = True
+			qs = Student.objects.filter(**{'district':district_name,'date__gte': StrToDate(start+'-01-01'), 'date__lte': StrToDate(end+'-12-31')})
+			print(len(qs))
+			p_c = len(Student.objects.filter(district=district_name,marks__gte=35,date__gte=StrToDate(start+'-01-01'),date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+			p_b = len(Student.objects.filter(district=district_name,gender="m",date__gte=StrToDate(start+'-01-01'),date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+			p_g = len(Student.objects.filter(district=district_name,gender="f", date__gte=StrToDate(
+				start+'-01-01'), date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+		except KeyError:
+			qs = Student.objects.filter(district=district_name)
+			p_c = len(Student.objects.filter(
+				district=district_name, marks__gte=35))*100.0/(len(qs))
+			p_b = len(Student.objects.filter(
+				district=district_name, gender="m"))*100.0/(len(qs))
+			p_g = len(Student.objects.filter(
+				district=district_name, gender="f"))*100.0/(len(qs))
 		for i in qs:
 			c_state = i.school
 			if state_ct.__contains__(c_state):
@@ -898,16 +959,23 @@ def getDistrictData(request,district_name):
 				t_s_a['avg'] = v
 				t_s_a['school'] = k
 		s_n = district_name
-		p_c = len(Student.objects.filter(district=district_name,marks__gte=35))*100.0/(len(qs))
-		p_b = len(Student.objects.filter(district=district_name,gender="m"))*100.0/(len(qs))
-		p_g = len(Student.objects.filter(district=district_name,gender="f"))*100.0/(len(qs))
-		qs = StudentFilterLatest({'district':district_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-marks')[:10]
+		
+		if fl:
+			qs = StudentFilterLatest({'district':district_name,'date__gte':StrToDate(start+'-01-01'),'date__lte':StrToDate(end+'-12-31')},'-marks')[:10]	
+		else:
+			qs = StudentFilterLatest({'district': district_name,'date__gte': datetime.datetime.strptime('2010-01-01', '%Y-%m-%d').date()}, '-marks')[:10]
 		for i in qs:
 			top_marks.append({'name':i.name,'marks':i.marks,'district':i.district})
-		qs = StudentFilterLatest({'district':district_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-extra_curr')[:10]
+		if fl:
+			qs = StudentFilterLatest({'district':district_name,'date__gte':StrToDate(start+'-01-01'),'date__lte':StrToDate(end+'-12-31')},'-extra_curr')[:10]	
+		else:
+			qs = StudentFilterLatest({'district': district_name,'date__gte': datetime.datetime.strptime('2010-01-01', '%Y-%m-%d').date()}, '-extra_curr')[:10]
 		for i in qs:
 			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'district':i.district})
-		qs = StudentFilterLatest({'district':district_name,'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
+		if fl:
+			qs = StudentFilterLatest({'district':district_name,'date__gte':StrToDate(start+'-01-01'),'date__lte':StrToDate(end+'-12-31')},'-sport')[:10]	
+		else:
+			qs = StudentFilterLatest({'district': district_name,'date__gte': datetime.datetime.strptime('2010-01-01', '%Y-%m-%d').date()}, '-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'district':i.district})
 		qs = Student.objects.filter(district=district_name)
@@ -919,7 +987,6 @@ def getDistrictData(request,district_name):
 def getCountryData(request):
 	ret = {}
 	if request.method == 'GET':
-		print('COUNTRY', request.GET)
 		pp_data = {}
 		ex_curr = {}
 		state_ct = {}
@@ -927,7 +994,22 @@ def getCountryData(request):
 		top_marks = []
 		top_sport = []
 		top_extra_curr = [] 
-		qs = Student.objects.all()
+		fl = False
+		try:
+			start = request.GET['start']
+			end = request.GET['end']
+			fl = True
+			qs = Student.objects.filter(**{'date__gte':StrToDate(start+'-01-01'),'date__lte':StrToDate(end+'-12-31')})
+			print(len(qs))
+			p_c = len(Student.objects.filter(marks__gte=35,date__gte=StrToDate(start+'-01-01'),date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+			p_b = len(Student.objects.filter(gender="m",date__gte=StrToDate(start+'-01-01'),date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+			p_g = len(Student.objects.filter(gender="f", date__gte=StrToDate(
+				start+'-01-01'), date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+		except KeyError:
+			qs = Student.objects.all()
+			p_c = len(Student.objects.filter(marks__gte=35))*100.0/(len(qs))
+			p_b = len(Student.objects.filter(gender="m"))*100.0/(len(qs))
+			p_g = len(Student.objects.filter(gender="f"))*100.0/(len(qs))
 		for i in qs:
 			c_state = i.state
 			if state_ct.__contains__(c_state):
@@ -957,16 +1039,22 @@ def getCountryData(request):
 			if v >= t_s_a['avg']:
 				t_s_a['avg'] = v
 				t_s_a['state'] = k
-		p_c = len(Student.objects.filter(marks__gte=35))*100.0/(len(qs))
-		p_b = len(Student.objects.filter(gender="m"))*100.0/(len(qs))
-		p_g = len(Student.objects.filter(gender="f"))*100.0/(len(qs))
-		qs = StudentFilterLatest({'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-marks')[:10]
+		if fl:
+			qs = StudentFilterLatest({'date__gte':StrToDate(start+'-01-01'),'date__lte':StrToDate(end+'-12-31')},'-marks')[:10]	
+		else:
+			qs = StudentFilterLatest({'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-marks')[:10]
 		for i in qs:
 			top_marks.append({'name':i.name,'marks':i.marks,'state':i.state})
-		qs = StudentFilterLatest({'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-extra_curr')[:10]
+		if fl:
+			qs = StudentFilterLatest({'date__gte':StrToDate(start+'-01-01'),'date__lte':StrToDate(end+'-12-31')},'-extra_curr')[:10]	
+		else:
+			qs = StudentFilterLatest({'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-extra_curr')[:10]
 		for i in qs:
 			top_extra_curr.append({'name':i.name,'extra_curr':i.extra_curr,'state':i.state})
-		qs = StudentFilterLatest({'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
+		if fl:
+			qs = StudentFilterLatest({'date__gte':StrToDate(start+'-01-01'),'date__lte':StrToDate(end+'-12-31')},'-sport')[:10]	
+		else:
+			qs = StudentFilterLatest({'date__gte':datetime.datetime.strptime('2010-01-01','%Y-%m-%d').date()},'-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'sport':i.sport,'state':i.state})
 		qs = Student.objects.all()
@@ -982,28 +1070,57 @@ def getSchoolData(request,school_name):
 		top_marks = []
 		top_sport = []
 		top_extra_curr = [] 
-		qs = Student.objects.filter(school=school_name)
-		p_c = len(Student.objects.filter(school=school_name,marks__gte=35))*100.0/(len(qs))
-		p_b = len(Student.objects.filter(school=school_name,gender="m"))*100.0/(len(qs))
-		p_g = len(Student.objects.filter(school=school_name,gender="f"))*100.0/(len(qs))
-		qs = StudentFilterLatest({'school':school_name},'-marks')
+		fl = False
+		try:
+			start = request.GET['start']
+			end = request.GET['end']
+			fl = True
+			qs = Student.objects.filter(**{'school':school_name,'date__gte': StrToDate(start+'-01-01'), 'date__lte': StrToDate(end+'-12-31')})
+			print(len(qs))
+			p_c = len(Student.objects.filter(school=school_name,marks__gte=35,date__gte=StrToDate(start+'-01-01'),date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+			p_b = len(Student.objects.filter(school=school_name,gender="m",date__gte=StrToDate(start+'-01-01'),date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+			p_g = len(Student.objects.filter(school=school_name, gender="f", date__gte=StrToDate(
+				start+'-01-01'), date__lte=StrToDate(end+'-12-31')))*100.0/(len(qs))
+		except KeyError:
+			qs = Student.objects.filter(school=school_name)
+			p_c = len(Student.objects.filter(school=school_name,marks__gte=35))*100.0/(len(qs))
+			p_b = len(Student.objects.filter(school=school_name,gender="m"))*100.0/(len(qs))
+			p_g = len(Student.objects.filter(school=school_name,gender="f"))*100.0/(len(qs))
+		print(len(qs))
+		if fl:
+			qs = StudentFilterLatest({'school': school_name, 'date__gte': StrToDate(
+				start+'-01-01'), 'date__lte': StrToDate(end+'-12-31')}, '-marks')[:10]
+		else:
+			qs = StudentFilterLatest({'school': school_name, 'date__gte': datetime.datetime.strptime(
+				'2010-01-01', '%Y-%m-%d').date()}, '-marks')[:10]
 		for i in qs:
 			top_marks.append({'name':i.name,'value':i.marks})
-		qs = StudentFilterLatest({'school':school_name},'-extra_curr')
+		if fl:
+			qs = StudentFilterLatest({'school': school_name, 'date__gte': StrToDate(
+				start+'-01-01'), 'date__lte': StrToDate(end+'-12-31')}, '-extra_curr')[:10]
+		else:
+			qs = StudentFilterLatest({'school': school_name, 'date__gte': datetime.datetime.strptime(
+				'2010-01-01', '%Y-%m-%d').date()}, '-extra_curr')[:10]
 		for i in qs:
 			top_extra_curr.append({'name':i.name,'value':i.extra_curr})
-		qs = StudentFilterLatest({'school':school_name},'-sport')
+		if fl:
+			qs = StudentFilterLatest({'school': school_name, 'date__gte': StrToDate(
+				start+'-01-01'), 'date__lte': StrToDate(end+'-12-31')}, '-sport')[:10]
+		else:
+			qs = StudentFilterLatest({'school': school_name, 'date__gte': datetime.datetime.strptime(
+				'2010-01-01', '%Y-%m-%d').date()}, '-sport')[:10]
 		for i in qs:
 			top_sport.append({'name':i.name,'value':i.sport})
 		s_n = school_name
-		qs = Student.objects.filter(school=school_name)
-		p_c = (len(Student.objects.filter(school=school_name,marks__gte=35))*100.0)/(len(qs))
-		p_b = (len(Student.objects.filter(school=school_name,gender="m"))*100.0)/(len(qs))
-		p_g = (len(Student.objects.filter(school=school_name,gender="f"))*100.0)/(len(qs))
+		if fl:
+			qs = Student.objects.filter(**{'school': school_name, 'date__gte': StrToDate(
+				start+'-01-01'), 'date__lte': StrToDate(end+'-12-31')})
+		else:
+			qs = Student.objects.filter(school=school_name)
 		avg_marks = 0.0
 		avg_sport = 0.0
 		avg_extra_curr =0.0
-		for i in Student.objects.filter(school=school_name):
+		for i in qs:
 			avg_marks+= float(i.marks)
 			avg_sport+= float(i.sport)
 			avg_extra_curr+= float(i.extra_curr)
@@ -1011,11 +1128,21 @@ def getSchoolData(request,school_name):
 		avg_sport /= len(Student.objects.filter(school=school_name))
 		avg_extra_curr /= len(Student.objects.filter(school=school_name)) 
 		b_marks = []	
-		qs = StudentFilterLatest({'school':school_name,'gender':'m'},'-marks')
+		if fl:
+			qs = StudentFilterLatest({'school': school_name, 'date__gte': StrToDate(
+				start+'-01-01'), 'date__lte': StrToDate(end+'-12-31'),'gender':'m'}, '-marks')[:10]
+		else:
+			qs = StudentFilterLatest({'school': school_name, 'date__gte': datetime.datetime.strptime(
+				'2010-01-01', '%Y-%m-%d').date(),'gender':'m'}, '-marks')[:10]
 		for i in qs:
 			b_marks.append({'name':i.name,'value':i.marks})
 		g_marks = []	
-		qs = StudentFilterLatest({'school':school_name,'gender':'f'},'-marks')
+		if fl:
+			qs = StudentFilterLatest({'school': school_name, 'date__gte': StrToDate(
+				start+'-01-01'), 'date__lte': StrToDate(end+'-12-31'), 'gender': 'f'}, '-marks')[:10]
+		else:
+			qs = StudentFilterLatest({'school': school_name, 'date__gte': datetime.datetime.strptime(
+				'2010-01-01', '%Y-%m-%d').date(), 'gender': 'f'}, '-marks')[:10]
 		for i in qs:
 			g_marks.append({'name':i.name,'value':i.marks})
 		qs = Student.objects.filter(school=school_name)
