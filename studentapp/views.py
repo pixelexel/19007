@@ -12,7 +12,7 @@ import pandas as pd
 from .forms import StudentForm
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.forms.models import model_to_dict
-from django.contrib.auth.views import login
+from django.contrib.auth.views import login,logout
 # Create your views here.
 CSV_STORAGE = os.path.join(os.getcwd(), 'studentapp', 'static', 'csv')
  
@@ -29,6 +29,12 @@ def custom_login(request,template_name):
     else:
         return login(request,template_name=template_name)
 
+def custom_logout(request,):
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('/api/login')
+
+    
 def get_formvals():
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}
 	rval = Student._meta.get_fields()
