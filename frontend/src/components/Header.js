@@ -69,7 +69,7 @@ class Header extends Component{
 					<FilterListIcon onClick={e => this.setState({ filterOpen: !this.state.filterOpen })} />
 				</IconButton>
 				
-					<DateFilter style={{marginRight: 15}} open={this.state.filterOpen} onChange={this.props.changeRootFilter} />
+					<DateFilter style={{marginRight: 15}} open={this.state.filterOpen} onChange={this.props.changeRootFilter} filters={this.props.filters}/>
 			
 			  <div >
 	          	<Search_bar />

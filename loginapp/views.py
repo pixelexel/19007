@@ -4,7 +4,6 @@ from django.views.generic import TemplateView
 import os
 
 def index(request):
-	print("hello")
 	if request.user.is_authenticated:
 		return render(request,"index.html",{})
 	else:

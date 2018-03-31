@@ -998,6 +998,7 @@ def getDistrictData(request,district_name):
 @csrf_exempt
 def getCountryData(request):
 	ret = {}
+	print('sdfs')
 	if request.method == 'GET':
 		pp_data = {}
 		ex_curr = {}
@@ -1008,6 +1009,7 @@ def getCountryData(request):
 		top_extra_curr = [] 
 		fl = False
 		try:
+			print(request.GET)
 			start = request.GET['start']
 			end = request.GET['end']
 			fl = True
@@ -1084,6 +1086,7 @@ def getSchoolData(request,school_name):
 		top_extra_curr = [] 
 		fl = False
 		try:
+			print(request.GET)
 			start = request.GET['start']
 			end = request.GET['end']
 			fl = True

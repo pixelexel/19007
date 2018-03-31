@@ -253,7 +253,7 @@ class MahaState extends Component{
     }
     onClickReRender = (v)=>{
         // this.props.dispatch(changeScreen(screens.STATE, toTitleCase(v.replace('(undefined)', ''))))
-      window.location.reload();
+      // window.location.reload();
       const url = '/state/' + toTitleCase(v.replace('(undefined)', ''))
         this.props.dispatch(push(url))
     }
