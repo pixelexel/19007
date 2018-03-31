@@ -100,7 +100,7 @@ render() {
              <Paper style={{height:"inherit"}}>
             <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Sports Performing Student</Typography>
 
-              <Progress data={Object.assign({}, p_sport[0], {'value': p_sport[0].value * 10}) } style={{marginBottom: 10}}/>
+              <Progress data={p_sport[0]} style={{marginBottom: 10}}/>
            </Paper>
               </Grid>
               <Grid item xs={3}>
