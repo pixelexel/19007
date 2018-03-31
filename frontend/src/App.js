@@ -8,14 +8,16 @@ import { MuiThemeProvider } from 'material-ui/styles'
 import Root from './containers/Root'
 import { hot } from 'react-hot-loader'
 import { AppTheme } from './config'
-
+import { screens } from './actions/root'
+import { Route } from 'react-router'
 class App extends Component {
   render() {
     return (
     <MuiThemeProvider theme={AppTheme}>
       <div className="App">
         <CssBaseline/>
-        <Root/>
+        <Route exact path="/" component={Root} />
+    <Route path="/:screen/:id" component={Root} />
       </div>
     </MuiThemeProvider>
     );

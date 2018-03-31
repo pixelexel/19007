@@ -22,6 +22,7 @@ const mapStateToProps = (state) => ({
 	id: state.root.id,
 	name: state.root.name,
 	filters: state.root.filters,
+	routing: state.routing,
 })
 
 class Root extends Component{
@@ -45,10 +46,20 @@ class Root extends Component{
 	}
 
 	render(){
-		const { screen, id, filters } = this.props 
+		const { filters, routing, match } = this.props 
 		let screenComponent = null
+		let screen, id
+		if(match.params.screen){
+			screen = match.params.screen
+			id = match.params.id
+		} else {
+			screen = screens.COUNTRY
+			id = 1
+		}
 		
-		switch(screen){
+		console.log('root', this.props, screen, id, screens)
+		
+		switch(screen.toUpperCase()){
 			case screens.DASH:
 				screenComponent = <HomeScreenContainer screen={screen} id={id} name={this.props.name}/>
 				break

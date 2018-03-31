@@ -7,6 +7,7 @@ import TextField from 'material-ui/TextField'
 import { changeScreen, screens } from '../actions/root'
 import '../styles/list.scss'
 import { levDist } from '../utils'
+import { Link } from 'react-router-dom'
 
 const mapStateToProps = (state) => {
 	return {
@@ -53,24 +54,24 @@ class Search_bar extends Component{
 	}
 
 	handleClick = (e) => {
-		const eid = e.target.id
-		const [ type, value, id ] = eid.split('-')
+		// const eid = e.target.id
+		// const [ type, value, id ] = eid.split('-')
 		
-		switch(type){
-			case 'student':
-				this.props.dispatch(changeScreen(screens.STUDENT, id))
-				break
-			case 'state':
-				this.props.dispatch(changeScreen(screens.STATE, value))
-				break
-			case 'district':
-				this.props.dispatch(changeScreen(screens.DISTRICT, value))
-				break
-			case 'school':
-				this.props.dispatch(changeScreen(screens.SCHOOL, value))
-				break
-			default:
-		}
+		// switch(type){
+		// 	case 'student':
+		// 		this.props.dispatch(changeScreen(screens.STUDENT, id))
+		// 		break
+		// 	case 'state':
+		// 		this.props.dispatch(changeScreen(screens.STATE, value))
+		// 		break
+		// 	case 'district':
+		// 		this.props.dispatch(changeScreen(screens.DISTRICT, value))
+		// 		break
+		// 	case 'school':
+		// 		this.props.dispatch(changeScreen(screens.SCHOOL, value))
+		// 		break
+		// 	default:
+		// }
 
 		this.setState({
 			searchText: '',
@@ -122,18 +123,32 @@ class Search_bar extends Component{
 				{ allValues.length > 0 &&
 				<div className={classes.root}>
 					<List >
-						{ allValues.map((d, index) => (
-							<ListItem key={index} className={classes.listItem + ' hoverlistitem'} 
-									onClick={this.handleClick} 
-									id={`${d.type}-${d.name}-${d.id}`}>
-								<ListItemText className={classes.removePointerEvents} primary={d.name} secondary={d.type}/>
-							</ListItem> 
-						))}
+						{ allValues.map((d, index) => {
+							let url = `/${d.type.toLowerCase()}/`
+							if(d.type == 'student'){
+								url += `${d.id}`
+							} else {
+								url += `${d.name}`
+							}
+							return (<ListItem key={index} className={classes.listItem + ' hoverlistitem'}> 
+								<Link onClick={this.handleClick} className={classes.primary} key={index} to={url}>
+									<ListItemText className={classes.removePointerEvents} primary={d.name} secondary={d.type} />
+								</Link> 
+							</ListItem>)
+						})}
 					</List>
 					</div> }
 		    </div>
 		)
 	}
 }
+
+/*
+<ListItem key={index} className={classes.listItem + ' hoverlistitem'}
+									onClick={this.handleClick}
+									id={`${d.type}-${d.name}-${d.id}`}>
+								<ListItemText className={classes.removePointerEvents} primary={d.name} secondary={d.type}/>
+							</ListItem>
+*/
 
 export default withStyles(styles, {withTheme: true})(connect(mapStateToProps)(Search_bar))

@@ -1,5 +1,6 @@
 import { BASE_API_URL } from '../config'
 import { screens, changeScreen } from './root'
+import { push } from 'react-router-redux'
 
 export const RECEIVE_LIST_FROM_FILTERS = 'RECEIVE_LIST_FROM_FILTERS'
 export const ADD_TO_TABLE = 'ADD_TO_TABLE'
@@ -46,7 +47,8 @@ export const saveNewFilter = filter => {
         }).then(data => data.json())
         .then(json => {
             dispatch(finishSavingFilter())
-            dispatch(changeScreen(screens.DASH))
+            // dispatch(changeScreen(screens.DASH))
+            dispatch(push('/'))
         }
         )
     }

@@ -199,7 +199,7 @@ def getGraph(request):
 				else:
 					dash_name = ls[0].dash_name
 
-		except TypeError:
+		except (TypeError, ValueError) as e:
 			g = Graphs.objects.all()
 			try:
 				last = max(map(lambda x: x.id, g))
@@ -342,7 +342,7 @@ def get_list_data(dt, request, id=None, save=True, limit=True):
 		s = int(id)
 		dash_id = s
 
-	except TypeError:
+	except (TypeError, ValueError) as e:
 		g = Lists.objects.all()
 		gg = Graphs.objects.all()
 

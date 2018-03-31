@@ -13,7 +13,7 @@ import districtData from './district'
 import schoolData from './school'
 import drawer from './drawer'
 import addfilter from './addfilter'
-
+import { routerReducer } from 'react-router-redux'
 // Combine all reducers
 // If you don't give a key, the name of the reducer is it's
 // state's key
@@ -32,6 +32,7 @@ const studentApp = combineReducers({
 	chatbot: chatbot,
 	drawer: drawer,
 	addfilter: addfilter,
+	routing: routerReducer,
 })
 
 export default studentApp

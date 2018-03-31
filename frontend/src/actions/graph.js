@@ -2,6 +2,8 @@ import { BASE_API_URL } from '../config'
 import { exampleGraph, sampleGraphs } from '../samples'
 import { changeScreen, screens } from './root'
 import { addDashboardToDrawer } from './drawer'
+import { push } from 'react-router-redux'
+
 export const ADD_GRAPH = 'ADD_GRAPH'
 export const REQUEST_ALL_GRAPHS = 'REQUEST_ALL_GRAPHS'
 export const RECEIVE_ALL_GRAPHS = 'RECEIVE_ALL_GRAPHS'
@@ -38,9 +40,8 @@ export const addGraph = graphData => {
 				.then(data => data.json())
 				.then(json => {
 					if(json.is_new_dash){
-						console.log('new111')
-						dispatch(changeScreen(screens.DASH, json.dash_id))
-						console.log('adsadad')
+						// dispatch(changeScreen(screens.DASH, json.dash_id))
+						dispatch(push(`/dash/${json.dash_id}`))
 						dispatch(addDashboardToDrawer(`Dashboard ${json.dash_id}`, json.dash_id))
 					}
 					else

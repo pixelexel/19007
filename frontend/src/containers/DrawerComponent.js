@@ -9,6 +9,7 @@ import DeleteIcon from 'material-ui-icons/Delete'
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft'
 import { withStyles } from 'material-ui/styles'
 import { toTitleCase } from '../utils'
+import { Link } from 'react-router-dom'
 
 const mapStateToProps = state => {
   return {
@@ -77,27 +78,33 @@ class DrawerComponent extends Component{
         >
           <ListItem button key='global'
             id={`${screens.COUNTRY}-0`}
-            onClick={this.handleScreenChange.bind(this, screens.COUNTRY, 0)}>
-              <ListItemText primary="Global Dashboard"/>
+            >
+            { /*             onClick={this.handleScreenChange.bind(this, screens.COUNTRY, 0)}
+*/
+                /* <ListItemText primary="Global Dashboard"/> */}
+             <Link to={'/'}>Global Dashboard</Link>
           </ListItem>
 
           {
             dashboards.map ( (d, index) => (
               <ListItem button key={index}
                  >
-                <ListItemText onClick={this.handleScreenChange.bind(this, screens.DASH, d.id, d.name)} primary={d.name} id={`${screens.DASH}-${d.id}`} style={{cursor: 'pointer'}}/>
+                <Link to={`/dash/${d.id}`}>{d.name}</Link>
                 {/* <IconButton style={{ height: 26 }}>
                   <DeleteIcon />
                 </IconButton> */}
               </ListItem>
               ))
           }
-          <ListItem button key={'add'}
+          {/* <ListItem button key={'add'}
             onClick={this.handleScreenChange.bind(this, screens.DASH, null)} >
             <ListItemText primary={'Add a new dashboard'} />
             <IconButton style={{ height: 26 }}>
                 <AddIcon/>
             </IconButton>
+          </ListItem> */}
+          <ListItem button key={'add'}>
+            <Link to={`/dash/${null}`}>Add a new dashboard</Link>
           </ListItem>
         </List>
         <List className={classes.paper}
