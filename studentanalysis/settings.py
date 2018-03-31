@@ -31,6 +31,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Application definition
 LOGIN_REDIRECT_URL = 'home'
 INSTALLED_APPS = [
+    'loginapp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

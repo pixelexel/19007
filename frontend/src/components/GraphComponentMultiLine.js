@@ -102,7 +102,7 @@ class GraphComponentMultiLine extends Component{
 		
 		return(
 			<div style={style} className={classes.root}>
-				<ResponsiveContainer width='100%' height="100%">
+				<ResponsiveContainer width='100%' aspect={5.0/1.0}>
 					{this.getLineChart(min, max, { top: 5, right: 25, left: 20, bottom: 25 }, data)}
 				</ResponsiveContainer>
 			</div>

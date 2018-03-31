@@ -49,7 +49,7 @@ const rootFilter = (start_date, end_date) => ({
 	end_date: end_date,
 })
 
-export const setRootFilter = (start_date, end_date) => {
+export const setRootFilter = (start_date, end_date, screen, id) => {
 	return (dispatch, getState) => {
 		
 		if(isNaN(start_date) || isNaN(end_date) || (parseFloat(start_date) >= parseFloat(end_date)))
@@ -57,8 +57,8 @@ export const setRootFilter = (start_date, end_date) => {
 
 		dispatch(rootFilter(start_date, end_date))
 		const state = getState()
-		console.log('hey hey hye', state, state.root.screen)
-		switch(state.root.screen){
+		console.log('hey hey hye', screen, id)
+		switch(screen.toUpperCase()){
 			case screens.COUNTRY:
 				dispatch(getCountryData({
 					'filters': {
@@ -68,7 +68,7 @@ export const setRootFilter = (start_date, end_date) => {
 				}))
 				break
 			case screens.STATE:
-				dispatch(getStateData(state.root.id, {
+				dispatch(getStateData(id, {
 					'filters': {
 						'start_date': start_date,
 						'end_date': end_date
@@ -76,7 +76,7 @@ export const setRootFilter = (start_date, end_date) => {
 				}))
 				break
 			case screens.DISTRICT:
-				dispatch(getDistrictData(state.root.id, {
+				dispatch(getDistrictData(id, {
 					'filters': {
 						'start_date': start_date,
 						'end_date': end_date
@@ -84,7 +84,7 @@ export const setRootFilter = (start_date, end_date) => {
 				}))
 				break
 			case screens.SCHOOL:
-				dispatch(getSchoolData(state.root.id, {
+				dispatch(getSchoolData(id, {
 					'filters': {
 						'start_date': start_date,
 						'end_date': end_date
