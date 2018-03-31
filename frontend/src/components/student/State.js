@@ -158,7 +158,7 @@ render() {
              }</TableBody></Table></div>
           </Paper>
             </Grid>
-            <Grid item xs={6}>
+            <Grid style={{zIndex:10000}} item xs={6}>
                  <Paper  style={{height:'270px'}}>
             <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Districts List</Typography>
 <div className={classes.root3}>

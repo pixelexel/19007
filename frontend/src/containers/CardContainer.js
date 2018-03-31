@@ -65,7 +65,7 @@ class CardContainer extends Component{
 			case 'list':
 				const selected = this.props.list.lists.filter(v => v.id.toString() == id)[0]
 				console.log('selectedlist', selected)
-				window.location = selected['csv_path']
+				window.open('/' + selected['csv_path'])
 				break
 			default:
 				break

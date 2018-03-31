@@ -117,7 +117,26 @@ class DrawerComponent extends Component{
             </ListItem>
           </Link>
           </List>
+        
+        <List className={classes.paper}
+          subheader={<ListSubheader
+            className={classes.subheader}
+            component="div">Import Data</ListSubheader>}
+        >
+          <a href={'/api/import_data'}>
+            <ListItem>
+              <ListItemText primary="Upload from CSV or Excel" />
+            </ListItem>
+          </a>
           
+          <a href={'/api/studentform/new'}>
+            <ListItem>
+              <ListItemText primary="Upload via form" />
+            </ListItem>
+          </a>
+
+        </List>
+
         <List className={classes.paper}
           subheader={<ListSubheader
             className={classes.subheader}
