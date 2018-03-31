@@ -88,6 +88,7 @@ class StudentContainer extends Component{
 		}
 
 		return (
+			<div>
 				<Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
 					<Grid item xs={3}>
 						<IDCard {...details}/>
@@ -106,20 +107,15 @@ class StudentContainer extends Component{
 						{acad_data.length > 0 && <GraphComponent legendOff data={ret} height='100%' margin={{ top: 5, right: 5, left: 5, bottom: 5 }} />}	
 						</Card>
 					</Grid>
-					<Grid item xs={6}>
-						<GraphComponentMultiLine {...this.props.student}/>
-					</Grid>
-					<Grid item xs={3}>
-						<Card style={{ height: 'calc(100%)', width:'100%' }}>
-							{acad_data.length > 0 && <GraphComponent legendOff data={ret} height='100%' margin={{ top: 5, right: 5, left: 5, bottom: 5 }} />}	
-						</Card>
-					</Grid> 
-					<Grid item xs={3}>
-						<Card style={{ height: 'calc(100%)', width:'100%' }}>
-							{acad_data.length > 0 && <GraphComponent legendOff data={ret} height='100%' margin={{ top: 5, right: 5, left: 5, bottom: 5 }} />}	
+				</Grid>
+				<Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
+					<Grid item xs={12}>
+						<Card>
+							<GraphComponentMultiLine {...this.props.student}/>
 						</Card>
 					</Grid>
 				</Grid>
+			</div>
 		)
 	}
 }
