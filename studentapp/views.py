@@ -12,6 +12,7 @@ import pandas as pd
 from .forms import StudentForm
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.forms.models import model_to_dict
+from django.contrib.auth.views import login
 # Create your views here.
 CSV_STORAGE = os.path.join(os.getcwd(), 'studentapp', 'static', 'csv')
  
@@ -22,6 +23,11 @@ def index(req):
 		'data': ['Api root', 'nice']
 	})
 
+def custom_login(request,template_name):
+    if request.user.is_authenticated:
+        return redirect('/?redirect=0')
+    else:
+        return login(request,template_name=template_name)
 
 def get_formvals():
 	retGraph = {'x':[] , 'y':[] , 'filters':{}}
