@@ -26,7 +26,7 @@ function mapStateToProps(state){
 
 class StateContainer extends Component{
 	componentWillMount(){
-		console.log('state', this.props)
+	// 	console.log('state', this.props)
 
 		this.props.dispatch(getStateData(this.props.id, {
       filters: this.props.filters,

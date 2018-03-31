@@ -76,24 +76,30 @@ class DrawerComponent extends Component{
             className={classes.subheader} 
             component="div">Dashboards</ListSubheader>}
         >
+          <Link to={'/'}>
           <ListItem button key='global'
-            id={`${screens.COUNTRY}-0`}
-            >
+            id={`${screens.COUNTRY}-0`}>
+            <ListItemText primary='Global Dashboard'/>
+          
             { /*             onClick={this.handleScreenChange.bind(this, screens.COUNTRY, 0)}
 */
                 /* <ListItemText primary="Global Dashboard"/> */}
-             <Link to={'/'}>Global Dashboard</Link>
+             
           </ListItem>
+          </Link>
+          <Divider/>
 
           {
             dashboards.map ( (d, index) => (
+              <Link to={`/dash/${d.id}`}>
               <ListItem button key={index}
                  >
-                <Link to={`/dash/${d.id}`}>{d.name}</Link>
+                <ListItemText primary={d.name}/>
                 {/* <IconButton style={{ height: 26 }}>
                   <DeleteIcon />
                 </IconButton> */}
               </ListItem>
+              </Link>
               ))
           }
           {/* <ListItem button key={'add'}
@@ -103,26 +109,39 @@ class DrawerComponent extends Component{
                 <AddIcon/>
             </IconButton>
           </ListItem> */}
-          <ListItem button key={'add'}>
-            <Link to={`/dash/${null}`}>Add a new dashboard</Link>
-          </ListItem>
-        </List>
+          <Divider />
+
+          <Link to={`/dash/${null}`}>
+            <ListItem button key={'add'}>
+              <ListItemText primary="Add a new dashboard"/>
+            </ListItem>
+          </Link>
+          </List>
+          
         <List className={classes.paper}
           subheader={<ListSubheader
             className={classes.subheader}
-            component="div">Custom Filters</ListSubheader>}
+            component="div">Add Custom Filters</ListSubheader>}
             >
-            {
-              custom_filters.map((f, index) => (
-              <ListItem button key={index} id={`${screens.ADD_FILTER}-${f.id}`}
-                onClick={this.handleScreenChange.bind(this, screens.ADD_FILTER, f.id)} >
-                <ListItemText primary={f.name}/>
+            <Link to={'/addfilter'}>
+              <ListItem>
+                <ListItemText primary="Add filter"/>
               </ListItem>
-            ) )}
+            </Link>
           </List>
       </Drawer>
     )
   }
 }
+
+/*
+{
+  custom_filters.map((f, index) => (
+  <ListItem button key={index} id={`${screens.ADD_FILTER}-${f.id}`}
+    onClick={this.handleScreenChange.bind(this, screens.ADD_FILTER, f.id)} >
+    <ListItemText primary={f.name}/>
+  </ListItem>
+) )}
+*/
 
 export default withStyles(styles)(connect(mapStateToProps)(DrawerComponent))

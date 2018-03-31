@@ -5,7 +5,7 @@ import { ResponsiveContainer, BarChart,Bar,LineChart, XAxis, YAxis, CartesianGri
 import { withStyles } from 'material-ui/styles' 
 import '../../styles/graph.scss'
 import convert from 'color-convert'
-
+ 
 const styles = (theme) => ({
   root: {
     backgroundColor: theme.palette.secondary.light,
@@ -18,7 +18,7 @@ class GraphBar extends Component{
     const { classes, theme } = this.props
   	return (
       <div>
-      <ResponsiveContainer width="100%" aspect={3.0/1.1}>
+      <ResponsiveContainer width="100%" aspect={3.0/1.2}>
     	<BarChart width={600} height={300} data={this.props.value}
             margin={{top: 20, right: 30, left: 20, bottom: 5}}>
        <XAxis dataKey="name"/>

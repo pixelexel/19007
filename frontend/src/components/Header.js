@@ -57,7 +57,7 @@ class Header extends Component{
 	            <MenuIcon />
 	          </IconButton>
 
-	       	  <Avatar onClick={e => { this.props.dispatch(this.props.changeScreen('DASH')) }} className={classes.primaryAvatar}>
+	       	  <Avatar className={classes.primaryAvatar}>
 	       	  	<TrendingUpIcon/>
 	       	  </Avatar>
 	          

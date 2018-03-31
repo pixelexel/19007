@@ -17,7 +17,8 @@ class App extends Component {
       <div className="App">
         <CssBaseline/>
         <Route exact path="/" component={Root} />
-    <Route path="/:screen/:id" component={Root} />
+        <Route path="/:screen/:id" component={Root} />
+        <Route path="/addfilter" component={Root} />
       </div>
     </MuiThemeProvider>
     );

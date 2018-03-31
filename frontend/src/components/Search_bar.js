@@ -130,11 +130,14 @@ class Search_bar extends Component{
 							} else {
 								url += `${d.name}`
 							}
-							return (<ListItem key={index} className={classes.listItem + ' hoverlistitem'}> 
-								<Link onClick={this.handleClick} className={classes.primary} key={index} to={url}>
+							return (
+						<Link onClick={this.handleClick} className={classes.primary} key={index} to={url}>
+							<ListItem key={index} className={classes.listItem + ' hoverlistitem'}> 
+								
 									<ListItemText className={classes.removePointerEvents} primary={d.name} secondary={d.type} />
-								</Link> 
-							</ListItem>)
+								
+							</ListItem>
+								</Link> )
 						})}
 					</List>
 					</div> }

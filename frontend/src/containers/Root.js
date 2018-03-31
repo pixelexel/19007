@@ -15,6 +15,8 @@ import SchoolContainer from './SchoolContainer'
 import Chatbot from '../containers/Chatbot'
 import AddFilterContainer from '../containers/AddFilterContainer'
 import '../styles/App.scss'
+import { getStateData } from '../actions/state'
+
 
 const mapStateToProps = (state) => ({
 	screen: state.root.screen,
@@ -49,16 +51,17 @@ class Root extends Component{
 		const { filters, routing, match } = this.props 
 		let screenComponent = null
 		let screen, id
-		if(match.params.screen){
+		if(match.path == '/addfilter'){
+			screen = screens.ADD_FILTER
+		}
+		else if(match.params.screen){
 			screen = match.params.screen
 			id = match.params.id
 		} else {
 			screen = screens.COUNTRY
 			id = 1
 		}
-		
-		console.log('root', this.props, screen, id, screens)
-		
+				
 		switch(screen.toUpperCase()){
 			case screens.DASH:
 				screenComponent = <HomeScreenContainer screen={screen} id={id} name={this.props.name}/>
