@@ -16,6 +16,7 @@ import AssIcon from 'material-ui-icons/Assessment'
 import WorldIcon from 'material-ui-icons/Language'
 import Typography from 'material-ui/Typography';
 import Progress from '../Progress'
+import Progress1 from '../Progress1'
 import { Link } from 'react-router-dom'
 import { ListItem, ListItemText, ListSubheader } from 'material-ui/List'
 import { addGraph, getAllGraphs, removeGraph } from '../../actions/graph'
@@ -26,6 +27,7 @@ import * as FontAwesome from "react-icons/lib/fa";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { changeScreen, screens } from '../../actions/root'
 import {LinearProgress} from "material-ui"
+import Progress2 from '../Progress2'
 
 
 const styles = theme => ({
@@ -124,14 +126,14 @@ render() {
           </Grid>
           <Grid item xs={6}>
           <Paper style={{height:"inherit"}}>
-            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Academic Performing State</Typography>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best State-Academics</Typography>
 
               <Progress data={t_s_a[0]} style={{marginBottom: 10}}/>
            </Paper>
             </Grid>
           <Grid item xs={6}>
              <Paper style={{height:"inherit"}}>
-            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Sports Performing State</Typography>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best State-Sports</Typography>
 
               <Progress data={t_s_s[0]} style={{marginBottom: 10}}/>
            </Paper>
@@ -139,21 +141,21 @@ render() {
             </Grid>
             <Grid item xs={6}>
              <Paper style={{height:"inherit"}}>
-            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Extra Curricular Performing State</Typography>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Best State-Extra Curricular</Typography>
 
               <Progress data={t_s_e[0]} style={{marginBottom: 10}}/>
            </Paper>
               </Grid>
               <Grid item xs={6}>
                <Paper style={{height:"inherit"}}>
-            <Typography style={{fontSize:'15px',textAlign:'center'}}>Pass Percentage Of Country</Typography>
+            <Typography style={{fontSize:'15px',textAlign:'center'}}>Country-Pass Percentage</Typography>
 
               <Progress data={p_c[0]} style={{marginBottom: 10}}/>
            </Paper>
                 </Grid>
                 <Grid item xs={6}>
                  <Paper  style={{height:'270px'}}>
-            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Top Extra Curricular Performance</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Extra Curricular-Top Performers</Typography>
 <div className={classes.root3}>
                       <Table>
                       <TableBody>
@@ -169,7 +171,7 @@ render() {
             </Grid>
             <Grid item xs={6}>
                  <Paper  style={{height:'270px'}}>
-            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>States List</Typography>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>State List</Typography>
 <div className={classes.root3}>
                       <Table>
                       <TableBody>
@@ -194,7 +196,7 @@ render() {
         <Grid item xs={5}>
           <Paper style={{ height: "350px" }}>
             <Typography style={{ paddingTop:'10px',fontSize: "20px", textAlign: "center" }}>
-              State Academic Performances
+              State Academic Performance
             </Typography>
 
             <GraphLine value={pp_data} />
@@ -203,7 +205,7 @@ render() {
         <Grid item xs={7}>
           <Paper style={{ height: "350px" }}>
             <Typography style={{ paddingTop:'10px',fontSize: "20px", textAlign: "center" }}>
-              State Extra Curricular Performances
+              State Extra Curricular Performance
             </Typography>
 
             <GraphBar value={ex_curr} />
@@ -216,12 +218,12 @@ render() {
         <Paper style={{height:"inherit"}}>
             <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Academic Student</Typography>
 
-              <Progress data={top_marks[0]} style={{ marginBottom: "20px" }} />
+              <Progress1 data={top_marks[0]} style={{ marginBottom: "20px" }} />
            </Paper>
             <Paper style={{height:"inherit"}}>
             <Typography style={{fontSize:'15px',textAlign:'center'}}>Best Sports Student</Typography>
 
-             <Progress data={top_extra_curr[0]} style={{}} />
+             <Progress2 data={top_extra_curr[0]} style={{}} />
            </Paper>
 
           
@@ -229,7 +231,7 @@ render() {
         <Grid item xs={5}>
           <Paper style={{ height: "290px" }}>
             <Typography style={{paddingTop:'10px', fontSize: "20px", textAlign: "center" }}>
-              State Sports Performances
+              State Sports Performance
             </Typography>
 
             <GraphBar value={pp_data} />
@@ -250,7 +252,7 @@ render() {
         <Grid item xs={4}>
           <Paper style={{ height: "300px", textAlign: "center" }}>
             <Typography style={{ paddingTop:'10px',fontSize: "20px" }}>
-              Top Academic Performances
+              Academics-Top Performers
             </Typography>
             <div className={classes.root1}>
               <Table>
@@ -280,7 +282,7 @@ render() {
         <Grid item xs={4}>
           <Paper style={{ height: "300px" }}>
             <Typography style={{ paddingTop:'10px',fontSize: "20px", textAlign: "center" }}>
-              Top Sports Performances
+              Sports-Top Performers
             </Typography>
             <div className={classes.root1}>
               <Table>

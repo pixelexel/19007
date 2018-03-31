@@ -54,10 +54,10 @@ function ind(getData){
 		pmarks_Pass.push({'name':pmarks_Get.name,'value':Math.round(pmarks_Get.marks)})
 	}
 	for(let i=0;i<sport_keys.length;i++){
-		psport_Pass.push({'name':sport_keys[i],'value':(Math.round(psport_Get[sport_keys[i]]*10))})
+		psport_Pass.push({'name':sport_keys[i],'value':(Math.round(psport_Get[sport_keys[i]]))})
 	}
 	for(let i=0;i<curr_keys.length;i++){
-		pcurr_Pass.push({'name':curr_keys[i],'value':(Math.round(pcurr_Get[curr_keys[i]]*10))})
+		pcurr_Pass.push({'name':curr_keys[i],'value':(Math.round(pcurr_Get[curr_keys[i]]))})
 	}
 	for(let i=0;i<b_keys.length;i++){
 		bmarks_Pass.push({'name':b_keys[i],'value':Math.round(bmarks_Get[b_keys[i]])})
@@ -67,11 +67,12 @@ function ind(getData){
 	}
 	
 	pc_Pass.push({'name':"Pass Percentage",'value':pc_Get});
-	pb_Pass.push({'name':'Boys%','value':pb_Get});
-	pg_Pass.push({'name':'Girls%','value':pg_Get});
+	pb_Pass.push({'name':'Boys%','value':Math.floor(parseFloat(pb_Get))});
+	pg_Pass.push({'name':'Girls%','value':Math.ceil(parseFloat(pg_Get))});
 	avgmarks_Pass.push({'name':'Average Academic Performance','value':avgmarks_Get});
 	avgsport_Pass.push({'name':'Average Sport Performance','value':avgsport_Get*10});
 	avgcurr_Pass.push({'name':'Average Extra Curricular Performance','value':avgcurr_Get*10});
+	console.log('School Data ',pcurr_Pass);
 
 	const allDataPass = {
 		'p_marks' : pmarks_Get,
