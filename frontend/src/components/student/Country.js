@@ -228,7 +228,7 @@ render() {
               State Sports Performances
             </Typography>
 
-            <GraphBar value={pp_data} />
+            <GraphBar value={sport_d} />
           </Paper>
         </Grid>
         <Grid item xs={4}>

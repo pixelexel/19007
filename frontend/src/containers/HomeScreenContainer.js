@@ -44,7 +44,7 @@ class HomeScreenContainer extends Component{
 		this.addList = this.addList.bind(this)
 		this.updateList = this.updateList.bind(this)
 	}
-
+	
 	componentWillMount(){
 		this.props.dispatch(getAllGraphs(this.props.id))
 		this.props.dispatch(getAllLists(this.props.id))

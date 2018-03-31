@@ -177,16 +177,8 @@ render() {
         <Grid container style={{margin: 25, maxWidth: 'calc(100% - 50px)'}}>
           <Grid item xs={5}>
           <Paper  style={{height:'350px'}}>
-            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>Districts List</Typography>
- <div className={classes.root2}>
-                      <Table>
-                      <TableBody>
-                        { districts.map((d) => {
-                       return <TableRow>
-                          <TableCell onClick={() => {this.props.dispatch(changeScreen(screens.DISTRICT, d))}}>{d}</TableCell>
-                      </TableRow>
-             })
-             }</TableBody></Table></div>
+            <Typography style={{paddingTop:'10px',fontSize:'20px',textAlign:'center'}}>All Districts Sports Performances</Typography>
+            <GraphLine value={sport_d}/>
           </Paper>
           </Grid>
           <Grid item xs={7}>
